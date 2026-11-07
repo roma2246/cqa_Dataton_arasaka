@@ -4,6 +4,7 @@
 по репликам → апелляция → решение проверяющего → пересчитанный итог.
 
 **Кто что делает — см. [TEAM_TASKS.md](TEAM_TASKS.md).**
+**Что сделано и что идёт сейчас — [docs/CHANGELOG.md](docs/CHANGELOG.md); вживую — http://localhost:8000 → «Задачи».**
 **Финал (T+23, 10 контрольных чатов) — [docs/PROD_RUNBOOK.md](docs/PROD_RUNBOOK.md).** Сдача: `results/dev/results.json`, `results/prod/results.json`.
 
 ## Стек

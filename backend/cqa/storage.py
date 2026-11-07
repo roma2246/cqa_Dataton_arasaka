@@ -424,3 +424,32 @@ def set_calibration_active(example_id: int, active: bool) -> bool:
     with tx() as c:
         return c.execute("UPDATE calibration_examples SET active=? WHERE example_id=?",
                          (1 if active else 0, example_id)).rowcount == 1
+
+
+def list_batches(limit: int = 12) -> list[dict[str, Any]]:
+    """Последние пакеты: прогресс по последней попытке на диалог, стоимость, время."""
+    with tx() as c:
+        ids = [r[0] for r in c.execute(
+            "SELECT batch_id FROM evaluations WHERE batch_id IS NOT NULL GROUP BY batch_id "
+            "ORDER BY MAX(evaluation_id) DESC LIMIT ?", (limit,)).fetchall()]
+        out = []
+        for b in ids:
+            meta = c.execute("SELECT MIN(created_at) AS started, MAX(finished_at) AS last, "
+                             "MAX(checklist_version_id) AS vid FROM evaluations WHERE batch_id=?", (b,)).fetchone()
+            ver = c.execute("SELECT body_json, version FROM checklist_versions WHERE version_id=?", (meta["vid"],)).fetchone()
+            name = json.loads(ver["body_json"]).get("name", "") if ver else ""
+            out.append({"batch_id": b, "started": meta["started"], "last_finished": meta["last"],
+                        "checklist": f"v{ver['version']} · {name}" if ver else str(meta["vid"])})
+    for item in out:
+        st = batch_status(item["batch_id"])
+        item.update({k: st[k] for k in ("total", "counts", "done", "cost_usd")})
+    return out
+
+
+def recent_evaluations(limit: int = 15) -> list[dict[str, Any]]:
+    with tx() as c:
+        rows = c.execute(
+            "SELECT evaluation_id, conversation_id, status, model, error, created_at, finished_at, batch_id, "
+            "json_extract(final_score_json, '$.total') AS total, json_extract(final_score_json, '$.critical_error') AS critical "
+            "FROM evaluations WHERE finished_at IS NOT NULL ORDER BY finished_at DESC LIMIT ?", (limit,)).fetchall()
+    return [dict(r) for r in rows]

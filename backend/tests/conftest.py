@@ -10,5 +10,7 @@ def isolated_db(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "db_path", tmp_path / "test.sqlite3")
     monkeypatch.setattr(settings, "evaluator_mode", "mock")
     monkeypatch.setattr(settings, "calibration", True)
+    monkeypatch.setattr(settings, "llm_think", True)
+    monkeypatch.setattr(settings, "llm_context_tokens", 0)
     storage.init_db()
     yield

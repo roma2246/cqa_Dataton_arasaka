@@ -198,6 +198,13 @@ def start_batch(body: BatchBody) -> dict[str, Any]:
             "evaluation_ids": [_start(cid, body.checklist_version_id, batch_id) for cid in ids]}
 
 
+@app.get("/api/batches")
+def batches() -> dict[str, Any]:
+    """Всё, что сейчас идёт и недавно закончилось — для страницы «Задачи»."""
+    return {"batches": storage.list_batches(), "recent": storage.recent_evaluations(),
+            "evaluator": {"mode": settings.evaluator_mode, "model": settings.llm_model, "think": settings.llm_think}}
+
+
 @app.get("/api/batches/{batch_id}")
 def batch(batch_id: str) -> dict[str, Any]:
     st = storage.batch_status(batch_id)
@@ -360,6 +367,7 @@ def audio(conversation_id: str) -> dict[str, Any]:
 # ---------- UI ----------
 
 app.mount("/ui", StaticFiles(directory=ROOT / "frontend", html=True), name="ui")
+app.mount("/reports", StaticFiles(directory=ROOT / "evaluation" / "reports", html=True), name="reports")
 
 
 @app.get("/")

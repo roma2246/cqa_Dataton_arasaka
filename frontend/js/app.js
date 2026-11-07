@@ -4,6 +4,7 @@ import { renderConversations } from "./views/conversations.js";
 import { renderCard } from "./views/card.js";
 import { renderChecklist } from "./views/checklist.js";
 import { renderAppeals } from "./views/appeals.js";
+import { renderTasks } from "./views/tasks.js";
 
 export const root = document.getElementById("app");
 
@@ -66,6 +67,17 @@ document.getElementById("theme").addEventListener("click", () => {
   try { localStorage.setItem("cqa-theme", next); } catch {}
 });
 
+async function refreshTasksCount() {
+  try {
+    const r = await api.batches();
+    const active = r.batches.filter((b) => !b.done).length;
+    const el = document.getElementById("tasks-count");
+    el.textContent = active; el.hidden = !active;
+  } catch {}
+}
+setInterval(refreshTasksCount, 10000);
+refreshTasksCount();
+
 export async function refreshAppealsCount() {
   try {
     const n = (await api.appeals("open")).length;
@@ -86,6 +98,7 @@ async function route() {
     if (hash.startsWith("/c/")) { markNav("list"); return await renderCard(decodeURIComponent(hash.slice(3))); }
     if (hash === "/checklist") { markNav("checklist"); return await renderChecklist(); }
     if (hash === "/appeals") { markNav("appeals"); return await renderAppeals(); }
+    if (hash === "/tasks") { markNav("tasks"); return await renderTasks(); }
     markNav("list");
     return await renderConversations();
   } catch (e) {

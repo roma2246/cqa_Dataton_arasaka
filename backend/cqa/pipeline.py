@@ -32,7 +32,7 @@ def fetch(group_id: str) -> dict:
     return http.get_json(urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(qs))), timeout=120)
 
 
-OFFICIAL_FILE = "data/checklists/official_v3.json"  # официальный чек-лист (CQA_Chat_Quality_Checklist)
+OFFICIAL_FILE = "data/checklists/official_v4.json"  # официальный чек-лист (CQA_Chat_Quality_Checklist)
 
 
 def official_version() -> int:
