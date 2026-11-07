@@ -37,6 +37,8 @@ class Settings:
     llm_base_url: str = field(default_factory=lambda: os.getenv("LLM_BASE_URL", ""))
     llm_api_key: str = field(default_factory=lambda: os.getenv("LLM_API_KEY", ""))
     llm_model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", ""))
+    # Резервная модель при перегрузке основной (503/429), только openai_compat
+    llm_fallback_model: str = field(default_factory=lambda: os.getenv("LLM_FALLBACK_MODEL", ""))
     llm_price_input_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_INPUT_PER_M", "0")))
     llm_price_output_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_OUTPUT_PER_M", "0")))
     llm_timeout_s: int = field(default_factory=lambda: int(os.getenv("LLM_TIMEOUT_S", "300")))

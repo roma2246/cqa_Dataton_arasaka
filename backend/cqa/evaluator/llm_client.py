@@ -124,19 +124,38 @@ def _usage(usage: dict) -> tuple[Optional[int], Optional[int]]:
 
 
 def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLMResponse:
-    base = settings.llm_base_url or (GEMINI_BASE_URL if settings.llm_model.startswith("gemini") else "")
-    if not (base and settings.llm_model):
+    try:
+        return _openai_compat_model(system, user, schema, settings.llm_model)
+    except LLMError as e:
+        fb = settings.llm_fallback_model
+        overloaded = any(c.error in ("HTTP 503", "HTTP 429") or (c.error or "").startswith("TimeoutError")
+                         for c in e.calls)
+        if not (fb and fb != settings.llm_model and overloaded):
+            raise
+        # Основная модель перегружена — повторяем на резервной; все вызовы идут в учёт стоимости
+        try:
+            r = _openai_compat_model(system, user, schema, fb)
+        except LLMError as e2:
+            e2.calls = e.calls + e2.calls
+            raise
+        r.calls = e.calls + r.calls
+        return r
+
+
+def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: str) -> LLMResponse:
+    base = settings.llm_base_url or (GEMINI_BASE_URL if model.startswith("gemini") else "")
+    if not (base and model):
         raise LLMError("LLM_BASE_URL / LLM_MODEL не заданы в .env")
     if not settings.llm_api_key:
         raise LLMError("Не задан LLM_API_KEY в .env")
     body: dict[str, Any] = {
-        "model": settings.llm_model,
+        "model": model,
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "response_format": ({"type": "json_schema",
                              "json_schema": {"name": "cqa_evaluation", "schema": schema, "strict": True}}
                             if schema else {"type": "json_object"}),
     }
-    if settings.llm_model.startswith("gemini"):
+    if model.startswith("gemini"):
         body["reasoning_effort"] = _EFFORT.get(settings.llm_effort, "medium")
     else:
         body["temperature"] = 0
@@ -153,7 +172,7 @@ def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLM
             with urllib.request.urlopen(req, timeout=settings.llm_timeout_s, context=SSL_CONTEXT) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
             pin, pout = _usage(data.get("usage") or {})
-            rec = CallRecord(True, time.monotonic() - t0, data.get("model") or settings.llm_model, pin, pout)
+            rec = CallRecord(True, time.monotonic() - t0, data.get("model") or model, pin, pout)
             calls.append(rec)
             choice = data["choices"][0]
             if choice.get("finish_reason") == "length":
@@ -163,7 +182,7 @@ def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLM
         except urllib.error.HTTPError as e:
             detail = e.read(500).decode("utf-8", "replace") if e.fp else ""
             last_err = f"HTTP {e.code}: {detail[:200]}"
-            calls.append(CallRecord(False, time.monotonic() - t0, settings.llm_model, error=f"HTTP {e.code}"))
+            calls.append(CallRecord(False, time.monotonic() - t0, model, error=f"HTTP {e.code}"))
             if e.code == 400 and body["response_format"]["type"] == "json_schema":
                 # Провайдер не принял схему — пробуем режим JSON без схемы; валидатор всё равно проверит ответ
                 body["response_format"] = {"type": "json_object"}
@@ -172,7 +191,7 @@ def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLM
                 break
         except (urllib.error.URLError, TimeoutError, KeyError, json.JSONDecodeError) as e:
             last_err = f"{type(e).__name__}: {e}"
-            calls.append(CallRecord(False, time.monotonic() - t0, settings.llm_model, error=last_err))
+            calls.append(CallRecord(False, time.monotonic() - t0, model, error=last_err))
         time.sleep(min(2 ** attempt, 8))
     raise LLMError(f"Вызов модели не удался: {last_err}", calls)
 
@@ -186,6 +205,7 @@ KNOWN_PRICES = {
     "claude-opus-4-8": (5.0, 25.0),  # возможная модель серверного fallback
     # Gemini: цены до 31.12.2026 (с 01.01.2027 — 1.50 / 7.50); output включает токены размышлений
     "gemini-3.8-flash": (0.75, 3.75),
+    "gemini-3.6-flash": (0.75, 3.75),
     "claude-haiku-5-5": (0.10, 0.50),
 }
 

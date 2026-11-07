@@ -83,3 +83,13 @@ def test_missing_key(gemini, monkeypatch):
     monkeypatch.setattr(settings, "llm_api_key", "")
     with pytest.raises(llm_client.LLMError, match="LLM_API_KEY"):
         llm_client.chat_json("sys", "user", SCHEMA)
+
+
+def test_overloaded_primary_falls_back(gemini, monkeypatch):
+    monkeypatch.setattr(settings, "llm_fallback_model", "gemini-3.6-flash")
+    busy = lambda: urllib.error.HTTPError("u", 503, "busy", {}, io.BytesIO(b"{}"))  # noqa: E731
+    ok36 = json.loads(json.dumps(OK)); ok36["model"] = "gemini-3.6-flash"
+    sent = gemini([busy(), busy(), busy(), ok36])
+    r = llm_client.chat_json("sys", "user", SCHEMA)
+    assert [b["model"] for _, b in sent] == ["gemini-3.8-flash"] * 3 + ["gemini-3.6-flash"]
+    assert len(r.calls) == 4 and r.calls[-1].model == "gemini-3.6-flash"
