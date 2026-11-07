@@ -67,6 +67,7 @@ def main() -> int:
     args = ap.parse_args()
 
     settings.db_path = Path(args.db)
+    settings.database_url = ""  # прогоны тест-сетов — всегда в отдельной локальной SQLite, не в рабочей базе
     settings.calibration = args.calibration == "on"
     if settings.evaluator_mode != "real":
         print("ВНИМАНИЕ: EVALUATOR_MODE != real — оценки будут тестовыми (mock)")

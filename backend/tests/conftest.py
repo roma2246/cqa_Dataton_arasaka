@@ -18,6 +18,7 @@ PG = os.getenv("TEST_DATABASE_URL", "")
 def isolated_db(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "db_path", tmp_path / "test.sqlite3")
     monkeypatch.setattr(settings, "database_url", PG)
+    monkeypatch.setattr(settings, "database_url_unpooled", PG)
     schema = f"t_{uuid.uuid4().hex[:10]}" if PG else ""
     monkeypatch.setattr(settings, "db_schema", schema)
     monkeypatch.setattr(settings, "evaluator_mode", "mock")

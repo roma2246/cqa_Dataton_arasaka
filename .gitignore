@@ -8,3 +8,5 @@ data/raw/
 *.log
 .DS_Store
 data/external/
+.neon
+node_modules/

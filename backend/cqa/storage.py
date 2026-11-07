@@ -148,7 +148,8 @@ def _pg_pool():
     key = (settings.database_url, settings.db_schema)
     if _pool is None or _pool_key != key:
         from psycopg_pool import ConnectionPool
-        kwargs = {"autocommit": False}
+        # Через PgBouncer (пулер Neon) подготовленные запросы psycopg не используем
+        kwargs = {"autocommit": False, "prepare_threshold": None}
         if settings.db_schema:
             kwargs["options"] = f"-c search_path={settings.db_schema}"
         if _pool is not None:
@@ -213,15 +214,24 @@ def _schema() -> str:
     return SCHEMA.replace("INTEGER PRIMARY KEY AUTOINCREMENT", "BIGSERIAL PRIMARY KEY")
 
 
+def _pg_migrate() -> None:
+    """Таблицы создаются по ПРЯМОМУ соединению (рекомендация Neon: миграции не через пулер)."""
+    import psycopg
+    url = settings.database_url_unpooled or settings.database_url
+    with _lock, psycopg.connect(url, autocommit=True) as conn:
+        if settings.db_schema:
+            conn.execute(f'CREATE SCHEMA IF NOT EXISTS "{settings.db_schema}"')
+            conn.execute(f'SET search_path TO "{settings.db_schema}"')
+        for stmt in [x.strip() for x in re.sub(r"--[^\n]*", "", _schema()).split(";") if x.strip()]:
+            conn.execute(stmt)
+        conn.execute("ALTER TABLE evaluations ADD COLUMN IF NOT EXISTS batch_id TEXT")
+
+
 def init_db() -> None:
+    if is_pg():
+        _pg_migrate()
+        return
     with tx() as c:
-        if is_pg():
-            if settings.db_schema:
-                c.execute(f'CREATE SCHEMA IF NOT EXISTS "{settings.db_schema}"')
-            for stmt in [x.strip() for x in re.sub(r"--[^\n]*", "", _schema()).split(";") if x.strip()]:
-                c.execute(stmt)
-            c.execute("ALTER TABLE evaluations ADD COLUMN IF NOT EXISTS batch_id TEXT")
-            return
         c.executescript(SCHEMA)
         cols = {r["name"] for r in c.execute("PRAGMA table_info(evaluations)")}
         if "batch_id" not in cols:  # миграция БД, созданной до появления пакетов

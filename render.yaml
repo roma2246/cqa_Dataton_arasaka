@@ -5,7 +5,7 @@ services:
     name: cqa-arasaka
     runtime: docker
     plan: free
-    region: frankfurt
+    region: ohio   # рядом с базой Neon (us-east-2)
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /api/health

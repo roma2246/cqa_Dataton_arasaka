@@ -27,6 +27,8 @@ _load_dotenv()
 class Settings:
     # PostgreSQL на сервере (Neon и т.п.). Пусто — локальная SQLite (db_path)
     database_url: str = field(default_factory=lambda: os.getenv("DATABASE_URL", ""))
+    # Прямое (без PgBouncer) соединение Neon — для создания таблиц и сессионных настроек
+    database_url_unpooled: str = field(default_factory=lambda: os.getenv("DATABASE_URL_UNPOOLED", ""))
     db_schema: str = field(default_factory=lambda: os.getenv("DB_SCHEMA", ""))
     db_path: Path = field(default_factory=lambda: Path(os.getenv("CQA_DB_PATH", str(ROOT / "data" / "cqa.sqlite3"))))
     # Ссылка GET организаторов БЕЗ group_id (подписанная ссылка - секрет, только в .env)
