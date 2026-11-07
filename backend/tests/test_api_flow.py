@@ -181,7 +181,7 @@ def test_public_pages_open_with_auth(client, monkeypatch):
     monkeypatch.setattr(main, "_AUTH_PASS", "p")
     assert client.get("/").status_code == 200 and "Arasaka" in client.get("/").text
     assert client.get("/api/public/stats").status_code == 200
-    for asset in ("/ui/landing.css", "/ui/landing.js", "/ui/vendor/gsap.min.js"):
+    for asset in ("/ui/landing.css", "/ui/landing.js", "/ui/vendor/gsap.min.js", "/ui/img/freedom-logo.png"):
         assert client.get(asset).status_code == 200, asset
     assert client.get("/api/conversations").status_code == 401
     assert client.get("/api/conversations", auth=("u", "p")).status_code == 200

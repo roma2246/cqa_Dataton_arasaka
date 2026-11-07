@@ -50,7 +50,7 @@ _PUBLIC = {"/", "/api/health", "/api/public/stats", "/ui/styles.css", "/ui/landi
 
 def _public(path: str) -> bool:
     """Витрина для жюри и графики качества открыты; приложение и API — по паролю."""
-    return path in _PUBLIC or path.startswith(("/reports/", "/ui/vendor/"))
+    return path in _PUBLIC or path.startswith(("/reports/", "/ui/vendor/", "/ui/img/"))
 
 
 @app.middleware("http")
