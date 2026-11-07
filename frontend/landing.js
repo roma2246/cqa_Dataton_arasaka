@@ -389,6 +389,11 @@
   function revealTeam() {
     if (teamShown) return; teamShown = true;
     scramble(glitch, glitch.dataset.text, 1.4);
+    gsap.to(".cls, .under", { autoAlpha: 1, duration: 0.01, stagger: 0.15, delay: 0.2 });
+    $$(".cls").forEach((c, i) => setTimeout(() => scramble(c, c.dataset.cls, 0.8), 200 + i * 150));
+    const u = $(".under"), ut = u.textContent, uo = { n: 0 };
+    u.textContent = "";
+    gsap.to(uo, { n: ut.length, duration: ut.length * 0.05, delay: 1.6, ease: "none", onUpdate: () => (u.textContent = ut.slice(0, Math.round(uo.n))) });
     gsap.fromTo(".op", { autoAlpha: 0, y: 70, clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
       { autoAlpha: 1, y: 0, clipPath: "polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px))",
         duration: 1, stagger: 0.18, ease: "expo.out", delay: 0.3,
@@ -403,7 +408,7 @@
       gsap.from($$(".meter i", op), { scaleY: 0, transformOrigin: "bottom", duration: 0.2, stagger: 0.07, delay: 1 + i * 0.2 });
     });
   }
-  gsap.set(".op", { autoAlpha: 0 });
+  gsap.set(".op, .cls, .under", { autoAlpha: 0 });
   $$(".op h3").forEach((h) => h.setAttribute("aria-label", h.textContent));
   $$(".op").forEach((op) => op.addEventListener("mouseenter", () => scramble($("h3", op), $("h3", op).getAttribute("aria-label"), 0.5)));
 
