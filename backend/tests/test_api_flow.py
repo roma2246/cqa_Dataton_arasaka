@@ -99,3 +99,24 @@ def test_checklist_validation(client):
     bad = {"name": "x", "criteria": [
         {"criterion_id": "a", "title": "a", "instruction": "", "weight": 1, "answer_type": "yes_no", "options": []}]}
     assert client.post("/api/checklists", json=bad).status_code == 422
+
+
+def test_quota_stops_batch_queue(client, monkeypatch):
+    from cqa import main
+    from cqa.evaluator import llm_client
+
+    def boom(conv, chk):
+        raise llm_client.QuotaExceeded("Исчерпана квота")
+    monkeypatch.setattr(main, "evaluate", boom)
+    monkeypatch.setattr(main.executor, "submit", lambda fn, *a: None)  # выполняем вручную, по порядку
+    c = client
+    c.post("/api/import/json", json=DATASET)
+    b = c.post("/api/evaluations/batch", json={"checklist_version_id": 1, "group_id": "FIXTURE"}).json()
+    main._run_evaluation(b["evaluation_ids"][0])
+    for eid in b["evaluation_ids"][1:]:
+        main._run_evaluation(eid)  # отменённые не выполняются
+    st = c.get(f"/api/batches/{b['batch_id']}").json()
+    assert st["counts"] == {"failed": 1, "canceled": 2}
+    assert all("квота" in (i["error"] or "") for i in st["items"])
+    r = c.post(f"/api/batches/{b['batch_id']}/retry").json()
+    assert r["retried"] == 3

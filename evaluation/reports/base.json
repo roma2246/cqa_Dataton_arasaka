@@ -1,0 +1,2112 @@
+{
+ "summary": {
+  "tag": "base",
+  "testset": "synthetic_v1",
+  "checklist_version_id": 1,
+  "calibration": "off",
+  "calibration_examples_seeded": 0,
+  "repeat": 2,
+  "langs": [
+   "EN",
+   "KZ",
+   "RU"
+  ],
+  "model": [
+   "gemini-3.6-flash"
+  ],
+  "prompt_versions": [
+   "evaluate_v1"
+  ],
+  "accuracy": [
+   54,
+   54
+  ],
+  "by_criterion": {
+   "demo_greeting": [
+    16,
+    16
+   ],
+   "demo_need": [
+    15,
+    15
+   ],
+   "demo_next_step": [
+    16,
+    16
+   ],
+   "demo_politeness": [
+    7,
+    7
+   ]
+  },
+  "by_language": {
+   "EN": [
+    20,
+    20
+   ],
+   "KZ": [
+    14,
+    14
+   ],
+   "RU": [
+    20,
+    20
+   ]
+  },
+  "by_scenario": {
+   "bot_greeting_only": [
+    18,
+    18
+   ],
+   "client_greets_only": [
+    9,
+    9
+   ],
+   "good": [
+    24,
+    24
+   ],
+   "resolved_na": [
+    3,
+    3
+   ]
+  },
+  "evidence": [
+   37,
+   37
+  ],
+  "evaluations": {
+   "total": 48,
+   "completed": 16,
+   "failed": 32
+  },
+  "cost_usd": {
+   "total": 0.126527,
+   "per_eval": 0.007908,
+   "unknown": 0
+  },
+  "latency_s_avg": 10.1,
+  "wall_s": 2.3,
+  "stability": [
+   30,
+   30
+  ]
+ },
+ "items": [
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поздоровался и представился в начале диалога.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали проблемы, спросив про приложение и веб-версию.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил, что передал обращение в техподдержку и что клиенту пришлют уведомление.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор соблюдал вежливый и корректный тон на протяжении всего общения.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовала клиента в реплике m005: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын.».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнила детали обращения клиента в реплике m006: «Айтыңызшы, есепті қосымшадан жүктеп жатырсыз ба, әлде веб-нұсқадан ба?».",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор озвучила следующий шаг в реплике m009, сообщив о передаче запроса в техподдержку и отправке уведомления по исправлению до конца дня.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор общалась вежливо и корректно на протяжении всего диалога, а в конце пожелала удачного дня («Оқасы жоқ! Күніңіз сәтті өтсін.»).",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовала клиента и представилась: \"Hello! My name is Aliya, I'm a support agent.\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнила суть проблемы, спросив о способе скачивания отчёта: \"Could you tell me whether you're downloading it in the app or on the web version?\".",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначила следующий шаг и сроки исправления: \"a fix is expected by the end of the day and we'll send you a notification.\".",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор общалась вежливо, корректно дала инструкции и пожелала хорошего дня: \"You're welcome! Have a nice day.\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента после подключения к диалогу, сразу задав уточняющий вопрос.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, выяснив, где именно клиент пытается скачать отчёт.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг, указав, что обращение передано в техподдержку, а решение и уведомление ожидаются до конца дня.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента после подключения к диалогу.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор выяснил суть обращения, уточнив канал загрузки отчета: «Айтыңызшы, есепті қосымшадан жүктеп жатырсыз ба, әлде веб-нұсқадан ба?».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор проинформировал о направлении запроса в техподдержку, указал срок исправления и канал уведомления: «ақау күн соңына дейін түзетіледі — біз хабарлама жібереміз».",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента при подключении к чату и сразу перешел к уточнению вопроса.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали проблемы, спросив о способе скачивания отчета: \"Could you tell me whether you're downloading it in the app or on the web version?\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор четко обозначил следующий шаг и сроки, сообщив, что запрос передан в техподдержку и решение ожидается до конца дня.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поздоровался с клиентом при подключении к диалогу, сразу перейдя к уточнению детали вопроса.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть проблемы, спросив, в каком именно интерфейсе клиент пытается скачать отчёт.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг, сообщив о передаче задачи в техподдержку, сроке исправления до конца дня и отправке уведомления.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента в начале диалога и сразу перешел к уточнению вопроса в реплике m004.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор выяснил суть проблемы, уточнив в реплике m004, в веб-версии или приложении клиент пытается скачать отчет.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг в реплике m007, указав, что передал запрос в техподдержку, решение ожидается до конца дня и клиенту пришлют уведомление.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поздоровалась с клиентом и представилась в реплике \"Hello! My name is Aliya, I'm a support agent.\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Клиент подтвердил, что вопрос решен (\"my question is solved\"), поэтому определение последующих шагов не требуется.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вела диалог вежливо и профессионально, попрощалась фразой \"Have a nice day.\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поздоровалась с клиентом и представилась в реплике m005 («Здравствуйте! Меня зовут Алия, я оператор поддержки.»).",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнила суть обращения, задав уточняющий вопрос о платформе выгрузки отчёта («Подскажите, вы скачиваете отчёт в приложении или в веб-версии?»).",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначила следующий шаг, проинформировав о передаче обращения в техподдержку, сроке исправления до конца дня и последующем уведомлении.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор общалась вежливо и профессионально на протяжении всего диалога, вежливо ответила на благодарность и пожелала хорошего дня.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовал клиента и представился в реплике m005: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын.»",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали обращения клиента, спросив, откуда именно клиент пытается скачать отчёт (m006).",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор четко обозначил следующий шаг и сроки: передал запрос в техподдержку, указал срок исправления до конца дня и пообещал отправку уведомления (m009).",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор соблюдал профессиональный и вежливый тон на протяжении всего диалога, предоставил альтернативное решение и вежливо попрощался (m005, m011).",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовала клиента и представилась в реплике m005: \"Hello! My name is Aliya, I'm a support agent.\".",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнила суть проблемы клиента в реплике m006: \"Could you tell me whether you're downloading it in the app or on the web version?\".",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщила следующий шаг, срок и способ информирования в реплике m009: \"I've also passed your request to tech support; a fix is expected by the end of the day and we'll send you a notification.\".",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор общалась вежливо и корректно на протяжении всего диалога, попрощалась и пожелала хорошего дня (\"Have a nice day.\").",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента при входе в диалог и сразу перешел к вопросу.",
+   "evidence": []
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали проблемы, спросив о способе скачивания отчёта в реплике m005.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор проинформировал клиента о передаче обращения в техподдержку, сроке решения и последующем уведомлении.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента при входе в чат.",
+   "evidence": []
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, спросив, через приложение или веб-версию клиент пытается скачать отчёт («Айтыңызшы, есепті қосымшадан жүктеп жатырсыз ба, әлде веб-нұсқадан ба?»).",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг, сообщив об отправке обращения в техподдержку, сроке решения до конца дня и последующем уведомлении («ақау күн соңына дейін түзетіледі — біз хабарлама жібереміз»).",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента в начале диалога и сразу задал уточняющий вопрос. Приветствие бота не засчитывается оператору.",
+   "evidence": []
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор выяснил суть проблемы, уточнив канал скачивания отчета в реплике m005 ('Could you tell me whether you're downloading it in the app or on the web version?').",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг, срок и канал информирования ('a fix is expected by the end of the day and we'll send you a notification').",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поприветствовал клиента в начале диалога и сразу přeшёл к уточнению вопроса.",
+   "evidence": []
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали обращения клиента в реплике m004 (\"Подскажите, вы скачиваете отчёт в приложении или в веб-версии?\").",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 1,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг в реплике m007, передав задачу в техподдержку и указав срок решения до конца дня с отправкой уведомления.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  }
+ ],
+ "evaluations": [
+  {
+   "repeat": 0,
+   "evaluation_id": 1,
+   "conversation_id": "syn-ru-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.005862,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 7.195524417096749,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 2,
+   "conversation_id": "syn-kz-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.007625,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.027695833006874,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 3,
+   "conversation_id": "syn-en-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.006611,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 8.420290499925613,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 4,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008528,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.324586583068594,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 5,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.009224,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 10.935761041939259,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 6,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008352,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 10.373787709046155,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 7,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008798,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.592721875058487,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 9,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008098,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 10.308361833915114,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 15,
+   "conversation_id": "syn-en-05-resolved_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.007831,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.128553374903277,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 25,
+   "conversation_id": "syn-ru-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.009244,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.7423116248101,
+   "calls": 1
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 26,
+   "conversation_id": "syn-kz-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.007142,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 8.2890211250633,
+   "calls": 1
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 27,
+   "conversation_id": "syn-en-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008655,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 9.8631364160683,
+   "calls": 1
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 28,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.006683,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 9.870636916253716,
+   "calls": 3
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 29,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.009742,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.472419708967209,
+   "calls": 1
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 30,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.006305,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 7.680777250090614,
+   "calls": 1
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 31,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.007827,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 11.112163000041619,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 49,
+   "conversation_id": "syn-en-04-no_next_step",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8688354999758303,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 50,
+   "conversation_id": "syn-en-06-rude",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8491231659427285,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 51,
+   "conversation_id": "syn-en-07-injection",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8623758752364665,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 52,
+   "conversation_id": "syn-en-08-vague_no_clarify",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8612473339308053,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 53,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 1.0187700830865651,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 54,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 1.1189460831228644,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 55,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 56,
+   "conversation_id": "syn-kz-06-rude",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 57,
+   "conversation_id": "syn-kz-07-injection",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 58,
+   "conversation_id": "syn-kz-08-vague_no_clarify",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 59,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 60,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 61,
+   "conversation_id": "syn-ru-06-rude",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 62,
+   "conversation_id": "syn-ru-07-injection",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 63,
+   "conversation_id": "syn-ru-08-vague_no_clarify",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 64,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.885191666893661,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 65,
+   "conversation_id": "syn-en-04-no_next_step",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8881688339170069,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 66,
+   "conversation_id": "syn-en-05-resolved_na",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8885423340834677,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 67,
+   "conversation_id": "syn-en-06-rude",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8767614159733057,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 68,
+   "conversation_id": "syn-en-07-injection",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 1.098435458028689,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 69,
+   "conversation_id": "syn-en-08-vague_no_clarify",
+   "status": "failed",
+   "error": "QuotaExceeded: Исчерпана квота провайдера для gemini-3.6-flash и gemini-3.8-flash: Исчерпана квота gemini-3.8-flash (HTTP 429). Включите оплату в Google AI Studio или дождитесь сброса суточного лимита. You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, h",
+   "cost_usd": 0.0,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0.8951337079051882,
+   "calls": 2
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 70,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 71,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 72,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 73,
+   "conversation_id": "syn-kz-06-rude",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 74,
+   "conversation_id": "syn-kz-07-injection",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 75,
+   "conversation_id": "syn-kz-08-vague_no_clarify",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 76,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 77,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 78,
+   "conversation_id": "syn-ru-06-rude",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 79,
+   "conversation_id": "syn-ru-07-injection",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  },
+  {
+   "repeat": 1,
+   "evaluation_id": 80,
+   "conversation_id": "syn-ru-08-vague_no_clarify",
+   "status": "canceled",
+   "error": "Остановлено: исчерпана квота модели",
+   "cost_usd": null,
+   "model": null,
+   "prompt_version": null,
+   "latency_s": 0,
+   "calls": 0
+  }
+ ]
+}

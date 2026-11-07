@@ -42,7 +42,12 @@ class Settings:
     llm_price_input_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_INPUT_PER_M", "0")))
     llm_price_output_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_OUTPUT_PER_M", "0")))
     llm_timeout_s: int = field(default_factory=lambda: int(os.getenv("LLM_TIMEOUT_S", "300")))
+    # Ограничение частоты запросов к модели на процесс, запросов в минуту (0 — без ограничения)
+    llm_rpm: int = field(default_factory=lambda: int(os.getenv("LLM_RPM", "0")))
     llm_max_retries: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_RETRIES", "2")))
+    # Калибровка: решения проверяющего подставляются в промпт как прецеденты (on | off)
+    calibration: bool = field(default_factory=lambda: os.getenv("LLM_CALIBRATION", "on") == "on")
+    calibration_per_criterion: int = field(default_factory=lambda: int(os.getenv("LLM_CALIBRATION_PER_CRITERION", "3")))
     batch_concurrency: int = field(default_factory=lambda: int(os.getenv("BATCH_CONCURRENCY", "4")))
 
 

@@ -67,6 +67,20 @@ CREATE TABLE IF NOT EXISTS appeals (
     status TEXT NOT NULL,             -- open | confirmed | changed
     created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS calibration_examples (
+    example_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    criterion_id TEXT NOT NULL,
+    criterion_fingerprint TEXT NOT NULL, -- хеш формулировки критерия: изменили критерий -> старые примеры не применяются
+    conversation_id TEXT NOT NULL,
+    evaluation_id INTEGER, appeal_id INTEGER UNIQUE,
+    excerpt_json TEXT NOT NULL,          -- фрагмент диалога [{message_id, speaker, text}]
+    ai_status TEXT, ai_answer TEXT,
+    correct_status TEXT NOT NULL, correct_answer TEXT,
+    reason TEXT NOT NULL,
+    source TEXT NOT NULL,                -- appeal | manual
+    active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS decisions (
     decision_id INTEGER PRIMARY KEY AUTOINCREMENT,
     appeal_id INTEGER NOT NULL UNIQUE, -- одно решение на апелляцию
@@ -156,10 +170,10 @@ def batch_status(batch_id: str) -> dict[str, Any]:
     }
 
 
-def cancel_batch(batch_id: str) -> int:
+def cancel_batch(batch_id: str, reason: Optional[str] = None) -> int:
     with tx() as c:
-        return c.execute("UPDATE evaluations SET status='canceled', finished_at=? WHERE batch_id=? AND status='queued'",
-                         (now(), batch_id)).rowcount
+        return c.execute("UPDATE evaluations SET status='canceled', error=?, finished_at=? "
+                         "WHERE batch_id=? AND status='queued'", (reason, now(), batch_id)).rowcount
 
 
 # ---------- Диалоги ----------
@@ -357,3 +371,56 @@ def save_decision_atomic(appeal_id: int, evaluation_id: int, expected_revision: 
             "UPDATE evaluations SET final_results_json=?, final_score_json=?, revision=revision+1 WHERE evaluation_id=?",
             (json.dumps(final_results, ensure_ascii=False), json.dumps(final_score, ensure_ascii=False), evaluation_id))
         return expected_revision + 1
+
+
+# ---------- Калибровка («дообучение» на решениях проверяющего) ----------
+
+def criterion_fingerprint(criterion: Any) -> str:
+    import hashlib
+    c = criterion if isinstance(criterion, dict) else criterion.model_dump()
+    key = json.dumps({"t": c.get("title"), "i": c.get("instruction"), "a": c.get("answer_type"),
+                      "o": [o.get("value") if isinstance(o, dict) else o.value for o in c.get("options") or []],
+                      "s": c.get("scale")}, ensure_ascii=False, sort_keys=True)
+    return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+
+
+def add_calibration_example(**f: Any) -> Optional[int]:
+    with tx() as c:
+        cur = c.execute(
+            "INSERT OR IGNORE INTO calibration_examples (criterion_id, criterion_fingerprint, conversation_id, "
+            "evaluation_id, appeal_id, excerpt_json, ai_status, ai_answer, correct_status, correct_answer, reason, "
+            "source, active, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?)",
+            (f["criterion_id"], f["criterion_fingerprint"], f["conversation_id"], f.get("evaluation_id"),
+             f.get("appeal_id"), json.dumps(f["excerpt"], ensure_ascii=False), f.get("ai_status"), f.get("ai_answer"),
+             f["correct_status"], f.get("correct_answer"), f["reason"], f.get("source", "appeal"), now()))
+        return cur.lastrowid if cur.rowcount else None
+
+
+def list_calibration(active_only: bool = False) -> list[dict[str, Any]]:
+    q = "SELECT * FROM calibration_examples" + (" WHERE active=1" if active_only else "") + " ORDER BY example_id DESC"
+    with tx() as c:
+        rows = [dict(r) for r in c.execute(q).fetchall()]
+    for r in rows:
+        r["excerpt"] = json.loads(r.pop("excerpt_json"))
+    return rows
+
+
+def calibration_for(fingerprints: dict[str, str], exclude_conversation: str, per_criterion: int = 3) -> list[dict[str, Any]]:
+    """Активные примеры для критериев с ТОЙ ЖЕ формулировкой; без примеров из оцениваемого диалога."""
+    out: list[dict[str, Any]] = []
+    counts: dict[str, int] = {}
+    for r in list_calibration(active_only=True):
+        cid = r["criterion_id"]
+        if fingerprints.get(cid) != r["criterion_fingerprint"] or r["conversation_id"] == exclude_conversation:
+            continue
+        if counts.get(cid, 0) >= per_criterion:
+            continue
+        counts[cid] = counts.get(cid, 0) + 1
+        out.append(r)
+    return out
+
+
+def set_calibration_active(example_id: int, active: bool) -> bool:
+    with tx() as c:
+        return c.execute("UPDATE calibration_examples SET active=? WHERE example_id=?",
+                         (1 if active else 0, example_id)).rowcount == 1

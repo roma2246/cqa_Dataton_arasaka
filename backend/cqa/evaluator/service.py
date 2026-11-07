@@ -36,9 +36,18 @@ def evaluate(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     return _real(conv, checklist)
 
 
+def calibration_examples(conv: Conversation, checklist: ChecklistDraft) -> list[dict]:
+    if not settings.calibration:
+        return []
+    from .. import storage
+    fps = {c.criterion_id: storage.criterion_fingerprint(c) for c in checklist.criteria}
+    return storage.calibration_for(fps, conv.conversation_id, settings.calibration_per_criterion)
+
+
 def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     system = prompt_builder.system_prompt()
-    user = prompt_builder.user_prompt(checklist, conv)
+    examples = calibration_examples(conv, checklist)
+    user = prompt_builder.user_prompt(checklist, conv, examples)
     schema = prompt_builder.output_schema(checklist)
     calls: list[llm_client.CallRecord] = []
     parsed: Optional[AIEvaluation] = None
@@ -56,7 +65,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
             break
         except (json.JSONDecodeError, ValidationError) as e:
             last_err = str(e)[:300]
-            user = (prompt_builder.user_prompt(checklist, conv)
+            user = (prompt_builder.user_prompt(checklist, conv, examples)
                     + f"\n\nПредыдущий ответ не прошёл проверку формата: {last_err}\nВерни корректный JSON.")
     if parsed is None:
         raise llm_client.LLMError(f"Неверный JSON от модели после повтора: {last_err}", calls)
@@ -65,7 +74,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
         results=results, problems=problems, mode="real", model=", ".join(models) or settings.llm_model,
-        prompt_version=prompt_builder.PROMPT_VERSION,
+        prompt_version=prompt_builder.PROMPT_VERSION + (f"+cal{len(examples)}" if examples else ""),
         calls=[c.__dict__ for c in calls], cost_usd=llm_client.cost_usd(calls),
     )
 

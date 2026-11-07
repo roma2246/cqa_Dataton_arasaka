@@ -93,3 +93,27 @@ def test_overloaded_primary_falls_back(gemini, monkeypatch):
     r = llm_client.chat_json("sys", "user", SCHEMA)
     assert [b["model"] for _, b in sent] == ["gemini-3.8-flash"] * 3 + ["gemini-3.6-flash"]
     assert len(r.calls) == 4 and r.calls[-1].model == "gemini-3.6-flash"
+
+
+QUOTA = b'[{"error": {"code": 429, "message": "You exceeded your current quota, please check your plan and billing details.", "status": "RESOURCE_EXHAUSTED"}}]'
+
+
+def test_quota_is_not_retried_and_fallback_tried_once(gemini, monkeypatch):
+    monkeypatch.setattr(settings, "llm_fallback_model", "gemini-3.6-flash")
+    q = lambda: urllib.error.HTTPError("u", 429, "quota", {}, io.BytesIO(QUOTA))  # noqa: E731
+    sent = gemini([q(), q()])
+    with pytest.raises(llm_client.QuotaExceeded) as e:
+        llm_client.chat_json("sys", "user", SCHEMA)
+    assert [b["model"] for _, b in sent] == ["gemini-3.8-flash", "gemini-3.6-flash"]  # без повторов
+    assert "квота" in str(e.value) and "{" not in str(e.value)  # короткое сообщение, без JSON
+
+
+def test_rate_limit_paces_calls(gemini, monkeypatch):
+    slept = []
+    monkeypatch.setattr(settings, "llm_rpm", 60)
+    monkeypatch.setattr(llm_client, "_next_slot", 0.0)
+    monkeypatch.setattr(llm_client.time, "sleep", lambda s: slept.append(s))
+    gemini([OK, OK])
+    llm_client.chat_json("sys", "user", SCHEMA)
+    llm_client.chat_json("sys", "user", SCHEMA)
+    assert slept and slept[-1] == pytest.approx(1.0, abs=0.2)  # 60 rpm -> интервал ~1 с

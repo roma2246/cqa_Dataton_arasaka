@@ -10,6 +10,7 @@ LLM_PROVIDER:
 from __future__ import annotations
 
 import json
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -24,6 +25,42 @@ class LLMError(Exception):
     def __init__(self, msg: str, calls: Optional[list["CallRecord"]] = None):
         super().__init__(msg)
         self.calls = calls or []
+
+
+class QuotaExceeded(LLMError):
+    """Исчерпана квота/биллинг провайдера: повторять бессмысленно, очередь пакета останавливается."""
+
+
+def _api_message(detail: str) -> str:
+    """Короткое сообщение из JSON-ошибки провайдера (Google отдаёт [{"error": {...}}])."""
+    try:
+        d = json.loads(detail)
+        d = d[0] if isinstance(d, list) and d else d
+        return str((d.get("error") or {}).get("message") or detail)[:200]
+    except (ValueError, AttributeError):
+        return detail.strip()[:200]
+
+
+def _is_quota(code: int, msg: str) -> bool:
+    m = msg.lower()
+    return code == 429 and ("quota" in m or "billing" in m)
+
+
+_rate_lock = threading.Lock()
+_next_slot = 0.0
+
+
+def _pace() -> None:
+    """Не больше LLM_RPM запросов в минуту на процесс (0 — без ограничения)."""
+    global _next_slot
+    if settings.llm_rpm <= 0:
+        return
+    with _rate_lock:
+        now = time.monotonic()
+        wait = max(0.0, _next_slot - now)
+        _next_slot = max(now, _next_slot) + 60.0 / settings.llm_rpm
+    if wait:
+        time.sleep(wait)
 
 
 @dataclass
@@ -127,6 +164,7 @@ def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLM
     try:
         return _openai_compat_model(system, user, schema, settings.llm_model)
     except LLMError as e:
+        # квота у резервной модели может быть своей (у Gemini лимиты по моделям) — пробуем её один раз
         fb = settings.llm_fallback_model
         overloaded = any(c.error in ("HTTP 503", "HTTP 429") or (c.error or "").startswith("TimeoutError")
                          for c in e.calls)
@@ -137,6 +175,8 @@ def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLM
             r = _openai_compat_model(system, user, schema, fb)
         except LLMError as e2:
             e2.calls = e.calls + e2.calls
+            if isinstance(e, QuotaExceeded) and isinstance(e2, QuotaExceeded):
+                raise QuotaExceeded(f"Исчерпана квота провайдера для {settings.llm_model} и {fb}: {e2}", e2.calls) from e2
             raise
         r.calls = e.calls + r.calls
         return r
@@ -162,6 +202,7 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
     calls: list[CallRecord] = []
     last_err = ""
     for attempt in range(settings.llm_max_retries + 1):
+        _pace()
         t0 = time.monotonic()
         req = urllib.request.Request(
             base.rstrip("/") + "/chat/completions",
@@ -180,9 +221,13 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
                 raise LLMError("Ответ обрезан по длине", calls)
             return LLMResponse(choice["message"]["content"] or "", calls)
         except urllib.error.HTTPError as e:
-            detail = e.read(500).decode("utf-8", "replace") if e.fp else ""
-            last_err = f"HTTP {e.code}: {detail[:200]}"
+            detail = e.read(2000).decode("utf-8", "replace") if e.fp else ""
+            msg = _api_message(detail)
+            last_err = f"HTTP {e.code}: {msg}"
             calls.append(CallRecord(False, time.monotonic() - t0, model, error=f"HTTP {e.code}"))
+            if _is_quota(e.code, msg):
+                raise QuotaExceeded(f"Исчерпана квота {model} (HTTP 429). Включите оплату в Google AI Studio "
+                                    f"или дождитесь сброса суточного лимита. {msg}", calls)
             if e.code == 400 and body["response_format"]["type"] == "json_schema":
                 # Провайдер не принял схему — пробуем режим JSON без схемы; валидатор всё равно проверит ответ
                 body["response_format"] = {"type": "json_object"}

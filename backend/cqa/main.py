@@ -154,8 +154,11 @@ def _run_evaluation(evaluation_id: int) -> None:
             cost_usd=out.cost_usd, finished_at=storage.now(),
         )
     except Exception as e:  # noqa: BLE001 - сбой сохраняем как failed, а не как оценку
-        from .evaluator.llm_client import cost_usd
+        from .evaluator.llm_client import QuotaExceeded, cost_usd
         calls = getattr(e, "calls", [])
+        if isinstance(e, QuotaExceeded) and ev.get("batch_id"):
+            # квота исчерпана — не сжигаем остальную очередь пакета впустую
+            storage.cancel_batch(ev["batch_id"], "Остановлено: исчерпана квота модели")
         storage.update_evaluation(
             evaluation_id, status="failed", error=f"{type(e).__name__}: {e}",
             usage_json=json.dumps({"calls": [c.__dict__ for c in calls]}),
@@ -205,10 +208,10 @@ def batch(batch_id: str) -> dict[str, Any]:
 
 @app.post("/api/batches/{batch_id}/retry")
 def batch_retry(batch_id: str) -> dict[str, Any]:
-    """Повтор только неуспешных: новая попытка, старая с ошибкой остаётся в истории."""
+    """Повтор неуспешных и отменённых: новая попытка, старая остаётся в истории."""
     st = storage.batch_status(batch_id)
     retried = []
-    for it in st["failed"]:
+    for it in [i for i in st["items"] if i["status"] in ("failed", "canceled")]:
         ev = storage.get_evaluation(it["evaluation_id"])
         retried.append(_start(it["conversation_id"], ev["checklist_version_id"], batch_id))
     return {"retried": len(retried), "evaluation_ids": retried}
@@ -275,7 +278,52 @@ def decide(appeal_id: int, body: DecisionCreate) -> dict[str, Any]:
         raise HTTPException(409, str(e))
     except storage.AlreadyDecided as e:
         raise HTTPException(409, str(e))
-    return {"revision": rev, "final_score": sc.model_dump()}
+    example_id = None
+    if body.action == "change":
+        example_id = _save_calibration(ap, ev, chk, old, current, body.reason)
+    return {"revision": rev, "final_score": sc.model_dump(), "calibration_example_id": example_id}
+
+
+def _save_calibration(ap: dict, ev: dict, chk: Any, old: CriterionResult,
+                      current: list[CriterionResult], reason: str) -> Optional[int]:
+    """Исправление проверяющего -> прецедент для следующих оценок («дообучение» без изменения весов модели)."""
+    crit = next((c for c in chk.criteria if c.criterion_id == ap["criterion_id"]), None)
+    conv = storage.get_conversation(ev["conversation_id"])
+    if not crit or not conv:
+        return None
+    new = next(r for r in current if r.criterion_id == ap["criterion_id"])
+    msgs = conv.messages
+    ids = list(old.evidence_message_ids)
+    if not ids and old.checked_range:
+        idx = {m.message_id: m.index for m in msgs}
+        a, b = idx.get(old.checked_range.from_message_id, 0), idx.get(old.checked_range.to_message_id, 0)
+        ids = [m.message_id for m in msgs[a:b + 1]]
+    if not ids:  # нет ссылок — берём реплики оператора
+        ids = [m.message_id for m in msgs if m.speaker == "operator"]
+    keep = set(ids[:8])
+    excerpt = [{"message_id": m.message_id, "speaker": m.speaker, "text": m.text} for m in msgs if m.message_id in keep]
+    return storage.add_calibration_example(
+        criterion_id=crit.criterion_id, criterion_fingerprint=storage.criterion_fingerprint(crit),
+        conversation_id=conv.conversation_id, evaluation_id=ev["evaluation_id"], appeal_id=ap["appeal_id"],
+        excerpt=excerpt, ai_status=old.status, ai_answer=old.answer,
+        correct_status=new.status, correct_answer=new.answer, reason=reason, source="appeal")
+
+
+@app.get("/api/calibration")
+def calibration() -> dict[str, Any]:
+    return {"enabled": settings.calibration, "per_criterion": settings.calibration_per_criterion,
+            "examples": storage.list_calibration()}
+
+
+class CalibrationToggle(BaseModel):
+    active: bool
+
+
+@app.patch("/api/calibration/{example_id}")
+def calibration_toggle(example_id: int, body: CalibrationToggle) -> dict[str, Any]:
+    if not storage.set_calibration_active(example_id, body.active):
+        raise HTTPException(404, "Пример не найден")
+    return {"example_id": example_id, "active": body.active}
 
 
 # ---------- Аудио ----------
