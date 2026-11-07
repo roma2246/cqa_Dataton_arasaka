@@ -144,9 +144,16 @@
   gsap.to("#demo", { y: -60, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
 
   // Бегущая строка ускоряется при скролле
+  // (движение — твин GSAP, скорость меняется плавно через timeScale, без скачков позиции)
   const track = $(".marquee .track");
+  track.style.animation = "none";
+  const marq = gsap.to(track, { xPercent: -50, duration: 38, ease: "none", repeat: -1 });
   ScrollTrigger.create({ trigger: ".marquee", start: "top bottom", end: "bottom top",
-    onUpdate: (s) => { track.style.animationDuration = `${Math.max(12, 38 - Math.abs(s.getVelocity()) / 120)}s`; } });
+    onUpdate: (s) => {
+      const boost = 1 + Math.min(2, Math.abs(s.getVelocity()) / 1500);
+      gsap.to(marq, { timeScale: boost, duration: 0.3, overwrite: true,
+        onComplete: () => gsap.to(marq, { timeScale: 1, duration: 1.2, ease: "power2.out" }) });
+    } });
 
   // ---------- Появление при прокрутке ----------
   $$("section.s h2.split, .cta-band h2.split").forEach((h) => {
@@ -247,18 +254,25 @@
     const open = () => {
       if (opened) return; opened = true;
       const r = rift.getBoundingClientRect();
-      const st = { d: Math.min(cyber.offsetHeight, Math.max(280, innerHeight - r.top + 60)) };
+      // долистали быстро / обновили страницу внизу — без подъёма через весь экран: короткий взрыв и сразу команда
+      if (r.top < innerHeight * 0.25) {
+        cyber.style.clipPath = ""; gsap.set(rift, { autoAlpha: 1 }); gsap.set(".rift .slices span", { autoAlpha: 1, y: 0 });
+        if (r.bottom > 0) { fx.tear(); rift.classList.add("flash"); } else fx.arm();
+        revealTeam();
+        return;
+      }
+      const st = { d: Math.min(cyber.offsetHeight, innerHeight * 0.6, Math.max(240, innerHeight - r.top + 40)) };
       const apply = () => { gsap.set(rift, { y: st.d }); cyber.style.clipPath = `inset(${st.d}px 0 0 0)`; };
       apply();
       gsap.timeline()
         .set(rift, { autoAlpha: 1 })
-        .to(st, { d: 0, duration: 1.6, ease: "power2.inOut", onUpdate: () => { apply(); fx.rise(); } })
+        .to(st, { d: 0, duration: 1.1, ease: "power2.inOut", onUpdate: () => { apply(); fx.rise(); } })
         .add(() => { fx.tear(); rift.classList.add("flash"); })
         .to(rift, { keyframes: { x: [-8, 8, -6, 6, -3, 0] }, duration: 0.45, ease: "none" })
         .to(".rift .slices span", { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.06, ease: "steps(5)" }, "<")
         .add(() => { cyber.style.clipPath = ""; gsap.set(rift, { clearProps: "transform" }); revealTeam(); }, "<0.15");
     };
-    ScrollTrigger.create({ trigger: rift, start: "top 65%", once: true, onEnter: open });
+    ScrollTrigger.create({ trigger: rift, start: "top 80%", once: true, onEnter: open });
   }
   // Частицы разлома: осколки светлой части, символы кода, искры. Canvas работает, только пока разлом на экране.
   function shardsFX() {
@@ -346,29 +360,35 @@
         }
       }
       ctx.globalAlpha = 1;
-      parts = alive.length > 900 ? alive.slice(-900) : alive;
+      parts = alive.length > 600 ? alive.slice(-600) : alive;
       start();
     }
     function start() { if (!raf) raf = requestAnimationFrame(frame); }
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) { size(); last = 0; start(); } }, { rootMargin: "200px 0px" }).observe(rift);
     addEventListener("resize", () => visible && size());
     // быстрый скролл через разлом — дополнительные выбросы
+    let lastBurst = 0;
     ScrollTrigger.create({ trigger: rift, start: "top bottom", end: "bottom top", onUpdate: (s) => {
-      const v = Math.abs(s.getVelocity());
-      if (armed && v > 900 && Math.random() < 0.5) { const [x, y] = at(Math.random()); burst(x, y, Math.min(1.4, v / 2000), 1); }
+      const v = Math.abs(s.getVelocity()), now = performance.now();
+      if (armed && v > 1200 && now - lastBurst > 450 && parts.length < 250) {
+        lastBurst = now; const [x, y] = at(Math.random()); burst(x, y, Math.min(1.4, v / 2000), 1); }
     } });
     // курсор вдоль трещины высекает искры
+    let lastMouse = 0;
     if (fine) addEventListener("mousemove", (e) => {
       if (!armed) return;
       const r = rift.getBoundingClientRect();
       if (e.clientY < r.top - 30 || e.clientY > r.bottom + 10) return;
       const [x, y] = at(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
-      for (let i = 0; i < 3; i++) spark(x, y, 0.7);
-      if (Math.random() < 0.25) shard(x, y, 0.6);
+      const now = performance.now();
+      if (now - lastMouse < 50 || parts.length > 300) return;   // не чаще 20 раз в секунду
+      lastMouse = now;
+      for (let i = 0; i < 2; i++) spark(x, y, 0.7);
+      if (Math.random() < 0.2) shard(x, y, 0.6);
       start();
     }, { passive: true });
     size();
-    return { tear, rise };
+    return { tear, rise, arm: () => { armed = true; } };
   }
 
   // шапка темнеет уже над разломом
@@ -379,7 +399,9 @@
   const CH = "アイウエオカキクケコ01ABCDEF#$%&*<>/\\";
   function scramble(el, text, dur = 1.2) {
     const o = { p: 0 };
-    gsap.to(o, { p: 1, duration: dur, ease: "none", onUpdate: () => {
+    if (el._scr) { el._scr.kill(); el.textContent = el._txt; }   // не накладывать перемешивания друг на друга
+    el._txt = text;
+    el._scr = gsap.to(o, { p: 1, duration: dur, ease: "none", onUpdate: () => {
       const n = Math.floor(o.p * text.length);
       el.textContent = text.slice(0, n) + [...text.slice(n)].map((c) => (c === " " ? " " : CH[(Math.random() * CH.length) | 0])).join("");
     }, onComplete: () => (el.textContent = text) });
