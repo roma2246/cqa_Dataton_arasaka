@@ -13,5 +13,13 @@
   "model": "qwen3:8b (локально), think=off",
   "changes": "Ультракомпактный ответ (−54% токенов): качество упало до 65% — откат на формат v3",
   "dev": "o4-ultra"
+ },
+ {
+  "iter": 2,
+  "name": "Gemini 3.6 Flash",
+  "model": "gemini-3.6-flash (облако, бесплатный проект)",
+  "changes": "Чек-лист v4 + факты о диалоге + уточняющий запрос; смена модели с локальной qwen3:8b на Gemini 3.6 Flash",
+  "dev": "gem-dev",
+  "holdout": "gem-hold"
  }
 ]

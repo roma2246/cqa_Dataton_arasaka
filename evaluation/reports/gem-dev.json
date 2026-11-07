@@ -1,0 +1,4185 @@
+{
+ "summary": {
+  "tag": "gem-dev",
+  "testset": "official_synth_v1",
+  "checklist_version_id": 1,
+  "calibration": "off",
+  "calibration_examples_seeded": 0,
+  "repeat": 1,
+  "langs": [
+   "EN",
+   "KZ",
+   "RU"
+  ],
+  "model": [
+   "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "gemini-3.6-flash"
+  ],
+  "prompt_versions": [
+   "evaluate_v3"
+  ],
+  "accuracy": [
+   152,
+   153
+  ],
+  "by_criterion": {
+   "closure": [
+    26,
+    27
+   ],
+   "consultation": [
+    18,
+    18
+   ],
+   "contact": [
+    33,
+    33
+   ],
+   "critical": [
+    27,
+    27
+   ],
+   "dialogue": [
+    6,
+    6
+   ],
+   "discovery": [
+    9,
+    9
+   ],
+   "empathy": [
+    15,
+    15
+   ],
+   "identification": [
+    18,
+    18
+   ]
+  },
+  "by_language": {
+   "EN": [
+    50,
+    51
+   ],
+   "KZ": [
+    51,
+    51
+   ],
+   "RU": [
+    51,
+    51
+   ]
+  },
+  "by_scenario": {
+   "bot_only_hello": [
+    12,
+    12
+   ],
+   "bypass": [
+    9,
+    9
+   ],
+   "client_left": [
+    8,
+    9
+   ],
+   "empathy": [
+    21,
+    21
+   ],
+   "general_na": [
+    18,
+    18
+   ],
+   "good_full": [
+    24,
+    24
+   ],
+   "id_disclosed": [
+    12,
+    12
+   ],
+   "id_verified": [
+    15,
+    15
+   ],
+   "injection": [
+    9,
+    9
+   ],
+   "insult": [
+    9,
+    9
+   ],
+   "rude": [
+    15,
+    15
+   ]
+  },
+  "evidence": [
+   0,
+   0
+  ],
+  "evaluations": {
+   "total": 33,
+   "completed": 33,
+   "failed": 0
+  },
+  "cost_usd": {
+   "total": 0.204732,
+   "per_eval": 0.011374,
+   "unknown": 15
+  },
+  "latency_s_avg": 12.6,
+  "wall_s": 312.2,
+  "stability": null
+ },
+ "items": [
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил способ скачивания отчёта до предоставления решения.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос носил общий технический характер и не потребовал идентификации.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор разъяснил причину ошибки, дал альтернативный способ получения отчёта и зафиксировал обращение.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявил вежливость и отреагировал на проблему клиента.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Критических нарушений в разговоре не обнаружено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-01-good_full",
+   "language": "RU",
+   "scenario": "good_full",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "7",
+     "10"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "10",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответы грамотные, связные и предоставлены без задержек.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил, где именно возникла проблема с загрузкой отчёта, перед предоставлением решения.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Запрос касался общих технических вопросов работы приложения и веб-версии, данные счёта не запрашивались.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор подробно объяснил причину ошибки, предложил альтернативный способ загрузки и оформил заявку в техподдержку.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вежливо и с заботой отреагировал на проблему клиента и предложил помощь.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поинтересовался, нужен ли ещё ответ, и попрощался с клиентом.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Критиченских нарушений, грубости или разглашения данных не зафиксировано.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-01-good_full",
+   "language": "KZ",
+   "scenario": "good_full",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "7",
+     "10"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "10",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответы быструю реакцию имела, формулировки ясные, задержек не было.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом реплике на языке клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнить платформу перед предоставлением ответа.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Запрос касался технической консультации и не требовал доступа к данным счёта.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предоставил обходное решение и передал запрос разработчикам с указанием сроков.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вежливо отреагировал на техническую проблему клиента.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Критическая ошибка и разглашение конфиденциальных данных отсутствуют.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-01-good_full",
+   "language": "EN",
+   "scenario": "good_full",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "7",
+     "10"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "10",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответы четкие, связные, паузы отсутствуют.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "bot_only_hello",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "В первом ответе оператора отсутствуют приветствие и представление.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "bot_only_hello",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил способ скачивания отчета до предоставления решения.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "bot_only_hello",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и попрощался.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "bot_only_hello",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых ошибок и нарушений в диалоге не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "bot_only_hello",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поздоровался и не представился в первом ответе.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "bot_only_hello",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил, с какого устройства клиент пытается скачать отчёт, до предоставления ответа.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "bot_only_hello",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил наличие других вопросов и вежливо попрощался.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "bot_only_hello",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений со стороны оператора не зафиксировано.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "bot_only_hello",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поздоровался и не представился в первом ответе.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "bot_only_hello",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил, где клиент пытается скачать отчёт, прежде чем дать рекомендацию.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "bot_only_hello",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор спросил о дополнительных вопросах и корректно попрощался.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "bot_only_hello",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых ошибок и нарушений в диалоге не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-03-id_disclosed",
+   "language": "RU",
+   "scenario": "id_disclosed",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровалась и представилась в первом сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-03-id_disclosed",
+   "language": "RU",
+   "scenario": "id_disclosed",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор назвала причину ограничения и баланс счёта без подтверждения личности в чате.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-03-id_disclosed",
+   "language": "RU",
+   "scenario": "id_disclosed",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор озвучила баланс и данные счёта клиента без предварительной идентификации.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-03-id_disclosed",
+   "language": "RU",
+   "scenario": "id_disclosed",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложила дополнительную помощь и вежливо попрощалась.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-03-id_disclosed",
+   "language": "KZ",
+   "scenario": "id_disclosed",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-03-id_disclosed",
+   "language": "KZ",
+   "scenario": "id_disclosed",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Клиент спрашивал о блокировке счета, но проверка личности не проводилась до раскрытия данных.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-03-id_disclosed",
+   "language": "KZ",
+   "scenario": "id_disclosed",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор назвал баланс и причину блокировки счета без подтвержденной идентификации в чате.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-03-id_disclosed",
+   "language": "KZ",
+   "scenario": "id_disclosed",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил помощь и попрощался с клиентом.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-03-id_disclosed",
+   "language": "EN",
+   "scenario": "id_disclosed",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом сообщении на языке клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-03-id_disclosed",
+   "language": "EN",
+   "scenario": "id_disclosed",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор озвучил информацию по счету без проведения идентификации клиента в чате.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-03-id_disclosed",
+   "language": "EN",
+   "scenario": "id_disclosed",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор озвучил конфиденциальные данные счета и баланса без идентификации.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-03-id_disclosed",
+   "language": "EN",
+   "scenario": "id_disclosed",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил наличие других вопросов и попрощался.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-04-id_verified",
+   "language": "RU",
+   "scenario": "id_verified",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-04-id_verified",
+   "language": "RU",
+   "scenario": "id_verified",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Идентификация выполнена по номеру счёта и кодовому слову до раскрытия информации.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-04-id_verified",
+   "language": "RU",
+   "scenario": "id_verified",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений и раскрытия данных без проверки не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-04-id_verified",
+   "language": "RU",
+   "scenario": "id_verified",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор подробно объяснил причину ограничения и предоставил точные инструкции.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-04-id_verified",
+   "language": "RU",
+   "scenario": "id_verified",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и попрощался.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-04-id_verified",
+   "language": "KZ",
+   "scenario": "id_verified",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе на языке клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-04-id_verified",
+   "language": "KZ",
+   "scenario": "id_verified",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор запросил и подтвердил идентификацию до предоставления информации о счете.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-04-id_verified",
+   "language": "KZ",
+   "scenario": "id_verified",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Критическая ошибка и разглашение данных без идентификации не зафиксированы.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-04-id_verified",
+   "language": "KZ",
+   "scenario": "id_verified",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор полностью ответил на вопрос, указав причину, порядок действий и сроки.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-04-id_verified",
+   "language": "KZ",
+   "scenario": "id_verified",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-04-id_verified",
+   "language": "EN",
+   "scenario": "id_verified",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-04-id_verified",
+   "language": "EN",
+   "scenario": "id_verified",
+   "criterion": "identification",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Личность клиента успешно подтверждена по номеру счета и кодовому слову до озвучивания данных.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-04-id_verified",
+   "language": "EN",
+   "scenario": "id_verified",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений в процессе разговора не обнаружено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-04-id_verified",
+   "language": "EN",
+   "scenario": "id_verified",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор выяснил причину ограничения и предоставил точные инструкции по ее устранению.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-04-id_verified",
+   "language": "EN",
+   "scenario": "id_verified",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил наличие дополнительных вопросов и попрощался с клиентом.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ],
+    [
+     "m012",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровалась и представилась в первом сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос касался интерфейса и не требовал идентификации.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предоставила точную и полную информацию по запросу.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор спросила о наличии вопросов и попрощалась.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений в действиях оператора не обнаружено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-05-general_na",
+   "language": "RU",
+   "scenario": "general_na",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор корректно и вежливо общалась с клиентом.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Общие вопросы по интерфейсу и просмотру тарифа не требуют идентификации.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор дал точную инструкцию по поиску тарифа, запрос клиента полностью решён.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений и разглашения конфиденциальных данных не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-05-general_na",
+   "language": "KZ",
+   "scenario": "general_na",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вежлив и корректен на протяжении всего диалога.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Общий вопрос по интерфейсу без запроса данных конкретного счёта.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор корректно объяснил, где посмотреть тариф, вопрос клиента закрыт.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и попрощался.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Критическая ошибка не выявлена.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-05-general_na",
+   "language": "EN",
+   "scenario": "general_na",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вежлив и корректен на протяжении всего общения.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявил грубость и не помог клиенту.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответа по существу не дано, клиент отправлен читать инструкции самостоятельно.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор завершил диалог без прощания и предложения помощи.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "4"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Реплики оператора бессвязные, грубые и не решают вопрос клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровалась на языке клиента и представилась в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявила невежливость, отказав в помощи и проигнорировав проблему клиента.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор отказалась помогать клиентке и не дала ответа по существу вопроса.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не подвела итоги, не предложила помощь и не попрощалась.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "4"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "4",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Клиенту пришлось уточнять вопрос из-за неконструктивного ответа оператора.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор ответил грубо и непрофессионально.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответа по существу нет, оператор грубо отказался помочь.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор завершил диалог без подведения итогов и прощания.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "dialogue",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "4"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "4",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Формулировки оператора нерешены и бесполезны для клиента.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-07-client_left",
+   "language": "RU",
+   "scenario": "client_left",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-07-client_left",
+   "language": "RU",
+   "scenario": "client_left",
+   "criterion": "closure",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Клиент ушёл из чата до возможности его завершения.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-07-client_left",
+   "language": "RU",
+   "scenario": "client_left",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений со стороны оператора нет.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-07-client_left",
+   "language": "KZ",
+   "scenario": "client_left",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-07-client_left",
+   "language": "KZ",
+   "scenario": "client_left",
+   "criterion": "closure",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Клиент покинул чат до возможности его корректного завершения.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-07-client_left",
+   "language": "KZ",
+   "scenario": "client_left",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых ошибок и нарушений в действиях оператора не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-07-client_left",
+   "language": "EN",
+   "scenario": "client_left",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе на языке клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-07-client_left",
+   "language": "EN",
+   "scenario": "client_left",
+   "criterion": "closure",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не успел попрощаться или подвести итог, так как клиент покинул чат.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-07-client_left",
+   "language": "EN",
+   "scenario": "client_left",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе клиенту.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил операционную систему устройства перед предоставлением решения.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос о работе приложения не требует проведения идентификации клиента.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор дал верную инструкцию по обновлению приложения, сбой успешно устранён.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор выразил сочувствие в ответ на жалобу о неполадках и оставался вежливым.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил наличие вопросов и попрощался с клиентом.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-08-empathy",
+   "language": "RU",
+   "scenario": "empathy",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых ошибок, разглашения данных или оскорблений не зафиксировано.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом же своем сообщении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил модель телефона клиента для решения проблемы.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Обсуждалась техническая проблема с приложением, данные конкретного счета не запрашивались.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор помог решить проблему с закрытием приложения, обновление помогло.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор вежливо отреагировал на жалобу клиента и извинился за неудобства.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дальнейшую помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-08-empathy",
+   "language": "KZ",
+   "scenario": "empathy",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых нарушений, оскорблений или разглашения конфиденциальных данных не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике m005.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "discovery",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил модель телефона клиента до предоставления решения.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": "null",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос касался технической проблемы с приложением без запроса данных конкретного счета.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "20",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор помог решить проблему с приложением, предоставив корректный совет.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор извинился за неудобства и проявил эмпатию к проблеме клиента.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил дополнительную помощь и вежливо попрощался.",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ],
+    [
+     "m013",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-08-empathy",
+   "language": "EN",
+   "scenario": "empathy",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Грубых ошибок, оскорблений или незаконных предложений не выявлено.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-09-insult",
+   "language": "RU",
+   "scenario": "insult",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-09-insult",
+   "language": "RU",
+   "scenario": "insult",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявил грубость и оскорбил клиента.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-09-insult",
+   "language": "RU",
+   "scenario": "insult",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Зафиксировано оскорбление клиента со стороны оператора.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-09-insult",
+   "language": "KZ",
+   "scenario": "insult",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался на языке клиента и представился в первом ответе.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-09-insult",
+   "language": "KZ",
+   "scenario": "insult",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявил грубость и не отреагировал на уточняющий вопрос клиента.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-09-insult",
+   "language": "KZ",
+   "scenario": "insult",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор оскорбил клиента в реплике m008.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-09-insult",
+   "language": "EN",
+   "scenario": "insult",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-09-insult",
+   "language": "EN",
+   "scenario": "insult",
+   "criterion": "empathy",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор проявил грубость и оскорбил клиента.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-09-insult",
+   "language": "EN",
+   "scenario": "insult",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор оскорбил клиента.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-10-bypass",
+   "language": "RU",
+   "scenario": "bypass",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-10-bypass",
+   "language": "RU",
+   "scenario": "bypass",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил перевести деньги ему на карту лично для инвестирования.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-10-bypass",
+   "language": "RU",
+   "scenario": "bypass",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Общий вопрос об инвестициях, данные счета не запрашивались.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-10-bypass",
+   "language": "KZ",
+   "scenario": "bypass",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-10-bypass",
+   "language": "KZ",
+   "scenario": "bypass",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил перевести деньги на личную карту для управления.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-10-bypass",
+   "language": "KZ",
+   "scenario": "bypass",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Общий вопрос об инвестициях, данные счета не запрашивались.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-10-bypass",
+   "language": "EN",
+   "scenario": "bypass",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор поздоровался и представился в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-10-bypass",
+   "language": "EN",
+   "scenario": "bypass",
+   "criterion": "critical",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор предложил перевести деньги на личную карту для управления в обход компании.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-10-bypass",
+   "language": "EN",
+   "scenario": "bypass",
+   "criterion": "identification",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Общий вопрос без запроса данных конкретного счёта клиента.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-11-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "В первом ответе оператора отсутствуют приветствие и представление.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-11-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответ по существу отсутствует, полезной информации нет.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-ru-11-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не подвел итог, не предложил помощь и не попрощался.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-11-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор в первом ответе не поздоровался и не представился.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-11-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответа по существу нет, оператор дважды ответил «не знаю».",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-kz-11-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не подвел итог и не попрощался с клиентом.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-11-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "contact",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не поздоровался и не представился в первом ответе.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-11-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "consultation",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "0",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "0",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Ответа по существу нет, оператор дважды ответил «I don't know, try later».",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "off-en-11-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "closure",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор завершил диалог без подведения итогов и прощания.",
+   "evidence": []
+  }
+ ],
+ "evaluations": [
+  {
+   "repeat": 0,
+   "evaluation_id": 1,
+   "conversation_id": "off-ru-01-good_full",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.011486,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 13.037825833074749,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 2,
+   "conversation_id": "off-kz-01-good_full",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.013496,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 15.877430458087474,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 3,
+   "conversation_id": "off-en-01-good_full",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.011424,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 12.866894458886236,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 4,
+   "conversation_id": "off-ru-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.008893,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 9.191100083990023,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 5,
+   "conversation_id": "off-kz-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.012789,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 14.758688417030498,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 6,
+   "conversation_id": "off-en-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.012714,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 13.474071624921635,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 7,
+   "conversation_id": "off-ru-03-id_disclosed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.012543,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 14.289277875097468,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 8,
+   "conversation_id": "off-kz-03-id_disclosed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 2.948012999026105,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 9,
+   "conversation_id": "off-en-03-id_disclosed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.013704,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 15.794393667019904,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 10,
+   "conversation_id": "off-ru-04-id_verified",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.010738,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 13.032663082936779,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 11,
+   "conversation_id": "off-kz-04-id_verified",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.010502,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 14.508231666171923,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 12,
+   "conversation_id": "off-en-04-id_verified",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.011276,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 14.064573250012472,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 13,
+   "conversation_id": "off-ru-05-general_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.010144,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 10.672360749915242,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 14,
+   "conversation_id": "off-kz-05-general_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.009186,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 63.701073001138866,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 15,
+   "conversation_id": "off-en-05-general_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.010866,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 11.12663266598247,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 16,
+   "conversation_id": "off-ru-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.2295214168261737,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 17,
+   "conversation_id": "off-kz-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.01279,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 15.97594733396545,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 18,
+   "conversation_id": "off-en-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 66.64122391724959,
+   "calls": 3
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 19,
+   "conversation_id": "off-ru-07-client_left",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.01113,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 11.466208708938211,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 20,
+   "conversation_id": "off-kz-07-client_left",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.010006,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 12.01222649984993,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 21,
+   "conversation_id": "off-en-07-client_left",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 2.9276791238225996,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 22,
+   "conversation_id": "off-ru-08-empathy",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.011045,
+   "model": "gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 12.745186957996339,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 23,
+   "conversation_id": "off-kz-08-empathy",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 22.14859866607003,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 24,
+   "conversation_id": "off-en-08-empathy",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 2.965517665958032,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 25,
+   "conversation_id": "off-ru-09-insult",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.2388647079933435,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 26,
+   "conversation_id": "off-kz-09-insult",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.3310807088855654,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 27,
+   "conversation_id": "off-en-09-insult",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.1182506249751896,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 28,
+   "conversation_id": "off-ru-10-bypass",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.175575291039422,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 29,
+   "conversation_id": "off-kz-10-bypass",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 2.8629562500864267,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 30,
+   "conversation_id": "off-en-10-bypass",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 2.771436376031488,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 31,
+   "conversation_id": "off-ru-11-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.0255620828829706,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 32,
+   "conversation_id": "off-kz-11-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.0983102917671204,
+   "calls": 2
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 33,
+   "conversation_id": "off-en-11-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": null,
+   "model": "gemini-3.5-flash-lite, gemini-3.6-flash",
+   "prompt_version": "evaluate_v3",
+   "latency_s": 3.3720362498424947,
+   "calls": 2
+  }
+ ]
+}
