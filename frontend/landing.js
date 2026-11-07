@@ -62,8 +62,6 @@
     lastY = y;
   } });
 
-  ScrollTrigger.create({ trigger: "#team", start: "top 72px", end: "bottom top", toggleClass: { targets: top, className: "dark" } });
-
   // ---------- Разбивка заголовков на слова (вложенные <em>/<span> сохраняются) ----------
   function splitWords(el) {
     const walk = (node) => {
@@ -235,6 +233,26 @@
   // Щиты в призыве медленно плывут
   gsap.to(".shields svg", { y: (i) => (i - 1) * 30, rotate: (i) => (i - 1) * 8, ease: "none",
     scrollTrigger: { trigger: ".cta-band", start: "top bottom", end: "bottom top", scrub: true } });
+
+  // ---------- Разлом: край рвётся от центра, обрывки кода влетают ----------
+  const edge = $("#crack-edge");
+  if (edge) {
+    const len = edge.getTotalLength();
+    const edges = $$(".rift .edge");
+    gsap.set(edges, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.set(".rift .fill", { clipPath: "inset(0 50% 0 50%)" });
+    gsap.set(".rift .slices span", { autoAlpha: 0, x: (i) => (i % 2 ? 80 : -80) });
+    ScrollTrigger.create({ trigger: "#rift", start: "top 85%", once: true, onEnter: () => {
+      gsap.timeline()
+        .to(".rift .fill", { clipPath: "inset(0 0% 0 0%)", duration: 0.7, ease: "expo.inOut" })
+        .to(edges, { strokeDashoffset: 0, duration: 0.9, ease: "power3.inOut", stagger: 0.06 }, 0)
+        .to("#rift", { keyframes: { x: [-7, 7, -5, 5, -2, 0] }, duration: 0.4, ease: "none" }, 0.35)
+        .to(".rift .slices span", { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "steps(6)" }, 0.5)
+        .add(() => gsap.set(edges, { clearProps: "strokeDasharray,strokeDashoffset" }));
+    } });
+  }
+  // шапка темнеет уже над разломом
+  ScrollTrigger.create({ trigger: "#rift", start: "top 72px", endTrigger: "#team", end: "bottom top", toggleClass: { targets: top, className: "dark" } });
 
   // ---------- Команда: киберпанк ----------
   const glitch = $(".glitch");
