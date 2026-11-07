@@ -8,3 +8,15 @@ ui/node_modules
 data/*.sqlite3*
 data/external
 data/*.log
+
+# Сборка как Python-функция (api/index.py), без контейнера
+Dockerfile
+ui
+results
+docs
+evaluation/datasets
+evaluation/golden
+backend/tests
+neon.ts
+package.json
+package-lock.json
