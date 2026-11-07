@@ -45,12 +45,12 @@ _AUTH_USER = os.getenv("BASIC_AUTH_USER", "")
 _AUTH_PASS = os.getenv("BASIC_AUTH_PASSWORD", "")
 
 
-_PUBLIC = {"/", "/api/health", "/api/public/stats", "/ui/styles.css"}
+_PUBLIC = {"/", "/api/health", "/api/public/stats", "/ui/styles.css", "/ui/landing.css", "/ui/landing.js"}
 
 
 def _public(path: str) -> bool:
     """Витрина для жюри и графики качества открыты; приложение и API — по паролю."""
-    return path in _PUBLIC or path.startswith("/reports/")
+    return path in _PUBLIC or path.startswith(("/reports/", "/ui/vendor/"))
 
 
 @app.middleware("http")

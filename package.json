@@ -8,5 +8,10 @@
     "build": "npm --prefix ui ci && npm --prefix ui run build",
     "test": "cd backend && ../.venv/bin/python -m pytest -q -p no:warnings",
     "start": "cd backend && ../.venv/bin/uvicorn cqa.main:app --port 8000"
+  },
+  "devDependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13",
+    "split-type": "^0.3.4"
   }
 }
