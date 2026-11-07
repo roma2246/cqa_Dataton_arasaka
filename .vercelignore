@@ -1,0 +1,10 @@
+# Не отправлять на Vercel секреты и локальные данные (для деплоя через CLI)
+.env
+.env.*
+.neon
+.venv
+node_modules
+ui/node_modules
+data/*.sqlite3*
+data/external
+data/*.log

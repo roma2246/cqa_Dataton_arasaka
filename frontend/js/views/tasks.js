@@ -22,7 +22,8 @@ export async function renderTasks() {
   root.innerHTML = `
     <div class="page-head">
       <div><h1>Задачи</h1>
-        <div class="muted">Что сейчас оценивает модель. Страница обновляется сама каждые 3 секунды.</div></div>
+        <div class="muted">Что сейчас оценивает модель. Страница обновляется сама каждые 3 секунды.
+          ${r.serverless ? "На этом сервере пакеты считаются, пока открыт сайт — не закрывайте вкладку до конца пакета." : ""}</div></div>
       <div class="row">
         ${chip(r.evaluator.mode === "real" ? `Модель: ${r.evaluator.model}${r.evaluator.think ? "" : " · быстрый режим"}` : "Тестовый оценщик", r.evaluator.mode === "real" ? "ok" : "warn")}
         <a class="btn" href="/reports/progress_official.html" target="_blank" rel="noopener">График качества ↗</a>

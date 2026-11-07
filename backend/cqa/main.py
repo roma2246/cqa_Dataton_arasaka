@@ -72,9 +72,11 @@ def startup() -> None:
         official_version()
     except Exception as e:  # noqa: BLE001
         print("Официальный чек-лист не загружен:", e)
-    # Восстановление после перезапуска: незавершённые задачи снова в очередь
-    for eid in storage.unfinished_evaluations():
-        executor.submit(_run_evaluation, eid)
+    # Восстановление после перезапуска: незавершённые задачи снова в очередь.
+    # Без фоновых процессов (Vercel) очередь досчитывается через POST /api/work.
+    if not settings.serverless:
+        for eid in storage.unfinished_evaluations():
+            executor.submit(_run_evaluation, eid)
 
 
 @app.get("/api/health")
@@ -82,7 +84,8 @@ def health() -> dict[str, Any]:
     model = "mock"
     if settings.evaluator_mode == "real":
         model = settings.llm_model or ("claude-opus-5-5" if settings.llm_provider == "anthropic" else "?")
-    return {"ok": True, "evaluator_mode": settings.evaluator_mode, "provider": settings.llm_provider, "model": model}
+    return {"ok": True, "evaluator_mode": settings.evaluator_mode, "provider": settings.llm_provider, "model": model,
+            "serverless": settings.serverless}
 
 
 # ---------- Импорт ----------
@@ -198,21 +201,44 @@ def _run_evaluation(evaluation_id: int) -> None:
             cost_usd=cost_usd(calls) if calls else None, finished_at=storage.now())
 
 
-def _start(conversation_id: str, version_id: int, batch_id: Optional[str] = None) -> int:
+def _start(conversation_id: str, version_id: int, batch_id: Optional[str] = None, inline: bool = False) -> int:
     conv = storage.get_conversation(conversation_id)
     if not conv:
         raise HTTPException(404, f"Диалог {conversation_id} не найден")
     if not storage.get_checklist(version_id):
         raise HTTPException(404, "Версия чек-листа не найдена")
     eid = storage.create_evaluation(conversation_id, conv.content_hash, version_id, batch_id)
-    executor.submit(_run_evaluation, eid)
+    if not settings.serverless:
+        executor.submit(_run_evaluation, eid)
+    elif inline:
+        _run_evaluation(eid)  # одна оценка — прямо в запросе (~10 с на Gemini)
     return eid
+
+
+@app.post("/api/work")
+def work() -> dict[str, Any]:
+    """Досчитать порцию очереди в пределах WORK_BUDGET_S (для Vercel: вызывает интерфейс, пока идёт пакет)."""
+    import time
+    from concurrent.futures import ThreadPoolExecutor as Pool
+    t0 = time.monotonic()
+    reclaimed = storage.reclaim_stale()
+    done = 0
+    with Pool(max_workers=settings.batch_concurrency) as pool:
+        while time.monotonic() - t0 < settings.work_budget_s:
+            ids = storage.next_queued(settings.batch_concurrency)
+            if not ids:
+                break
+            list(pool.map(_run_evaluation, ids))
+            done += len(ids)
+    return {"processed": done, "reclaimed": reclaimed, "remaining": len(storage.next_queued(1000)),
+            "seconds": round(time.monotonic() - t0, 1)}
 
 
 @app.post("/api/evaluations")
 def start_evaluation(req: EvaluationRequest) -> dict[str, Any]:
     # TODO(B05): кеш по (content_hash, version, model, prompt_version) при необходимости
-    return {"evaluation_id": _start(req.conversation_id, req.checklist_version_id), "status": "queued"}
+    eid = _start(req.conversation_id, req.checklist_version_id, inline=True)
+    return {"evaluation_id": eid, "status": storage.get_evaluation(eid)["status"]}
 
 
 class BatchBody(BaseModel):
@@ -235,7 +261,8 @@ def start_batch(body: BatchBody) -> dict[str, Any]:
 def batches() -> dict[str, Any]:
     """Всё, что сейчас идёт и недавно закончилось — для страницы «Задачи»."""
     return {"batches": storage.list_batches(), "recent": storage.recent_evaluations(),
-            "evaluator": {"mode": settings.evaluator_mode, "model": settings.llm_model, "think": settings.llm_think}}
+            "evaluator": {"mode": settings.evaluator_mode, "model": settings.llm_model, "think": settings.llm_think},
+            "serverless": settings.serverless}
 
 
 @app.get("/api/batches/{batch_id}")

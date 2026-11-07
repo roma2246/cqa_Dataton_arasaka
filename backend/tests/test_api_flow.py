@@ -134,3 +134,28 @@ def test_basic_auth_when_enabled(monkeypatch, tmp_path):
         assert c.get("/api/conversations", headers=ok).status_code == 200
         bad = {"Authorization": "Basic " + base64.b64encode(b"team:nope").decode()}
         assert c.get("/api/conversations", headers=bad).status_code == 401
+
+
+def test_serverless_mode_runs_inline_and_by_work(client, monkeypatch):
+    from cqa.config import settings
+    monkeypatch.setattr(settings, "serverless", True)
+    c = client
+    c.post("/api/import/json", json=DATASET)
+    assert c.get("/api/health").json()["serverless"] is True
+    r = c.post("/api/evaluations", json={"conversation_id": "fx-ru-001", "checklist_version_id": 1}).json()
+    assert r["status"] == "completed"                                   # одна оценка — сразу в запросе
+    b = c.post("/api/evaluations/batch", json={"checklist_version_id": 1, "group_id": "FIXTURE"}).json()
+    assert c.get(f"/api/batches/{b['batch_id']}").json()["counts"] == {"queued": 3}   # без фоновых потоков
+    w = c.post("/api/work").json()
+    assert w["processed"] == 3 and w["remaining"] == 0
+    assert c.get(f"/api/batches/{b['batch_id']}").json()["counts"] == {"completed": 3}
+
+
+def test_stale_running_is_reclaimed(client):
+    from cqa import storage
+    c = client
+    c.post("/api/import/json", json=DATASET)
+    conv = storage.get_conversation("fx-ru-001")
+    eid = storage.create_evaluation("fx-ru-001", conv.content_hash, 1)
+    storage.update_evaluation(eid, status="running", started_at="2000-01-01T00:00:00+00:00")
+    assert storage.reclaim_stale(300) == 1 and storage.get_evaluation(eid)["status"] == "queued"

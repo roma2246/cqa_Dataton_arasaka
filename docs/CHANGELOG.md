@@ -1,6 +1,6 @@
 # Журнал работ (7 ноября 2026)
 
-Задеплоено: **https://cqa-arasaka.onrender.com** (вход `arasaka` + пароль из `.env` → `DEPLOY_BASIC_AUTH_PASSWORD`).
+Задеплоено: **https://cqarasaka.vercel.app** (основной) и https://cqa-arasaka.onrender.com (запасной), (вход `arasaka` + пароль из `.env` → `DEPLOY_BASIC_AUTH_PASSWORD`).
 Локально: **http://localhost:8000 → «Задачи»** (что сейчас оценивается, прогресс, прогноз окончания)
 и **http://localhost:8000/reports/progress_official.html** (график качества по итерациям).
 

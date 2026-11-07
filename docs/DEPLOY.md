@@ -1,6 +1,8 @@
 # Деплой: Render (сервер) + Neon (PostgreSQL)
 
-**Сейчас:** https://cqa-arasaka.onrender.com (Render, бесплатный тариф, регион Ohio) + Neon `small-lab-73536684`,
+**Основной адрес:** https://cqarasaka.vercel.app (Vercel собирает `Dockerfile` из `main` при каждом push).
+Сервер работает как функция: `SERVERLESS=1`, пакет оценок досчитывается порциями (`POST /api/work`), пока открыт сайт.
+**Запасной:** https://cqa-arasaka.onrender.com (Render, бесплатный тариф, регион Ohio) + Neon `small-lab-73536684`,
 ветка `production` (us-east-2). Вход: логин `arasaka`, пароль — в `.env` (`DEPLOY_BASIC_AUTH_PASSWORD`).
 Перенос локальных данных в Neon: `cd backend && ../.venv/bin/python -m cqa.migrate_to_pg`.
 

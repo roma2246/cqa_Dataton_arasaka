@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS evaluations (
     checklist_version_id INTEGER NOT NULL,
     status TEXT NOT NULL,             -- queued | running | completed | failed | canceled
     batch_id TEXT,
+    started_at TEXT,
     mode TEXT,                        -- mock | real
     model TEXT, prompt_version TEXT,
     ai_results_json TEXT,             -- исходный ответ ИИ (не меняется!)
@@ -225,6 +226,7 @@ def _pg_migrate() -> None:
         for stmt in [x.strip() for x in re.sub(r"--[^\n]*", "", _schema()).split(";") if x.strip()]:
             conn.execute(stmt)
         conn.execute("ALTER TABLE evaluations ADD COLUMN IF NOT EXISTS batch_id TEXT")
+        conn.execute("ALTER TABLE evaluations ADD COLUMN IF NOT EXISTS started_at TEXT")
 
 
 def init_db() -> None:
@@ -236,6 +238,8 @@ def init_db() -> None:
         cols = {r["name"] for r in c.execute("PRAGMA table_info(evaluations)")}
         if "batch_id" not in cols:  # миграция БД, созданной до появления пакетов
             c.execute("ALTER TABLE evaluations ADD COLUMN batch_id TEXT")
+        if "started_at" not in cols:
+            c.execute("ALTER TABLE evaluations ADD COLUMN started_at TEXT")
 
 
 def unfinished_evaluations() -> list[int]:
@@ -248,9 +252,24 @@ def unfinished_evaluations() -> list[int]:
 def claim_evaluation(evaluation_id: int) -> bool:
     """queued -> running атомарно. False, если задачу отменили или уже взяли."""
     with tx() as c:
-        cur = c.execute("UPDATE evaluations SET status='running' WHERE evaluation_id=? AND status='queued'",
-                        (evaluation_id,))
+        cur = c.execute("UPDATE evaluations SET status='running', started_at=? WHERE evaluation_id=? AND status='queued'",
+                        (now(), evaluation_id))
         return cur.rowcount == 1
+
+
+def reclaim_stale(max_age_s: int = 300) -> int:
+    """running дольше max_age_s (функция оборвалась) -> снова в очередь."""
+    from datetime import timedelta
+    border = (datetime.now(timezone.utc) - timedelta(seconds=max_age_s)).isoformat()
+    with tx() as c:
+        return c.execute("UPDATE evaluations SET status='queued' WHERE status='running' "
+                         "AND (started_at IS NULL OR started_at < ?)", (border,)).rowcount
+
+
+def next_queued(limit: int) -> list[int]:
+    with tx() as c:
+        return [r[0] for r in c.execute("SELECT evaluation_id FROM evaluations WHERE status='queued' "
+                                        "ORDER BY evaluation_id LIMIT ?", (limit,)).fetchall()]
 
 
 def batch_status(batch_id: str) -> dict[str, Any]:

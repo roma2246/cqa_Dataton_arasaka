@@ -109,7 +109,20 @@ async function route() {
 }
 
 window.addEventListener("hashchange", route);
+// ---- Режим без фоновых процессов (Vercel): пока есть очередь, страница сама досчитывает её порциями ----
+let pumping = false;
+async function pump() {
+  if (pumping) return;
+  try {
+    const r = await api.batches();
+    if (!r.batches.some((b) => !b.done)) return;
+    pumping = true;
+    await api.work();
+  } catch {} finally { pumping = false; }
+}
+
 api.health().then((h) => {
+  if (h.serverless) setInterval(pump, 4000);
   const b = document.getElementById("mode-badge");
   b.textContent = h.evaluator_mode === "mock" ? "Тестовый оценщик" : h.model;
   b.className = "chip mode-pill " + (h.evaluator_mode === "mock" ? "warn" : "ok");

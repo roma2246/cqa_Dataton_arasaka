@@ -61,6 +61,9 @@ class Settings:
     calibration_per_criterion: int = field(default_factory=lambda: int(os.getenv("LLM_CALIBRATION_PER_CRITERION", "3")))
     # Название команды для results.json (Приложение «Как сдать результаты»)
     team_name: str = field(default_factory=lambda: os.getenv("TEAM_NAME", "Arasaka"))
+    # Без фоновых процессов (Vercel): пакет досчитывается порциями через POST /api/work
+    serverless: bool = field(default_factory=lambda: os.getenv("SERVERLESS") == "1" or os.getenv("VERCEL") == "1")
+    work_budget_s: int = field(default_factory=lambda: int(os.getenv("WORK_BUDGET_S", "40")))
     batch_concurrency: int = field(default_factory=lambda: int(os.getenv("BATCH_CONCURRENCY", "4")))
 
 
