@@ -120,3 +120,17 @@ def test_quota_stops_batch_queue(client, monkeypatch):
     assert all("квота" in (i["error"] or "") for i in st["items"])
     r = c.post(f"/api/batches/{b['batch_id']}/retry").json()
     assert r["retried"] == 3
+
+
+def test_basic_auth_when_enabled(monkeypatch, tmp_path):
+    import base64
+    from cqa import main
+    monkeypatch.setattr(main, "_AUTH_USER", "team")
+    monkeypatch.setattr(main, "_AUTH_PASS", "s3cret")
+    with TestClient(main.app) as c:
+        assert c.get("/api/health").status_code == 200                       # проверка живости открыта
+        assert c.get("/api/conversations").status_code == 401
+        ok = {"Authorization": "Basic " + base64.b64encode(b"team:s3cret").decode()}
+        assert c.get("/api/conversations", headers=ok).status_code == 200
+        bad = {"Authorization": "Basic " + base64.b64encode(b"team:nope").decode()}
+        assert c.get("/api/conversations", headers=bad).status_code == 401

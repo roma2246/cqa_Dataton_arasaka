@@ -30,6 +30,34 @@ from .models import (
 from .scoring import score
 
 app = FastAPI(title="CQA Hackathon API", version="0.1.0")
+
+
+# ---------- Защита паролем (для деплоя) ----------
+# Включается переменными BASIC_AUTH_USER / BASIC_AUTH_PASSWORD. /api/health открыт для проверки живости.
+import base64
+import os
+import secrets
+
+from fastapi import Request
+from fastapi.responses import Response
+
+_AUTH_USER = os.getenv("BASIC_AUTH_USER", "")
+_AUTH_PASS = os.getenv("BASIC_AUTH_PASSWORD", "")
+
+
+@app.middleware("http")
+async def basic_auth(request: Request, call_next):
+    if not _AUTH_PASS or request.url.path == "/api/health":
+        return await call_next(request)
+    header = request.headers.get("authorization", "")
+    if header.startswith("Basic "):
+        try:
+            user, _, pwd = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+        except Exception:  # noqa: BLE001
+            user, pwd = "", ""
+        if secrets.compare_digest(user, _AUTH_USER) and secrets.compare_digest(pwd, _AUTH_PASS):
+            return await call_next(request)
+    return Response("Требуется вход", status_code=401, headers={"WWW-Authenticate": 'Basic realm="CQA"'})
 executor = ThreadPoolExecutor(max_workers=settings.batch_concurrency)
 
 
@@ -39,6 +67,11 @@ def startup() -> None:
     if not storage.list_checklists():
         demo = ROOT / "data" / "fixtures" / "checklist_demo.json"
         storage.save_checklist(ChecklistDraft.model_validate_json(demo.read_text(encoding="utf-8")))
+    try:  # официальный чек-лист всегда доступен в UI
+        from .pipeline import official_version
+        official_version()
+    except Exception as e:  # noqa: BLE001
+        print("Официальный чек-лист не загружен:", e)
     # Восстановление после перезапуска: незавершённые задачи снова в очередь
     for eid in storage.unfinished_evaluations():
         executor.submit(_run_evaluation, eid)
