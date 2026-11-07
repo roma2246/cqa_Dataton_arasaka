@@ -41,6 +41,8 @@ class Settings:
     # Размышления локальной модели (Qwen3 и т.п.): on — качественнее, off — в ~2–3 раза быстрее
     llm_think: bool = field(default_factory=lambda: os.getenv("LLM_THINK", "on") == "on")
     # Уточняющий запрос по критериям, которые модель оставила «нужна проверка»
+    # Сколько независимых оценок на диалог (голосование большинством); 1 — без голосования
+    llm_votes: int = field(default_factory=lambda: int(os.getenv("LLM_VOTES", "1")))
     followup: bool = field(default_factory=lambda: os.getenv("LLM_FOLLOWUP", "on") == "on")
     llm_effort: str = field(default_factory=lambda: os.getenv("LLM_EFFORT", "medium"))
     llm_base_url: str = field(default_factory=lambda: os.getenv("LLM_BASE_URL", ""))

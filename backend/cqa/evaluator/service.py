@@ -28,12 +28,62 @@ class EvaluatorOutput:
     prompt_version: str
     calls: list[dict] = field(default_factory=list)
     cost_usd: Optional[float] = None
+    agreement: dict = field(default_factory=dict)   # criterion_id -> доля прогонов с победившим ответом
 
 
 def evaluate(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     if settings.evaluator_mode == "mock":
         return _mock(conv, checklist)
+    if settings.llm_votes > 1:
+        return _voted(conv, checklist, settings.llm_votes)
     return _real(conv, checklist)
+
+
+def _key(r: CriterionResult) -> tuple:
+    return (r.status, r.answer if r.status == "applicable" else None)
+
+
+def _voted(conv: Conversation, checklist: ChecklistDraft, n: int) -> EvaluatorOutput:
+    """N независимых оценок параллельно; по каждому критерию — ответ большинства.
+    Нет большинства: для шкалы — медиана, иначе первый применимый ответ. Сбой части прогонов допустим."""
+    from collections import Counter
+    from concurrent.futures import ThreadPoolExecutor
+    runs, errors = [], []
+    with ThreadPoolExecutor(max_workers=n) as pool:
+        for fut in [pool.submit(_real, conv, checklist) for _ in range(n)]:
+            try:
+                runs.append(fut.result())
+            except llm_client.LLMError as e:
+                errors.append(e)
+    if not runs:
+        err = errors[0]
+        err.calls = [c for e in errors for c in e.calls]
+        raise err
+    results, agreement = [], {}
+    for c in checklist.criteria:
+        cands = [next(r for r in run.results if r.criterion_id == c.criterion_id) for run in runs]
+        counts = Counter(_key(r) for r in cands)
+        top, cnt = counts.most_common(1)[0]
+        if cnt == 1 and len(cands) > 2:
+            nums = sorted(int(r.answer) for r in cands if r.status == "applicable" and (r.answer or "").isdigit())
+            if len(nums) == len(cands):  # шкала: медиана
+                top = ("applicable", str(nums[len(nums) // 2]))
+            else:
+                top = next((_key(r) for r in cands if r.status == "applicable"), top)
+            cnt = sum(1 for r in cands if _key(r) == top)
+        chosen = next(r for r in cands if _key(r) == top) if cnt else cands[0]
+        results.append(chosen)
+        agreement[c.criterion_id] = round(cnt / len(runs), 2)
+    calls = [c for run in runs for c in run.calls] + [c.__dict__ for e in errors for c in e.calls]
+    costs = [run.cost_usd for run in runs]
+    problems = [p for run in runs for p in run.problems] + [f"прогон не удался: {str(e)[:100]}" for e in errors]
+    weak = [k for k, v in agreement.items() if v < 1]
+    if weak:
+        problems.append("нет единогласия: " + ", ".join(f"{k} {agreement[k]:.0%}" for k in weak))
+    return EvaluatorOutput(
+        results=results, problems=problems, mode="real", model=runs[0].model,
+        prompt_version=runs[0].prompt_version + f"+vote{len(runs)}", calls=calls,
+        cost_usd=round(sum(costs), 6) if all(x is not None for x in costs) else None, agreement=agreement)
 
 
 def calibration_examples(conv: Conversation, checklist: ChecklistDraft) -> list[dict]:

@@ -5,6 +5,7 @@ import { renderCard } from "./views/card.js";
 import { renderChecklist } from "./views/checklist.js";
 import { renderAppeals } from "./views/appeals.js";
 import { renderTasks } from "./views/tasks.js";
+import { renderAnalytics } from "./views/analytics.js";
 
 export const root = document.getElementById("app");
 
@@ -98,6 +99,7 @@ async function route() {
     if (hash.startsWith("/c/")) { markNav("list"); return await renderCard(decodeURIComponent(hash.slice(3))); }
     if (hash === "/checklist") { markNav("checklist"); return await renderChecklist(); }
     if (hash === "/appeals") { markNav("appeals"); return await renderAppeals(); }
+    if (hash.startsWith("/analytics")) { markNav("analytics"); return await renderAnalytics(); }
     if (hash === "/tasks") { markNav("tasks"); return await renderTasks(); }
     markNav("list");
     return await renderConversations();

@@ -38,6 +38,8 @@ export const api = {
   batchRetry: (id) => request("POST", `/batches/${id}/retry`),
   batchCancel: (id) => request("POST", `/batches/${id}/cancel`),
   evaluation: (id) => request("GET", "/evaluations/" + id),
+  analytics: (group_id) => request("GET", "/analytics?group_id=" + encodeURIComponent(group_id)),
+  analyticsAsk: (group_id, question) => request("POST", "/analytics/ask", { group_id, question }),
   exportResults: (group) => request("GET", "/export/" + encodeURIComponent(group)),
   createAppeal: (evaluationId, criterion_id, comment) =>
     request("POST", `/evaluations/${evaluationId}/appeals`, { criterion_id, comment }),

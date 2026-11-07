@@ -159,3 +159,17 @@ def test_stale_running_is_reclaimed(client):
     eid = storage.create_evaluation("fx-ru-001", conv.content_hash, 1)
     storage.update_evaluation(eid, status="running", started_at="2000-01-01T00:00:00+00:00")
     assert storage.reclaim_stale(300) == 1 and storage.get_evaluation(eid)["status"] == "queued"
+
+
+def test_analytics_summary(client):
+    from cqa import pipeline
+    c = client
+    c.post("/api/import/json", json=DATASET)
+    vid = pipeline.official_version()
+    for cid in ("fx-ru-001", "fx-kz-001"):
+        eid = c.post("/api/evaluations", json={"conversation_id": cid, "checklist_version_id": vid}).json()["evaluation_id"]
+        wait_eval(c, eid)
+    a = c.get("/api/analytics", params={"group_id": "FIXTURE"}).json()
+    assert a["evaluated"] == 2 and len(a["criteria"]) == 8
+    assert set(a["by_language"]) == {"RU", "KZ"} and a["avg_total"] is not None
+    assert c.post("/api/analytics/ask", json={"group_id": "FIXTURE"}).status_code == 409   # mock — без ИИ

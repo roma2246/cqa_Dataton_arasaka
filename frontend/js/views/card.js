@@ -125,6 +125,7 @@ function renderResult(ev, chk) {
   const aiRes = Object.fromEntries(ev.ai_results.map((r) => [r.criterion_id, r]));
   const appealsBy = {};
   ev.appeals.forEach((a) => (appealsBy[a.criterion_id] ||= []).push(a));
+  const agree = (ev.usage && ev.usage.agreement) || {};
   const t = tone(fin.total);
   const ringColor = t === "good" ? "var(--ok)" : t === "mid" ? "var(--warn)" : "var(--bad)";
   const changedTotal = ai.total !== fin.total;
@@ -175,6 +176,9 @@ function renderResult(ev, chk) {
               <span>эфф. вес <b>${s.effective_weight === null ? "—" : pct(s.effective_weight * 100)}</b></span>
               <span>вклад <b>${s.contribution === null ? "—" : fmt(s.contribution) + " п."}</b></span>
               ${s.is_critical_hit ? '<span class="chip bad plain">грубая ошибка</span>' : ""}
+              ${agree[s.criterion_id] !== undefined && agree[s.criterion_id] < 1
+                ? `<span class="chip warn plain" title="Доля независимых оценок с этим ответом">согласие ${Math.round(agree[s.criterion_id] * 100)}%</span>`
+                : agree[s.criterion_id] === 1 ? '<span class="subtle" title="Все независимые оценки совпали">✓ единогласно</span>' : ""}
             </div>
           </div>
           ${stChip}

@@ -186,7 +186,8 @@ def _run_evaluation(evaluation_id: int) -> None:
             prompt_version=out.prompt_version,
             ai_results_json=results_json, ai_score_json=sc.model_dump_json(),
             final_results_json=results_json, final_score_json=sc.model_dump_json(),
-            usage_json=json.dumps({"calls": out.calls, "problems": out.problems}, ensure_ascii=False),
+            usage_json=json.dumps({"calls": out.calls, "problems": out.problems, "agreement": out.agreement},
+                                  ensure_ascii=False),
             cost_usd=out.cost_usd, finished_at=storage.now(),
         )
     except Exception as e:  # noqa: BLE001 - сбой сохраняем как failed, а не как оценку
@@ -391,6 +392,39 @@ def calibration_toggle(example_id: int, body: CalibrationToggle) -> dict[str, An
     if not storage.set_calibration_active(example_id, body.active):
         raise HTTPException(404, "Пример не найден")
     return {"example_id": example_id, "active": body.active}
+
+
+# ---------- Аналитика ----------
+
+def _official_vid(checklist_version_id: Optional[int]) -> int:
+    vid = checklist_version_id or next((v.version_id for v in storage.list_checklists() if v.checklist_id == "official"), None)
+    if not vid:
+        raise HTTPException(404, "Нет официального чек-листа")
+    return vid
+
+
+@app.get("/api/analytics")
+def analytics(group_id: Optional[str] = "DEV", checklist_version_id: Optional[int] = None) -> dict[str, Any]:
+    from . import analytics as an
+    return an.summary(group_id or None, _official_vid(checklist_version_id))
+
+
+class AskBody(BaseModel):
+    group_id: Optional[str] = "DEV"
+    question: str = ""
+
+
+@app.post("/api/analytics/ask")
+def analytics_ask(body: AskBody) -> dict[str, Any]:
+    from . import analytics as an
+    from .evaluator.llm_client import LLMError
+    if settings.evaluator_mode != "real":
+        raise HTTPException(409, "ИИ-аналитик доступен с настоящей моделью (EVALUATOR_MODE=real)")
+    stats = an.summary(body.group_id or None, _official_vid(None))
+    try:
+        return an.ask(stats, body.question)
+    except LLMError as e:
+        raise HTTPException(502, f"Модель недоступна: {e}")
 
 
 # ---------- Экспорт для сдачи ----------

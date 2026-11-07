@@ -102,3 +102,30 @@ def test_needs_review_gets_one_followup(monkeypatch):
 def test_facts_block_points_to_first_operator_reply():
     f = prompt_builder.facts_block(CONV)  # fx-ru-001: оператор впервые в m004, после system m003 [00:38]
     assert "m004" in f and "37 с" in f and "Все реплики оператора: m004, m006" in f
+
+
+def test_voting_majority_and_agreement(monkeypatch):
+    from cqa.config import settings as st
+    def variant(greet, polite):
+        d = json.loads(json.dumps(GOOD))
+        d["results"][0]["answer"] = greet
+        d["results"][2]["answer"] = polite
+        if greet == "no":
+            d["results"][0]["evidence_message_ids"] = []
+        return json.dumps(d)
+    answers = iter([variant("yes", "5"), variant("no", "4"), variant("yes", "3")])
+    import threading
+    lock = threading.Lock()
+
+    def fake(s, u, sch):
+        with lock:
+            return llm_client.LLMResponse(next(answers), [call()])
+    monkeypatch.setattr(llm_client, "chat_json", fake)
+    monkeypatch.setattr(st, "llm_votes", 3)
+    monkeypatch.setattr(st, "evaluator_mode", "real")
+    monkeypatch.setattr(prompt_builder, "PROMPT_VERSION", "evaluate_v2")
+    out = service.evaluate(CONV, CHK)
+    by = {r.criterion_id: r for r in out.results}
+    assert by["demo_greeting"].answer == "yes" and out.agreement["demo_greeting"] == 0.67   # 2 из 3
+    assert by["demo_politeness"].answer == "4"                                             # медиана 3/4/5
+    assert out.agreement["demo_need"] == 1.0 and len(out.calls) == 3 and out.prompt_version.endswith("+vote3")
