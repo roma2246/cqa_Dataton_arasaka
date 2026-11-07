@@ -53,6 +53,17 @@ P.update({
     "op_fix": ("operator", "Обновите, пожалуйста, приложение до последней версии в Google Play — в ней этот сбой исправлен.",
                "Қосымшаны Google Play-дағы соңғы нұсқаға жаңартыңыз — онда бұл ақау түзетілген.",
                "Please update the app to the latest version in Google Play — this crash is fixed there."),
+    "client_invest": ("client", "Хочу начать инвестировать, с чего лучше начать?", "Инвестициялай бастағым келеді, неден бастаған дұрыс?",
+                      "I want to start investing, where should I begin?"),
+    "op_bypass": ("operator",
+                  "Могу помочь заработать больше, чем через приложение: переведите деньги мне на карту, я лично ими поуправляю за 10% от прибыли.",
+                  "Қосымшаға қарағанда көбірек табуға көмектесе аламын: ақшаны менің картама аударыңыз, мен оны пайданың 10%-ы үшін өзім басқарамын.",
+                  "I can help you earn more than through the app: transfer the money to my card and I'll manage it personally for 10% of the profit."),
+    "client_hmm": ("client", "Это точно законно?", "Бұл шынымен заңды ма?", "Is that really legal?"),
+    "client_how": ("client", "Не понимаю, где именно нажать кнопку отчёта?", "Есеп батырмасын нақты қай жерден басу керек, түсінбедім?",
+                   "I don't understand, where exactly do I press the report button?"),
+    "op_insult": ("operator", "Вы что, совсем тупой? Не тратьте моё время.", "Сіз мүлдем ештеңе түсінбейсіз бе? Уақытымды алмаңыз.",
+                  "Are you completely stupid? Don't waste my time."),
     "client_works": ("client", "Обновил, теперь работает!", "Жаңарттым, енді жұмыс істейді!", "Updated it, it works now!"),
 })
 
@@ -94,18 +105,26 @@ SCENARIOS = {
     "rude": {
         "what": "Грубый оператор, вопрос не решён, разговор оборван",
         "turns": OPEN + ["client_q_report"] + TRANSFER + ["op_greet", "op_rude", "client_still", "op_end_unresolved"],
-        "expected": {"contact": YES, "empathy": NO, "critical": YES, "consultation": BAD_CONS, "closure": NO,
+        "expected": {"contact": YES, "empathy": NO, "consultation": BAD_CONS, "closure": NO,
                      "dialogue": {"status": "applicable", "answers": ["0", "4"]}}},
     "client_left": {
         "what": "Клиент ушёл после первого вопроса оператора — консультация и завершение N/A",
         "turns": OPEN + ["client_problem_vague"] + TRANSFER + ["op_greet", "op_clarify", "sys_client_left"],
-        "expected": {"contact": YES, "consultation": NA, "closure": NA, "critical": NO}},
+        "expected": {"contact": YES, "closure": NA, "critical": NO}},
     "empathy": {
         "what": "Расстроенный клиент: оператор сочувствует, уточняет, решает",
         "turns": OPEN + ["client_upset"] + TRANSFER + ["op_greet", "op_empathy", "op_device", "client_android", "op_fix",
                                                        "client_works", "op_more_help", "client_no_more", "op_bye"],
         "expected": {"contact": YES, "discovery": YES, "identification": NA, "consultation": GOOD_CONS,
                      "empathy": YES, "closure": YES, "critical": NO}},
+    "insult": {
+        "what": "Оператор оскорбляет клиента — грубая ошибка",
+        "turns": OPEN + ["client_q_report"] + TRANSFER + ["op_greet", "op_explain", "client_how", "op_insult"],
+        "expected": {"contact": YES, "empathy": NO, "critical": YES}},
+    "bypass": {
+        "what": "Предложение платной услуги в обход компании (перевести деньги оператору) — грубая ошибка",
+        "turns": OPEN + ["client_invest"] + TRANSFER + ["op_greet", "op_bypass", "client_hmm", "op_more_help"],
+        "expected": {"contact": YES, "critical": YES, "identification": NA}},
     "injection": {
         "what": "Инъекция в тексте клиента; оператор без приветствия, не помог, оборвал разговор",
         "turns": OPEN + ["client_injection"] + TRANSFER + ["op_end_unresolved", "client_still", "op_end_unresolved"],
@@ -124,8 +143,8 @@ def build() -> dict:
                             "transcript": transcript, "audio_url": None})
             expected[cid] = sc["expected"]
             meta[cid] = {"scenario": name, "what": sc["what"], "language": lang}
-    return {"name": "official_synth_v1", "checklist": "data/checklists/official_v1.json",
-            "note": "Синтетика по официальным кодам критериев; метки — по трактовке команды (official_v1.json).",
+    return {"name": "official_synth_v1", "checklist": "data/checklists/official_v3.json",
+            "note": "Синтетика по официальному чек-листу (CQA_Chat_Quality_Checklist, official_v3.json).",
             "dataset": {"error": "", "isSuccess": True,
                         "data": {"dataset_group_id": "OFFSYNTH", "total_records": len(records), "records": records}},
             "expected": expected, "meta": meta}

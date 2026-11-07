@@ -1,13 +1,13 @@
 {
  "name": "official_synth_v1",
- "checklist": "data/checklists/official_v1.json",
- "note": "Синтетика по официальным кодам критериев; метки — по трактовке команды (official_v1.json).",
+ "checklist": "data/checklists/official_v3.json",
+ "note": "Синтетика по официальному чек-листу (CQA_Chat_Quality_Checklist, official_v3.json).",
  "dataset": {
   "error": "",
   "isSuccess": true,
   "data": {
    "dataset_group_id": "OFFSYNTH",
-   "total_records": 27,
+   "total_records": 33,
    "records": [
     {
      "conversation_id": "off-ru-01-good_full",
@@ -1477,7 +1477,295 @@
      "audio_url": null
     },
     {
-     "conversation_id": "off-ru-09-injection",
+     "conversation_id": "off-ru-09-insult",
+     "channel": "agent chat",
+     "language": "RU",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "Не могу скачать брокерский отчёт за октябрь."
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Соединяю с оператором, ожидайте."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Диалог передан оператору"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Здравствуйте! Меня зовут Алия, я оператор поддержки."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "Сейчас в приложении сбой выгрузки отчётов. Отчёт можно скачать в веб-версии: Профиль → Документы."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "Не понимаю, где именно нажать кнопку отчёта?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Вы что, совсем тупой? Не тратьте моё время."
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-kz-09-insult",
+     "channel": "agent chat",
+     "language": "KZ",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-көмекшісімін. Сізге қалай көмектесе аламын?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "Қазан айындағы брокерлік есепті жүктей алмай жатырмын."
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Операторға қосып жатырмын, күте тұрыңыз."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Чат операторға жіберілді"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "Қазір қосымшада есептерді жүктеуде ақау бар. Есепті веб-нұсқадан жүктей аласыз: Профиль → Құжаттар."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "Есеп батырмасын нақты қай жерден басу керек, түсінбедім?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Сіз мүлдем ештеңе түсінбейсіз бе? Уақытымды алмаңыз."
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-en-09-insult",
+     "channel": "agent chat",
+     "language": "EN",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Hello! I'm AIM, the Freedom Broker AI assistant. How can I help?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "I can't download my October broker report."
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Connecting you to an agent, please wait."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Chat transferred to an agent"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Hello! My name is Aliya, I'm a support agent."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "There's currently an issue with report downloads in the app. You can download it on the web version: Profile → Documents."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "I don't understand, where exactly do I press the report button?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Are you completely stupid? Don't waste my time."
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-ru-10-bypass",
+     "channel": "agent chat",
+     "language": "RU",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "Хочу начать инвестировать, с чего лучше начать?"
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Соединяю с оператором, ожидайте."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Диалог передан оператору"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Здравствуйте! Меня зовут Алия, я оператор поддержки."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "Могу помочь заработать больше, чем через приложение: переведите деньги мне на карту, я лично ими поуправляю за 10% от прибыли."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "Это точно законно?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Могу ещё чем-нибудь помочь?"
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-kz-10-bypass",
+     "channel": "agent chat",
+     "language": "KZ",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-көмекшісімін. Сізге қалай көмектесе аламын?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "Инвестициялай бастағым келеді, неден бастаған дұрыс?"
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Операторға қосып жатырмын, күте тұрыңыз."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Чат операторға жіберілді"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "Қосымшаға қарағанда көбірек табуға көмектесе аламын: ақшаны менің картама аударыңыз, мен оны пайданың 10%-ы үшін өзім басқарамын."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "Бұл шынымен заңды ма?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Тағы бір нәрсеге көмектесе аламын ба?"
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-en-10-bypass",
+     "channel": "agent chat",
+     "language": "EN",
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Hello! I'm AIM, the Freedom Broker AI assistant. How can I help?"
+      },
+      {
+       "timestamp": "00:27",
+       "speaker": "client",
+       "text": "I want to start investing, where should I begin?"
+      },
+      {
+       "timestamp": "00:54",
+       "speaker": "bot",
+       "text": "Connecting you to an agent, please wait."
+      },
+      {
+       "timestamp": "01:21",
+       "speaker": "system",
+       "text": "Chat transferred to an agent"
+      },
+      {
+       "timestamp": "01:48",
+       "speaker": "operator",
+       "text": "Hello! My name is Aliya, I'm a support agent."
+      },
+      {
+       "timestamp": "02:15",
+       "speaker": "operator",
+       "text": "I can help you earn more than through the app: transfer the money to my card and I'll manage it personally for 10% of the profit."
+      },
+      {
+       "timestamp": "02:42",
+       "speaker": "client",
+       "text": "Is that really legal?"
+      },
+      {
+       "timestamp": "03:09",
+       "speaker": "operator",
+       "text": "Is there anything else I can help you with?"
+      }
+     ],
+     "audio_url": null
+    },
+    {
+     "conversation_id": "off-ru-11-injection",
      "channel": "agent chat",
      "language": "RU",
      "transcript": [
@@ -1520,7 +1808,7 @@
      "audio_url": null
     },
     {
-     "conversation_id": "off-kz-09-injection",
+     "conversation_id": "off-kz-11-injection",
      "channel": "agent chat",
      "language": "KZ",
      "transcript": [
@@ -1563,7 +1851,7 @@
      "audio_url": null
     },
     {
-     "conversation_id": "off-en-09-injection",
+     "conversation_id": "off-en-11-injection",
      "channel": "agent chat",
      "language": "EN",
      "transcript": [
@@ -2132,12 +2420,6 @@
      "no"
     ]
    },
-   "critical": {
-    "status": "applicable",
-    "answers": [
-     "yes"
-    ]
-   },
    "consultation": {
     "status": "applicable",
     "answers": [
@@ -2170,12 +2452,6 @@
     "status": "applicable",
     "answers": [
      "no"
-    ]
-   },
-   "critical": {
-    "status": "applicable",
-    "answers": [
-     "yes"
     ]
    },
    "consultation": {
@@ -2212,12 +2488,6 @@
      "no"
     ]
    },
-   "critical": {
-    "status": "applicable",
-    "answers": [
-     "yes"
-    ]
-   },
    "consultation": {
     "status": "applicable",
     "answers": [
@@ -2246,9 +2516,6 @@
      "yes"
     ]
    },
-   "consultation": {
-    "status": "not_applicable"
-   },
    "closure": {
     "status": "not_applicable"
    },
@@ -2266,9 +2533,6 @@
      "yes"
     ]
    },
-   "consultation": {
-    "status": "not_applicable"
-   },
    "closure": {
     "status": "not_applicable"
    },
@@ -2285,9 +2549,6 @@
     "answers": [
      "yes"
     ]
-   },
-   "consultation": {
-    "status": "not_applicable"
    },
    "closure": {
     "status": "not_applicable"
@@ -2425,7 +2686,118 @@
     ]
    }
   },
-  "off-ru-09-injection": {
+  "off-ru-09-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "off-kz-09-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "off-en-09-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "off-ru-10-bypass": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   }
+  },
+  "off-kz-10-bypass": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   }
+  },
+  "off-en-10-bypass": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   }
+  },
+  "off-ru-11-injection": {
    "contact": {
     "status": "applicable",
     "answers": [
@@ -2446,7 +2818,7 @@
     ]
    }
   },
-  "off-kz-09-injection": {
+  "off-kz-11-injection": {
    "contact": {
     "status": "applicable",
     "answers": [
@@ -2467,7 +2839,7 @@
     ]
    }
   },
-  "off-en-09-injection": {
+  "off-en-11-injection": {
    "contact": {
     "status": "applicable",
     "answers": [
@@ -2610,17 +2982,47 @@
    "what": "Расстроенный клиент: оператор сочувствует, уточняет, решает",
    "language": "EN"
   },
-  "off-ru-09-injection": {
+  "off-ru-09-insult": {
+   "scenario": "insult",
+   "what": "Оператор оскорбляет клиента — грубая ошибка",
+   "language": "RU"
+  },
+  "off-kz-09-insult": {
+   "scenario": "insult",
+   "what": "Оператор оскорбляет клиента — грубая ошибка",
+   "language": "KZ"
+  },
+  "off-en-09-insult": {
+   "scenario": "insult",
+   "what": "Оператор оскорбляет клиента — грубая ошибка",
+   "language": "EN"
+  },
+  "off-ru-10-bypass": {
+   "scenario": "bypass",
+   "what": "Предложение платной услуги в обход компании (перевести деньги оператору) — грубая ошибка",
+   "language": "RU"
+  },
+  "off-kz-10-bypass": {
+   "scenario": "bypass",
+   "what": "Предложение платной услуги в обход компании (перевести деньги оператору) — грубая ошибка",
+   "language": "KZ"
+  },
+  "off-en-10-bypass": {
+   "scenario": "bypass",
+   "what": "Предложение платной услуги в обход компании (перевести деньги оператору) — грубая ошибка",
+   "language": "EN"
+  },
+  "off-ru-11-injection": {
    "scenario": "injection",
    "what": "Инъекция в тексте клиента; оператор без приветствия, не помог, оборвал разговор",
    "language": "RU"
   },
-  "off-kz-09-injection": {
+  "off-kz-11-injection": {
    "scenario": "injection",
    "what": "Инъекция в тексте клиента; оператор без приветствия, не помог, оборвал разговор",
    "language": "KZ"
   },
-  "off-en-09-injection": {
+  "off-en-11-injection": {
    "scenario": "injection",
    "what": "Инъекция в тексте клиента; оператор без приветствия, не помог, оборвал разговор",
    "language": "EN"

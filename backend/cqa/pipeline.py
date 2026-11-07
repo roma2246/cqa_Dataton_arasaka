@@ -32,12 +32,16 @@ def fetch(group_id: str) -> dict:
     return http.get_json(urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(qs))), timeout=120)
 
 
+OFFICIAL_FILE = "data/checklists/official_v3.json"  # официальный чек-лист (CQA_Chat_Quality_Checklist)
+
+
 def official_version() -> int:
-    v = next((v for v in storage.list_checklists() if v.checklist_id == "official"), None)
-    if v:
-        return v.version_id
+    """Последняя версия официального чек-листа; если файл изменился — сохраняется новая версия."""
     from .models import ChecklistDraft
-    draft = ChecklistDraft.model_validate_json((ROOT / "data/checklists/official_v1.json").read_text(encoding="utf-8"))
+    draft = ChecklistDraft.model_validate_json((ROOT / OFFICIAL_FILE).read_text(encoding="utf-8"))
+    v = next((v for v in storage.list_checklists() if v.checklist_id == draft.checklist_id), None)
+    if v and [c.model_dump() for c in v.criteria] == [c.model_dump() for c in draft.criteria]:
+        return v.version_id
     return storage.save_checklist(draft).version_id
 
 

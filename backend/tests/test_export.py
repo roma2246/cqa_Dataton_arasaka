@@ -9,7 +9,7 @@ from cqa.models import ChecklistDraft, CriterionResult
 from cqa.scoring import score
 
 ROOT = Path(__file__).resolve().parents[2]
-OFFICIAL = ChecklistDraft.model_validate_json((ROOT / "data/checklists/official_v1.json").read_text(encoding="utf-8"))
+OFFICIAL = ChecklistDraft.model_validate_json((ROOT / "data/checklists/official_v3.json").read_text(encoding="utf-8"))
 
 # Пример из приложения (стр. 2): итог 85.38
 EXAMPLE = {"contact": ("applicable", "yes"), "discovery": ("not_applicable", None),
@@ -102,8 +102,8 @@ def test_pipeline_end_to_end_from_file(tmp_path, monkeypatch):
     src = tmp_path / "prod.json"
     src.write_text((ROOT / "data/fixtures/sample_dataset.json").read_text(encoding="utf-8"), encoding="utf-8")
     (tmp_path / "data/checklists").mkdir(parents=True)
-    (tmp_path / "data/checklists/official_v1.json").write_text(
-        (ROOT / "data/checklists/official_v1.json").read_text(encoding="utf-8"), encoding="utf-8")
+    (tmp_path / "data/checklists/official_v3.json").write_text(
+        (ROOT / "data/checklists/official_v3.json").read_text(encoding="utf-8"), encoding="utf-8")
     monkeypatch.setattr(_sys, "argv", ["x", "--group", "PRODTEST", "--set", "prod", "--expect", "3",
                                        "--from-file", str(src), "--workers", "1"])
     assert pipeline.main() == 0
