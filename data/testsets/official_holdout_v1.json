@@ -1,0 +1,1285 @@
+{
+ "name": "official_holdout_v1",
+ "checklist": "data/checklists/official_v3.json",
+ "note": "ОТЛОЖЕННЫЙ набор по официальному чек-листу: не использовать для настройки.",
+ "dataset": {
+  "error": "",
+  "isSuccess": true,
+  "data": {
+   "dataset_group_id": "OFFHOLD",
+   "total_records": 18,
+   "records": [
+    {
+     "conversation_id": "offh-ru-01-balance_no_id",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Подскажите, какой у меня сейчас баланс на брокерском счёте?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из службы поддержки."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "На вашем счёте 3 480 долларов и 12 акций Apple."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Благодарю!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Рад помочь. Остались ещё вопросы? Если нет — всего доброго!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-01-balance_no_id",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Брокерлік шотымда қазір қанша қаражат бар екенін айтып жібересіз бе?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдау қызметінен Данияр."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Шотыңызда 3 480 доллар және Apple-дың 12 акциясы бар."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Көп рақмет!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Көмектескеніме қуаныштымын. Тағы сұрақтарыңыз бар ма? Болмаса — сау болыңыз!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-01-balance_no_id",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Could you tell me my current balance on my brokerage account?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from customer support."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Your account holds 3,480 dollars and 12 Apple shares."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Much appreciated!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Happy to help. Any other questions? If not — have a good day!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-ru-02-balance_sms",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Подскажите, какой у меня сейчас баланс на брокерском счёте?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из службы поддержки."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Для доступа к данным счёта я отправил вам SMS-код. Назовите его, пожалуйста."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Код 5521."
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Спасибо, код верный. На вашем счёте 3 480 долларов и 12 акций Apple."
+      },
+      {
+       "timestamp": "03:51",
+       "speaker": "client",
+       "text": "Благодарю!"
+      },
+      {
+       "timestamp": "04:24",
+       "speaker": "operator",
+       "text": "Рад помочь. Остались ещё вопросы? Если нет — всего доброго!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-02-balance_sms",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Брокерлік шотымда қазір қанша қаражат бар екенін айтып жібересіз бе?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдау қызметінен Данияр."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Шот деректеріне қол жеткізу үшін сізге SMS-код жібердім. Соны айтыңызшы."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Код 5521."
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Рақмет, код дұрыс. Шотыңызда 3 480 доллар және Apple-дың 12 акциясы бар."
+      },
+      {
+       "timestamp": "03:51",
+       "speaker": "client",
+       "text": "Көп рақмет!"
+      },
+      {
+       "timestamp": "04:24",
+       "speaker": "operator",
+       "text": "Көмектескеніме қуаныштымын. Тағы сұрақтарыңыз бар ма? Болмаса — сау болыңыз!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-02-balance_sms",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Could you tell me my current balance on my brokerage account?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from customer support."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "To access your account data I've sent you an SMS code. Please tell me the code."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "The code is 5521."
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Thank you, the code is correct. Your account holds 3,480 dollars and 12 Apple shares."
+      },
+      {
+       "timestamp": "03:51",
+       "speaker": "client",
+       "text": "Much appreciated!"
+      },
+      {
+       "timestamp": "04:24",
+       "speaker": "operator",
+       "text": "Happy to help. Any other questions? If not — have a good day!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-ru-03-fee_general",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Сколько стоит вывод денег на карту?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из службы поддержки."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Вывод на карту бесплатный, деньги приходят в течение одного рабочего дня."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Благодарю!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Рад помочь. Остались ещё вопросы? Если нет — всего доброго!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-03-fee_general",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Картаға ақша шығару қанша тұрады?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдау қызметінен Данияр."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Картаға шығару тегін, ақша бір жұмыс күні ішінде түседі."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Көп рақмет!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Көмектескеніме қуаныштымын. Тағы сұрақтарыңыз бар ма? Болмаса — сау болыңыз!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-03-fee_general",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "How much does a withdrawal to a card cost?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from customer support."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Withdrawals to a card are free; the money arrives within one business day."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "client",
+       "text": "Much appreciated!"
+      },
+      {
+       "timestamp": "03:18",
+       "speaker": "operator",
+       "text": "Happy to help. Any other questions? If not — have a good day!"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-ru-04-private_paid",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Посоветуйте, во что вложить деньги?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из службы поддержки."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Здесь не могу. Дайте ваш личный номер — проконсультирую частно, всего 50 долларов за час."
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-04-private_paid",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Ақшаны неге салған дұрыс, кеңес бересіз бе?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдау қызметінен Данияр."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Мұнда болмайды. Жеке нөміріңізді беріңіз — жеке кеңес беремін, сағатына небәрі 50 доллар."
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-04-private_paid",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Can you advise me what to invest in?"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from customer support."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "I can't here. Give me your personal number — I'll consult you privately, just 50 dollars an hour."
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-ru-05-insult",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Почему ордер на покупку не исполняется уже час? Это безобразие!"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из службы поддержки."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Потому что вы бестолковый и поставили цену ниже рынка."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "system",
+       "text": "Чат закрыт оператором"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-05-insult",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Неге сатып алу ордері бір сағаттан бері орындалмай тұр? Бұл сұмдық!"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдау қызметінен Данияр."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Себебі сіз ақылсызсыз және бағаны нарықтан төмен қойдыңыз."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "system",
+       "text": "Чатты оператор жапты"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-05-insult",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Why hasn't my buy order been executed for an hour? This is outrageous!"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from customer support."
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "operator",
+       "text": "Because you're clueless and set the price below market."
+      },
+      {
+       "timestamp": "02:45",
+       "speaker": "system",
+       "text": "Chat closed by the agent"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-ru-06-client_gone",
+     "channel": "agent chat",
+     "language": "RU",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Добрый день! Это помощник Freedom Broker. Напишите ваш вопрос."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Здравствуйте, вопрос по приложению"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор подключился"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Добрый день! Я Данияр из поддержки. Опишите, пожалуйста, что случилось?"
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "system",
+       "text": "Клиент отключился"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-kz-06-client_gone",
+     "channel": "agent chat",
+     "language": "KZ",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Қайырлы күн! Бұл Freedom Broker көмекшісі. Сұрағыңызды жазыңыз."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Сәлеметсіз бе, қосымша бойынша сұрақ бар"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "Оператор қосылды"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Қайырлы күн! Мен қолдаудан Данияр. Не болғанын сипаттап беріңізші?"
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "system",
+       "text": "Клиент ажыратылды"
+      }
+     ]
+    },
+    {
+     "conversation_id": "offh-en-06-client_gone",
+     "channel": "agent chat",
+     "language": "EN",
+     "audio_url": null,
+     "transcript": [
+      {
+       "timestamp": "00:00",
+       "speaker": "bot",
+       "text": "Good afternoon! This is the Freedom Broker assistant. Please type your question."
+      },
+      {
+       "timestamp": "00:33",
+       "speaker": "client",
+       "text": "Hello, I have a question about the app"
+      },
+      {
+       "timestamp": "01:06",
+       "speaker": "system",
+       "text": "An agent joined"
+      },
+      {
+       "timestamp": "01:39",
+       "speaker": "operator",
+       "text": "Good afternoon! I'm Daniyar from support. Could you describe what happened?"
+      },
+      {
+       "timestamp": "02:12",
+       "speaker": "system",
+       "text": "The client disconnected"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "expected": {
+  "offh-ru-01-balance_no_id": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-kz-01-balance_no_id": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-en-01-balance_no_id": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-ru-02-balance_sms": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-kz-02-balance_sms": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-en-02-balance_sms": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-ru-03-fee_general": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-kz-03-fee_general": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-en-03-fee_general": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "identification": {
+    "status": "not_applicable"
+   },
+   "consultation": {
+    "status": "applicable",
+    "answers": [
+     "15",
+     "20"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-ru-04-private_paid": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-kz-04-private_paid": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-en-04-private_paid": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   }
+  },
+  "offh-ru-05-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-kz-05-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-en-05-insult": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "empathy": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "closure": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-ru-06-client_gone": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "consultation": {
+    "status": "not_applicable"
+   },
+   "closure": {
+    "status": "not_applicable"
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-kz-06-client_gone": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "consultation": {
+    "status": "not_applicable"
+   },
+   "closure": {
+    "status": "not_applicable"
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  },
+  "offh-en-06-client_gone": {
+   "contact": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ]
+   },
+   "consultation": {
+    "status": "not_applicable"
+   },
+   "closure": {
+    "status": "not_applicable"
+   },
+   "critical": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   }
+  }
+ },
+ "meta": {
+  "offh-ru-01-balance_no_id": {
+   "scenario": "balance_no_id",
+   "what": "Баланс счёта назван без проверки личности",
+   "language": "RU"
+  },
+  "offh-kz-01-balance_no_id": {
+   "scenario": "balance_no_id",
+   "what": "Баланс счёта назван без проверки личности",
+   "language": "KZ"
+  },
+  "offh-en-01-balance_no_id": {
+   "scenario": "balance_no_id",
+   "what": "Баланс счёта назван без проверки личности",
+   "language": "EN"
+  },
+  "offh-ru-02-balance_sms": {
+   "scenario": "balance_sms",
+   "what": "Проверка SMS-кодом, затем баланс",
+   "language": "RU"
+  },
+  "offh-kz-02-balance_sms": {
+   "scenario": "balance_sms",
+   "what": "Проверка SMS-кодом, затем баланс",
+   "language": "KZ"
+  },
+  "offh-en-02-balance_sms": {
+   "scenario": "balance_sms",
+   "what": "Проверка SMS-кодом, затем баланс",
+   "language": "EN"
+  },
+  "offh-ru-03-fee_general": {
+   "scenario": "fee_general",
+   "what": "Общий вопрос о комиссии — идентификация N/A",
+   "language": "RU"
+  },
+  "offh-kz-03-fee_general": {
+   "scenario": "fee_general",
+   "what": "Общий вопрос о комиссии — идентификация N/A",
+   "language": "KZ"
+  },
+  "offh-en-03-fee_general": {
+   "scenario": "fee_general",
+   "what": "Общий вопрос о комиссии — идентификация N/A",
+   "language": "EN"
+  },
+  "offh-ru-04-private_paid": {
+   "scenario": "private_paid",
+   "what": "Просит личный номер для платной частной консультации — грубая ошибка",
+   "language": "RU"
+  },
+  "offh-kz-04-private_paid": {
+   "scenario": "private_paid",
+   "what": "Просит личный номер для платной частной консультации — грубая ошибка",
+   "language": "KZ"
+  },
+  "offh-en-04-private_paid": {
+   "scenario": "private_paid",
+   "what": "Просит личный номер для платной частной консультации — грубая ошибка",
+   "language": "EN"
+  },
+  "offh-ru-05-insult": {
+   "scenario": "insult",
+   "what": "Оскорбление клиента — грубая ошибка, эмпатия «Нет»",
+   "language": "RU"
+  },
+  "offh-kz-05-insult": {
+   "scenario": "insult",
+   "what": "Оскорбление клиента — грубая ошибка, эмпатия «Нет»",
+   "language": "KZ"
+  },
+  "offh-en-05-insult": {
+   "scenario": "insult",
+   "what": "Оскорбление клиента — грубая ошибка, эмпатия «Нет»",
+   "language": "EN"
+  },
+  "offh-ru-06-client_gone": {
+   "scenario": "client_gone",
+   "what": "Клиент отключился до формулировки запроса — консультация и завершение N/A",
+   "language": "RU"
+  },
+  "offh-kz-06-client_gone": {
+   "scenario": "client_gone",
+   "what": "Клиент отключился до формулировки запроса — консультация и завершение N/A",
+   "language": "KZ"
+  },
+  "offh-en-06-client_gone": {
+   "scenario": "client_gone",
+   "what": "Клиент отключился до формулировки запроса — консультация и завершение N/A",
+   "language": "EN"
+  }
+ }
+}

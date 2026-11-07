@@ -13,6 +13,7 @@ TS = json.loads((ROOT / "data/testsets/synthetic_v1.json").read_text(encoding="u
 HOLD = json.loads((ROOT / "data/testsets/holdout_v1.json").read_text(encoding="utf-8"))
 EXT = json.loads((ROOT / "data/testsets/external_v1.json").read_text(encoding="utf-8"))
 OFF = json.loads((ROOT / "data/testsets/official_synth_v1.json").read_text(encoding="utf-8"))
+OFFH = json.loads((ROOT / "data/testsets/official_holdout_v1.json").read_text(encoding="utf-8"))
 CHK = ChecklistDraft.model_validate_json((ROOT / TS["checklist"]).read_text(encoding="utf-8"))
 
 
@@ -28,7 +29,7 @@ def test_imports_and_language_parity():
     assert all(len(v) == 1 for v in by_sc.values())
 
 
-@pytest.mark.parametrize("ts", [TS, HOLD, EXT, OFF], ids=["synthetic", "holdout", "external", "official"])
+@pytest.mark.parametrize("ts", [TS, HOLD, EXT, OFF, OFFH], ids=["synthetic", "holdout", "external", "official", "official_holdout"])
 def test_expected_answers_are_valid_for_checklist(ts):
     chk = ChecklistDraft.model_validate_json((ROOT / ts["checklist"]).read_text(encoding="utf-8"))
     crit = {c.criterion_id: c for c in chk.criteria}
@@ -68,3 +69,8 @@ def test_external_has_attribution_and_one_operator_line():
     for r in EXT["dataset"]["data"]["records"]:
         assert [m["speaker"] for m in r["transcript"]].count("operator") == 1
         assert EXT["meta"][r["conversation_id"]]["source"]
+
+
+def test_official_holdout_is_disjoint():
+    t = lambda d: {m["text"] for r in d["dataset"]["data"]["records"] for m in r["transcript"] if m["speaker"] == "operator"}  # noqa: E731
+    assert not t(OFF) & t(OFFH)
