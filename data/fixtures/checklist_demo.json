@@ -1,0 +1,58 @@
+{
+  "checklist_id": "main",
+  "name": "ДЕМО-чек-лист (НЕ официальный — заменить по PDF, задача Q01)",
+  "is_official": false,
+  "rules": {"rounding_digits": 2, "critical_policy": "flag_only", "aggregation": "flat"},
+  "sections": [
+    {"section_id": "s_contact", "title": "Контакт", "weight": null},
+    {"section_id": "s_solution", "title": "Решение", "weight": null}
+  ],
+  "criteria": [
+    {
+      "criterion_id": "demo_greeting",
+      "title": "Оператор поприветствовал клиента",
+      "instruction": "Засчитывается только приветствие от speaker=operator. Приветствие бота не считается.",
+      "section_id": "s_contact",
+      "weight": 10,
+      "answer_type": "yes_no",
+      "options": [{"value": "yes", "label": "Да", "score": 1}, {"value": "no", "label": "Нет", "score": 0}],
+      "na_allowed": false
+    },
+    {
+      "criterion_id": "demo_need",
+      "title": "Оператор выяснил суть обращения",
+      "instruction": "Оператор уточнил или подтвердил вопрос клиента.",
+      "section_id": "s_solution",
+      "weight": 30,
+      "answer_type": "single_choice",
+      "options": [
+        {"value": "yes", "label": "Да", "score": 1},
+        {"value": "partial", "label": "Частично", "score": 0.5},
+        {"value": "no", "label": "Нет", "score": 0}
+      ],
+      "na_allowed": false
+    },
+    {
+      "criterion_id": "demo_politeness",
+      "title": "Вежливость оператора (1–5)",
+      "instruction": "Оцени тон и корректность формулировок оператора. Резкость клиента не учитывать.",
+      "section_id": "s_contact",
+      "weight": 20,
+      "answer_type": "scale",
+      "scale": {"min": 1, "max": 5, "step": 1},
+      "na_allowed": false
+    },
+    {
+      "criterion_id": "demo_next_step",
+      "title": "Оператор обозначил следующий шаг",
+      "instruction": "Оператор сообщил клиенту, что будет дальше (срок, действие, канал). N/A — если вопрос полностью решён в чате и шагов не требуется.",
+      "section_id": "s_solution",
+      "weight": 40,
+      "answer_type": "yes_no",
+      "options": [{"value": "yes", "label": "Да", "score": 1}, {"value": "no", "label": "Нет", "score": 0}],
+      "na_allowed": true,
+      "na_rule": "Вопрос решён полностью, дальнейших шагов нет",
+      "is_critical": false
+    }
+  ]
+}

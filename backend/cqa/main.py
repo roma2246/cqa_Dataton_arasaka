@@ -1,0 +1,263 @@
+"""HTTP API. Владелец: Участник 1.
+
+Запуск:  cd backend && uvicorn cqa.main:app --reload --port 8000
+UI раздаётся с того же сервера: http://localhost:8000  (нет CORS)
+Контракт: docs/API_CONTRACT.md
+"""
+from __future__ import annotations
+
+import json
+import urllib.parse
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Optional
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+from . import importer, storage
+from .config import ROOT, settings
+from .evaluator import evaluate
+from .models import (
+    AppealCreate,
+    ChecklistDraft,
+    CriterionResult,
+    DecisionCreate,
+    EvaluationRequest,
+)
+from .scoring import score
+
+app = FastAPI(title="CQA Hackathon API", version="0.1.0")
+executor = ThreadPoolExecutor(max_workers=settings.batch_concurrency)
+
+
+@app.on_event("startup")
+def startup() -> None:
+    storage.init_db()
+    if not storage.list_checklists():
+        demo = ROOT / "data" / "fixtures" / "checklist_demo.json"
+        storage.save_checklist(ChecklistDraft.model_validate_json(demo.read_text(encoding="utf-8")))
+
+
+@app.get("/api/health")
+def health() -> dict[str, Any]:
+    return {"ok": True, "evaluator_mode": settings.evaluator_mode,
+            "model": settings.llm_model if settings.evaluator_mode == "real" else "mock"}
+
+
+# ---------- Импорт ----------
+
+class ImportOrganizerBody(BaseModel):
+    group_id: str
+
+
+@app.post("/api/import/organizer")
+def import_organizer(body: ImportOrganizerBody) -> dict[str, Any]:
+    if not settings.organizer_api_url:
+        raise HTTPException(400, "ORGANIZER_API_URL не задан в .env")
+    parts = urllib.parse.urlsplit(settings.organizer_api_url)
+    qs = dict(urllib.parse.parse_qsl(parts.query))
+    qs["group_id"] = body.group_id
+    url = urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(qs)))
+    try:
+        with urllib.request.urlopen(url, timeout=60) as r:
+            data = json.loads(r.read().decode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(502, f"API организаторов недоступен: {type(e).__name__}")
+    return _import(data, body.group_id)
+
+
+@app.post("/api/import/json")
+def import_json(body: dict[str, Any]) -> dict[str, Any]:
+    """Тело - ответ API организаторов целиком (для файлов/фикстур)."""
+    return _import(body, None)
+
+
+def _import(data: dict[str, Any], group_id: Optional[str]) -> dict[str, Any]:
+    try:
+        convs = importer.parse_response(data, group_id)
+    except importer.ImportError_ as e:
+        raise HTTPException(422, str(e))
+    stats = storage.upsert_conversations(convs)
+    return {"total": len(convs), **stats}
+
+
+# ---------- Диалоги ----------
+
+@app.get("/api/conversations")
+def conversations(language: Optional[str] = None, channel: Optional[str] = None,
+                  group_id: Optional[str] = None) -> list[dict[str, Any]]:
+    return storage.list_conversations(language, channel, group_id)
+
+
+@app.get("/api/conversations/{conversation_id}")
+def conversation(conversation_id: str) -> dict[str, Any]:
+    conv = storage.get_conversation(conversation_id)
+    if not conv:
+        raise HTTPException(404, "Диалог не найден")
+    return {**conv.model_dump(), "evaluations": storage.list_evaluations(conversation_id)}
+
+
+# ---------- Чек-листы ----------
+
+@app.get("/api/checklists")
+def checklists() -> list[dict[str, Any]]:
+    return [c.model_dump() for c in storage.list_checklists()]
+
+
+@app.get("/api/checklists/{version_id}")
+def checklist(version_id: int) -> dict[str, Any]:
+    c = storage.get_checklist(version_id)
+    if not c:
+        raise HTTPException(404, "Версия не найдена")
+    return c.model_dump()
+
+
+@app.post("/api/checklists")
+def save_checklist(draft: ChecklistDraft) -> dict[str, Any]:
+    ids = [c.criterion_id for c in draft.criteria]
+    if len(ids) != len(set(ids)):
+        raise HTTPException(422, "criterion_id должны быть уникальны")
+    for c in draft.criteria:
+        if c.answer_type == "scale" and not c.scale:
+            raise HTTPException(422, f"{c.criterion_id}: для шкалы нужна scale")
+        if c.answer_type != "scale" and not c.options:
+            raise HTTPException(422, f"{c.criterion_id}: нужны варианты ответа")
+    return storage.save_checklist(draft).model_dump()
+
+
+# ---------- Оценка ----------
+
+def _run_evaluation(evaluation_id: int) -> None:
+    ev = storage.get_evaluation(evaluation_id)
+    conv = storage.get_conversation(ev["conversation_id"])
+    chk = storage.get_checklist(ev["checklist_version_id"])
+    storage.update_evaluation(evaluation_id, status="running")
+    try:
+        out = evaluate(conv, chk)  # долгий вызов - вне транзакции
+        sc = score(chk, out.results)
+        results_json = json.dumps([r.model_dump() for r in out.results], ensure_ascii=False)
+        storage.update_evaluation(
+            evaluation_id, status="completed", mode=out.mode, model=out.model,
+            prompt_version=out.prompt_version,
+            ai_results_json=results_json, ai_score_json=sc.model_dump_json(),
+            final_results_json=results_json, final_score_json=sc.model_dump_json(),
+            usage_json=json.dumps({"calls": out.calls, "problems": out.problems}, ensure_ascii=False),
+            cost_usd=out.cost_usd, finished_at=storage.now(),
+        )
+    except Exception as e:  # noqa: BLE001 - сбой сохраняем как failed, а не как оценку
+        calls = getattr(e, "calls", [])
+        storage.update_evaluation(
+            evaluation_id, status="failed", error=f"{type(e).__name__}: {e}",
+            usage_json=json.dumps({"calls": [c.__dict__ for c in calls]}), finished_at=storage.now())
+
+
+def _start(conversation_id: str, version_id: int) -> int:
+    conv = storage.get_conversation(conversation_id)
+    if not conv:
+        raise HTTPException(404, f"Диалог {conversation_id} не найден")
+    if not storage.get_checklist(version_id):
+        raise HTTPException(404, "Версия чек-листа не найдена")
+    eid = storage.create_evaluation(conversation_id, conv.content_hash, version_id)
+    executor.submit(_run_evaluation, eid)
+    return eid
+
+
+@app.post("/api/evaluations")
+def start_evaluation(req: EvaluationRequest) -> dict[str, Any]:
+    # TODO(B05): кеш по (content_hash, version, model, prompt_version) при необходимости
+    return {"evaluation_id": _start(req.conversation_id, req.checklist_version_id), "status": "queued"}
+
+
+class BatchBody(BaseModel):
+    checklist_version_id: int
+    conversation_ids: Optional[list[str]] = None
+    group_id: Optional[str] = None
+
+
+@app.post("/api/evaluations/batch")
+def start_batch(body: BatchBody) -> dict[str, Any]:
+    ids = body.conversation_ids or [c["conversation_id"] for c in storage.list_conversations(group_id=body.group_id)]
+    return {"evaluation_ids": [_start(cid, body.checklist_version_id) for cid in ids]}
+
+
+@app.get("/api/evaluations/{evaluation_id}")
+def get_evaluation(evaluation_id: int) -> dict[str, Any]:
+    ev = storage.get_evaluation(evaluation_id)
+    if not ev:
+        raise HTTPException(404, "Оценка не найдена")
+    return ev
+
+
+# ---------- Апелляции ----------
+
+@app.post("/api/evaluations/{evaluation_id}/appeals")
+def create_appeal(evaluation_id: int, body: AppealCreate) -> dict[str, Any]:
+    ev = storage.get_evaluation(evaluation_id)
+    if not ev or ev["status"] != "completed":
+        raise HTTPException(409, "Оценка не завершена")
+    if body.criterion_id not in {r["criterion_id"] for r in ev["ai_results"]}:
+        raise HTTPException(422, "Нет такого критерия в оценке")
+    return {"appeal_id": storage.create_appeal(evaluation_id, body.criterion_id, body.comment), "status": "open"}
+
+
+@app.get("/api/appeals")
+def appeals(status: Optional[str] = None) -> list[dict[str, Any]]:
+    return storage.list_appeals(status)
+
+
+@app.post("/api/appeals/{appeal_id}/decision")
+def decide(appeal_id: int, body: DecisionCreate) -> dict[str, Any]:
+    ap = storage.get_appeal(appeal_id)
+    if not ap:
+        raise HTTPException(404, "Апелляция не найдена")
+    ev = storage.get_evaluation(ap["evaluation_id"])
+    chk = storage.get_checklist(ev["checklist_version_id"])
+    current = [CriterionResult.model_validate(r) for r in ev["final_results"]]
+    old = next(r for r in current if r.criterion_id == ap["criterion_id"])
+
+    if body.action == "change":
+        if not body.new_status:
+            raise HTTPException(422, "Для изменения нужен new_status")
+        new = old.model_copy(update={
+            "status": body.new_status,
+            "answer": body.new_answer if body.new_status == "applicable" else None,
+            "na_reason": body.reason if body.new_status == "not_applicable" else None,
+        })
+        current = [new if r.criterion_id == old.criterion_id else r for r in current]
+    sc = score(chk, current)  # тот же калькулятор
+    try:
+        rev = storage.save_decision_atomic(
+            appeal_id, ap["evaluation_id"], body.expected_revision,
+            {"action": body.action, "reason": body.reason, "old_status": old.status, "old_answer": old.answer,
+             "new_status": body.new_status, "new_answer": body.new_answer},
+            [r.model_dump() for r in current], sc.model_dump())
+    except storage.RevisionConflict as e:
+        raise HTTPException(409, str(e))
+    except storage.AlreadyDecided as e:
+        raise HTTPException(409, str(e))
+    return {"revision": rev, "final_score": sc.model_dump()}
+
+
+# ---------- Аудио ----------
+
+@app.get("/api/conversations/{conversation_id}/audio")
+def audio(conversation_id: str) -> dict[str, Any]:
+    """audio_url организаторов - HTML-страница плеера, НЕ аудиофайл.
+    Минимум: открыть штатный плеер. TODO(B06): серверный адаптер media source."""
+    conv = storage.get_conversation(conversation_id)
+    if not conv or not conv.audio_url:
+        raise HTTPException(404, "Записи нет")
+    return {"player_url": conv.audio_url, "kind": "external_player"}
+
+
+# ---------- UI ----------
+
+app.mount("/ui", StaticFiles(directory=ROOT / "frontend", html=True), name="ui")
+
+
+@app.get("/")
+def root() -> RedirectResponse:
+    return RedirectResponse("/ui/")

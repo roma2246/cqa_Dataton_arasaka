@@ -1,0 +1,51 @@
+{
+  "error": "",
+  "isSuccess": true,
+  "data": {
+    "dataset_group_id": "FIXTURE",
+    "total_records": 3,
+    "records": [
+      {
+        "conversation_id": "fx-ru-001",
+        "channel": "agent chat",
+        "language": "RU",
+        "transcript": [
+          {"timestamp": "00:02", "speaker": "bot", "text": "Здравствуйте! Я виртуальный помощник. Чем могу помочь?"},
+          {"timestamp": "00:10", "speaker": "client", "text": "Не вижу позицию в приложении после покупки."},
+          {"timestamp": "00:38", "speaker": "system", "text": "Диалог передан оператору"},
+          {"timestamp": "01:15", "speaker": "operator", "text": "Добрый день! Меня зовут Анна. Уточните, пожалуйста, какой инструмент вы купили?"},
+          {"timestamp": "01:40", "speaker": "client", "text": "Акции, вчера вечером."},
+          {"timestamp": "02:05", "speaker": "operator", "text": "Сделка расчитывается T+1, позиция появится сегодня до 18:00. Если не появится — напишите сюда, мы проверим."},
+          {"timestamp": "02:20", "speaker": "client", "text": "Понял, спасибо."}
+        ],
+        "audio_url": null
+      },
+      {
+        "conversation_id": "fx-kz-001",
+        "channel": "agent chat",
+        "language": "KZ",
+        "transcript": [
+          {"timestamp": "00:01", "speaker": "bot", "text": "Сәлеметсіз бе! Сізге қалай көмектесе аламын?"},
+          {"timestamp": "00:20", "speaker": "client", "text": "Есепті қалай жүктеп алуға болады?"},
+          {"timestamp": "00:25", "speaker": "system", "text": "Оператор қосылды"},
+          {"timestamp": "00:50", "speaker": "operator", "text": "Профиль → Құжаттар бөлімінен есепті жүктей аласыз."},
+          {"timestamp": "01:10", "speaker": "client", "text": "Рақмет."}
+        ],
+        "audio_url": null
+      },
+      {
+        "conversation_id": "fx-call-001",
+        "channel": "voice call",
+        "language": "RU",
+        "transcript": [
+          {"timestamp": "2026-11-01T10:00:03+05:00", "speaker": "bot", "text": "Звонок записывается."},
+          {"timestamp": "2026-11-01T10:00:09+05:00", "speaker": "operator", "text": "Здравствуйте, компания, оператор Ерлан, слушаю вас."},
+          {"timestamp": "2026-11-01T10:00:15+05:00", "speaker": "client", "text": "Хочу узнать комиссию за вывод."},
+          {"timestamp": "2026-11-01T10:00:20+05:00", "speaker": "system", "text": "Запись и транскрибирование запущены"},
+          {"timestamp": "2026-11-01T10:00:31+05:00", "speaker": "operator", "text": "Комиссию уточню и пришлю вам в течение часа на почту."}
+        ],
+        "audio_url": "https://example.invalid/player?id=fixture"
+      }
+    ]
+  }
+}

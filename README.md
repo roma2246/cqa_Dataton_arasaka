@@ -1,0 +1,65 @@
+# CQA — Conversation Quality Analytics (Freedom Broker Hackathon, команда 4)
+
+Прототип: настраиваемый чек-лист → автоматическая оценка оператора (RU/KZ/EN) → доказательства
+по репликам → апелляция → решение проверяющего → пересчитанный итог.
+
+**Кто что делает — см. [TEAM_TASKS.md](TEAM_TASKS.md).**
+
+## Стек
+- Backend: Python 3.12, FastAPI, SQLite (`backend/cqa`)
+- Оценщик: OpenAI-совместимый `chat/completions` (`backend/cqa/evaluator`), промпт `backend/prompts`
+- Frontend: чистый HTML/CSS/JS без сборки (`frontend/`) — готов к упаковке как HTML web resource Dynamics 365
+- UI раздаётся тем же сервером → нет проблем с CORS
+
+## Запуск
+
+```bash
+python3 -m venv .venv
+```
+```bash
+.venv/bin/pip install -r backend/requirements.txt
+```
+```bash
+cp .env.example .env
+```
+```bash
+cd backend && ../.venv/bin/uvicorn cqa.main:app --reload --port 8000
+```
+
+Открыть http://localhost:8000 → «Импорт»: выбрать файл `data/fixtures/sample_dataset.json`
+или загрузить из API организаторов (нужен `ORGANIZER_API_URL` в `.env`).
+
+По умолчанию `EVALUATOR_MODE=mock` — **тестовый** ответ без модели (в UI жёлтая плашка).
+Для настоящей оценки: `EVALUATOR_MODE=real` + `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, цены.
+
+## Тесты
+
+```bash
+cd backend && ../.venv/bin/pytest -q
+```
+
+## Структура
+
+```
+backend/cqa/main.py          API (Участник 1)
+backend/cqa/storage.py       SQLite, версии, атомарные решения (Участник 1)
+backend/cqa/models.py        общий контракт (Участник 1, согласуется всеми)
+backend/cqa/evaluator/       модель, промпт, валидация доказательств (Участник 2)
+backend/prompts/             тексты промптов (Участник 2)
+backend/cqa/scoring.py       калькулятор итога (Участник 4)
+backend/cqa/importer.py      импорт набора организаторов (Участник 4)
+frontend/                    весь интерфейс (Участник 3)
+data/fixtures/               синтетические примеры (НЕ реальные данные)
+data/checklists/             официальный чек-лист в JSON (Участник 4, Q01)
+evaluation/                  эталоны и приёмка (Участник 4)
+docs/API_CONTRACT.md         контракт API
+```
+
+## Модель и стоимость
+_Заполнить к защите (A06): модель, версия промпта, средние токены и фактическая стоимость одной оценки со всеми вызовами._
+
+## Ограничения
+_Заполнить к защите (Q07): что не проверено, что требует звука и т.д._
+
+## Безопасность
+Ключи модели, подписанные ссылки API/аудио, реальные транскрипты и БД в репозиторий не коммитим (`.gitignore`).
