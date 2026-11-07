@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -45,9 +45,17 @@ _AUTH_USER = os.getenv("BASIC_AUTH_USER", "")
 _AUTH_PASS = os.getenv("BASIC_AUTH_PASSWORD", "")
 
 
+_PUBLIC = {"/", "/api/health", "/api/public/stats", "/ui/styles.css"}
+
+
+def _public(path: str) -> bool:
+    """Витрина для жюри и графики качества открыты; приложение и API — по паролю."""
+    return path in _PUBLIC or path.startswith("/reports/")
+
+
 @app.middleware("http")
 async def basic_auth(request: Request, call_next):
-    if not _AUTH_PASS or request.url.path == "/api/health":
+    if not _AUTH_PASS or _public(request.url.path):
         return await call_next(request)
     header = request.headers.get("authorization", "")
     if header.startswith("Basic "):
@@ -464,6 +472,28 @@ app.mount("/ui", StaticFiles(directory=ROOT / "frontend", html=True), name="ui")
 app.mount("/reports", StaticFiles(directory=ROOT / "evaluation" / "reports", html=True), name="reports")
 
 
-@app.get("/")
-def root() -> RedirectResponse:
-    return RedirectResponse("/ui/")
+@app.get("/", include_in_schema=False)
+def root() -> FileResponse:
+    return FileResponse(ROOT / "frontend" / "landing.html")
+
+
+_stats_cache: dict[str, Any] = {"at": 0.0, "data": None}
+
+
+@app.get("/api/public/stats")
+def public_stats() -> dict[str, Any]:
+    """Живые цифры для витрины: только агрегаты, без текстов переписок. Кэш 2 минуты."""
+    import time
+    if _stats_cache["data"] and time.time() - _stats_cache["at"] < 120:
+        return _stats_cache["data"]
+    from . import analytics as an
+    out: dict[str, Any] = {"model": settings.llm_model if settings.evaluator_mode == "real" else "mock",
+                           "team": settings.team_name}
+    try:
+        a = an.summary("DEV", _official_vid(None))
+        out.update({k: a[k] for k in ("evaluated", "avg_total", "critical_count", "by_language")})
+        out["criteria"] = [{k: c[k] for k in ("title", "weight", "score_pct")} for c in a["criteria"]]
+    except Exception:  # noqa: BLE001 — витрина не должна падать
+        return out
+    _stats_cache.update(at=time.time(), data=out)
+    return out

@@ -173,3 +173,13 @@ def test_analytics_summary(client):
     assert a["evaluated"] == 2 and len(a["criteria"]) == 8
     assert set(a["by_language"]) == {"RU", "KZ"} and a["avg_total"] is not None
     assert c.post("/api/analytics/ask", json={"group_id": "FIXTURE"}).status_code == 409   # mock — без ИИ
+
+
+def test_public_pages_open_with_auth(client, monkeypatch):
+    from cqa import main
+    monkeypatch.setattr(main, "_AUTH_USER", "u")
+    monkeypatch.setattr(main, "_AUTH_PASS", "p")
+    assert client.get("/").status_code == 200 and "Arasaka" in client.get("/").text
+    assert client.get("/api/public/stats").status_code == 200
+    assert client.get("/api/conversations").status_code == 401
+    assert client.get("/api/conversations", auth=("u", "p")).status_code == 200
