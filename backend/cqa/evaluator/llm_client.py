@@ -3,8 +3,9 @@
 LLM_PROVIDER:
   - anthropic      — Claude через официальный SDK `anthropic`, structured output по JSON-схеме,
                      серверный fallback при отказе (fallbacks="default"). Модель по умолчанию claude-opus-5-5.
-  - openai_compat  — любой POST {LLM_BASE_URL}/chat/completions: OpenAI, OpenRouter, vLLM/Ollama,
-                     Gemini (LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai).
+  - openai_compat  — любой POST {LLM_BASE_URL}/chat/completions: Gemini (выбран командой), OpenAI, OpenRouter, vLLM.
+                     Для моделей gemini-* LLM_BASE_URL можно не задавать. Ответ по JSON-схеме (json_schema),
+                     при отказе провайдера — json_object. reasoning_effort из LLM_EFFORT.
 """
 from __future__ import annotations
 
@@ -44,7 +45,7 @@ class LLMResponse:
 def chat_json(system: str, user: str, schema: dict[str, Any]) -> LLMResponse:
     if settings.llm_provider == "anthropic":
         return _anthropic(system, user, schema)
-    return _openai_compat(system, user)
+    return _openai_compat(system, user, schema)
 
 
 # ---------------- Claude (официальный SDK) ----------------
@@ -108,34 +109,65 @@ def _anthropic(system: str, user: str, schema: dict[str, Any]) -> LLMResponse:
 
 # ---------------- OpenAI-совместимый HTTP ----------------
 
-def _openai_compat(system: str, user: str) -> LLMResponse:
-    if not (settings.llm_base_url and settings.llm_model):
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"
+# reasoning_effort у Gemini: minimal | low | medium | high
+_EFFORT = {"low": "low", "medium": "medium", "high": "high", "xhigh": "high", "max": "high", "minimal": "minimal"}
+
+
+def _usage(usage: dict) -> tuple[Optional[int], Optional[int]]:
+    """(input, output). Output берём как total - prompt, чтобы учесть токены размышлений,
+    которые Gemini тарифицирует по цене output."""
+    pin, pout, tot = usage.get("prompt_tokens"), usage.get("completion_tokens"), usage.get("total_tokens")
+    if pin is not None and tot is not None and tot >= pin:
+        return pin, tot - pin
+    return pin, pout
+
+
+def _openai_compat(system: str, user: str, schema: Optional[dict] = None) -> LLMResponse:
+    base = settings.llm_base_url or (GEMINI_BASE_URL if settings.llm_model.startswith("gemini") else "")
+    if not (base and settings.llm_model):
         raise LLMError("LLM_BASE_URL / LLM_MODEL не заданы в .env")
-    body = {
+    if not settings.llm_api_key:
+        raise LLMError("Не задан LLM_API_KEY в .env")
+    body: dict[str, Any] = {
         "model": settings.llm_model,
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-        "temperature": 0,
-        "response_format": {"type": "json_object"},
+        "response_format": ({"type": "json_schema",
+                             "json_schema": {"name": "cqa_evaluation", "schema": schema, "strict": True}}
+                            if schema else {"type": "json_object"}),
     }
+    if settings.llm_model.startswith("gemini"):
+        body["reasoning_effort"] = _EFFORT.get(settings.llm_effort, "medium")
+    else:
+        body["temperature"] = 0
     calls: list[CallRecord] = []
     last_err = ""
     for attempt in range(settings.llm_max_retries + 1):
         t0 = time.monotonic()
         req = urllib.request.Request(
-            settings.llm_base_url.rstrip("/") + "/chat/completions",
+            base.rstrip("/") + "/chat/completions",
             data=json.dumps(body).encode("utf-8"),
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {settings.llm_api_key}"},
         )
         try:
             with urllib.request.urlopen(req, timeout=settings.llm_timeout_s, context=SSL_CONTEXT) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
-            usage = data.get("usage") or {}
-            calls.append(CallRecord(True, time.monotonic() - t0, settings.llm_model,
-                                    usage.get("prompt_tokens"), usage.get("completion_tokens")))
-            return LLMResponse(data["choices"][0]["message"]["content"], calls)
+            pin, pout = _usage(data.get("usage") or {})
+            rec = CallRecord(True, time.monotonic() - t0, data.get("model") or settings.llm_model, pin, pout)
+            calls.append(rec)
+            choice = data["choices"][0]
+            if choice.get("finish_reason") == "length":
+                rec.error = "max_tokens"
+                raise LLMError("Ответ обрезан по длине", calls)
+            return LLMResponse(choice["message"]["content"] or "", calls)
         except urllib.error.HTTPError as e:
-            last_err = f"HTTP {e.code}"
-            calls.append(CallRecord(False, time.monotonic() - t0, settings.llm_model, error=last_err))
+            detail = e.read(500).decode("utf-8", "replace") if e.fp else ""
+            last_err = f"HTTP {e.code}: {detail[:200]}"
+            calls.append(CallRecord(False, time.monotonic() - t0, settings.llm_model, error=f"HTTP {e.code}"))
+            if e.code == 400 and body["response_format"]["type"] == "json_schema":
+                # Провайдер не принял схему — пробуем режим JSON без схемы; валидатор всё равно проверит ответ
+                body["response_format"] = {"type": "json_object"}
+                continue
             if e.code not in (429, 500, 502, 503, 504):
                 break
         except (urllib.error.URLError, TimeoutError, KeyError, json.JSONDecodeError) as e:
@@ -152,6 +184,8 @@ KNOWN_PRICES = {
     "claude-opus-5-5": (4.0, 20.0),
     "claude-sonnet-5-5": (2.0, 10.0),
     "claude-opus-4-8": (5.0, 25.0),  # возможная модель серверного fallback
+    # Gemini: цены до 31.12.2026 (с 01.01.2027 — 1.50 / 7.50); output включает токены размышлений
+    "gemini-3.8-flash": (0.75, 3.75),
     "claude-haiku-5-5": (0.10, 0.50),
 }
 

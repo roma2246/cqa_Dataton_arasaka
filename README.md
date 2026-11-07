@@ -31,15 +31,21 @@ cd backend && ../.venv/bin/uvicorn cqa.main:app --reload --port 8000
 
 По умолчанию `EVALUATOR_MODE=mock` — **тестовый** ответ без модели (в UI жёлтая плашка).
 
-Настоящая оценка через Claude: в `.env` задать `EVALUATOR_MODE=real`, `LLM_PROVIDER=anthropic`,
-`ANTHROPIC_API_KEY=...` (модель по умолчанию `claude-opus-5-5`; дешевле — `LLM_MODEL=claude-sonnet-5-5`).
-Через Gemini/OpenAI: `LLM_PROVIDER=openai_compat`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, цены `LLM_PRICE_*`.
+Настоящая оценка — **Gemini 3.8 Flash** (выбор команды): в `.env` вписать `LLM_API_KEY`
+(ключ из https://aistudio.google.com/apikey) и поставить `EVALUATOR_MODE=real`.
+Проверить доступ одним коротким вызовом:
+
+```bash
+cd backend && ../.venv/bin/python -m cqa.check_llm
+```
+
+Альтернатива — Claude: `LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, `LLM_MODEL` (по умолчанию `claude-opus-5-5`).
 После изменения `.env` перезапустите сервер.
 
 ## Тесты
 
 ```bash
-cd backend && ../.venv/bin/pytest -q
+cd backend && ../.venv/bin/python -m pytest -q
 ```
 
 ## Структура
@@ -62,7 +68,12 @@ docs/API_CONTRACT.md         контракт API
 ```
 
 ## Модель и стоимость
-_Заполнить к защите (A06): модель, версия промпта, средние токены и фактическая стоимость одной оценки со всеми вызовами._
+Модель: `gemini-3.8-flash` (Google, платный тариф: $0.75 за 1 млн входных и $3.75 за 1 млн выходных токенов,
+включая токены размышлений; цены до 31.12.2026). Один вызов на диалог + не более одного повтора при неверном JSON.
+_Фактическую среднюю стоимость одной оценки со всеми вызовами заполнить после прогона DEV (A06)._
+
+Важно: на бесплатном тарифе Gemini Google использует данные для улучшения продуктов — для реальных
+звонков и транскриптов используйте платный тариф (или согласуйте с организаторами).
 
 ## Ограничения
 _Заполнить к защите (Q07): что не проверено, что требует звука и т.д._
