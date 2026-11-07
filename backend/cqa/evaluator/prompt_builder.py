@@ -93,6 +93,10 @@ def _seconds(ts: str) -> float | None:
         return None
 
 
+_VERIFY = re.compile(r"личност\w* (клиента )?подтвержд|подтвердите\W+(пожалуйста\W+)?личност|кодов\w* слов|sms|смс|"
+                     r"identity (is )?verified|verify your identity|code word|жеке бас\w* расталды|кодтық сөз", re.I)
+
+
 def facts_block(conv: Conversation) -> str:
     """Факты, которые сервер вычисляет сам, чтобы модель не ошибалась в позициях и паузах."""
     ops = [m for m in conv.messages if m.speaker == "operator"]
@@ -119,6 +123,12 @@ def facts_block(conv: Conversation) -> str:
                 gaps.append(f"{m.message_id} (+{int(b - a)} с)")
     if gaps:
         lines.append("Ответы оператора позже 3 минут после клиента: " + ", ".join(gaps))
+    ver = [m.message_id for m in conv.messages if m.speaker in ("operator", "system", "client") and _VERIFY.search(m.text)]
+    if ver:
+        lines.append("Реплики о проверке личности (SMS-код, кодовое слово, отметка системы): " + ", ".join(ver))
+    else:
+        lines.append("В разговоре НЕТ ни одной реплики о проверке личности (SMS-код, кодовое слово, отметка системы). "
+                     "Поэтому по идентификации «Да» невозможно: N/A, если запрос не касался данных счёта клиента, иначе «Нет».")
     lines.append("Все реплики оператора: " + ", ".join(m.message_id for m in ops))
     return "<facts>\n" + "\n".join(lines) + "\n</facts>\n\n"
 

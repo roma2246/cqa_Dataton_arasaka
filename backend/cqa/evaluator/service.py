@@ -126,6 +126,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
         raise llm_client.LLMError(f"Неверный JSON от модели после повтора: {last_err}", calls)
 
     results, problems = validate(parsed.results, checklist, conv)
+    results, problems = _guard_identification(results, problems, conv)
     results, problems = _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls)
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
@@ -177,6 +178,21 @@ def _parse(text: str) -> AIEvaluation:
     elif prompt_builder.compact():
         raw = prompt_builder.expand_compact(raw)
     return AIEvaluation.model_validate(raw)
+
+
+def _guard_identification(results, problems, conv):
+    """«Да» по идентификации без единой реплики о проверке личности противоречит определению чек-листа.
+    Такой ответ не подменяем сами, а отправляем на уточняющий запрос (решит N/A или «Нет»)."""
+    if any(prompt_builder._VERIFY.search(m.text) for m in conv.messages):
+        return results, problems
+    out = []
+    for r in results:
+        if r.criterion_id == "identification" and r.status == "applicable" and r.answer == "yes":
+            r = r.model_copy(update={"status": "needs_review", "answer": None,
+                                     "review_reason": "«Да» без реплики о проверке личности — реши: N/A или «Нет»"})
+            problems = problems + ["идентификация «Да» без проверки личности — отправлено на уточнение"]
+        out.append(r)
+    return out, problems
 
 
 def _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls):

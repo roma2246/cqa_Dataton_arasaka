@@ -129,3 +129,16 @@ def test_voting_majority_and_agreement(monkeypatch):
     assert by["demo_greeting"].answer == "yes" and out.agreement["demo_greeting"] == 0.67   # 2 из 3
     assert by["demo_politeness"].answer == "4"                                             # медиана 3/4/5
     assert out.agreement["demo_need"] == 1.0 and len(out.calls) == 3 and out.prompt_version.endswith("+vote3")
+
+
+def test_identification_yes_without_verification_goes_to_review():
+    from types import SimpleNamespace as NS
+    from cqa.evaluator.service import _guard_identification
+    from cqa.models import CriterionResult
+    conv = NS(messages=[NS(text="Где мой тариф?"), NS(text="Здравствуйте, я Алина. Во вкладке «Кабинет».")])
+    r = CriterionResult(criterion_id="identification", status="applicable", answer="yes", explanation="e")
+    out, probs = _guard_identification([r], [], conv)
+    assert out[0].status == "needs_review" and probs
+    conv.messages.append(NS(text="Личность клиента подтверждена."))
+    out, _ = _guard_identification([r], [], conv)
+    assert out[0].answer == "yes"
