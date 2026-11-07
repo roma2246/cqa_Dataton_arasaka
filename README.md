@@ -4,6 +4,7 @@
 по репликам → апелляция → решение проверяющего → пересчитанный итог.
 
 **Кто что делает — см. [TEAM_TASKS.md](TEAM_TASKS.md).**
+**Финал (T+23, 10 контрольных чатов) — [docs/PROD_RUNBOOK.md](docs/PROD_RUNBOOK.md).** Сдача: `results/dev/results.json`, `results/prod/results.json`.
 
 ## Стек
 - Backend: Python 3.12, FastAPI, SQLite (`backend/cqa`)

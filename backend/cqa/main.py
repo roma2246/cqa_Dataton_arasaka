@@ -326,6 +326,25 @@ def calibration_toggle(example_id: int, body: CalibrationToggle) -> dict[str, An
     return {"example_id": example_id, "active": body.active}
 
 
+# ---------- Экспорт для сдачи ----------
+
+@app.get("/api/export/{group_id}")
+def export_results(group_id: str, checklist_version_id: Optional[int] = None) -> dict[str, Any]:
+    """results.json в формате организаторов + список ошибок формата (пустой = готово к сдаче)."""
+    from . import export as exp
+    vid = checklist_version_id or next((v.version_id for v in storage.list_checklists() if v.checklist_id == "official"), None)
+    if not vid:
+        raise HTTPException(404, "Нет официального чек-листа")
+    try:
+        doc = exp.build(group_id, vid, settings.team_name)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    ids = {c["conversation_id"] for c in storage.list_conversations(group_id=group_id)}
+    if not ids:
+        raise HTTPException(404, f"Нет диалогов группы {group_id}")
+    return {"document": doc, "errors": exp.check(doc, ids)}
+
+
 # ---------- Аудио ----------
 
 @app.get("/api/conversations/{conversation_id}/audio")

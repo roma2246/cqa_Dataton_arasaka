@@ -23,6 +23,7 @@ export async function renderConversations() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
           Загрузить из API</button>
         <label class="btn file-btn">Из файла JSON<input type="file" id="imp-file" accept=".json,application/json"></label>
+        <button class="btn" id="export" title="Выгрузить results.json по группе из поля слева (формат организаторов)">results.json ↓</button>
       </div>
     </div>
 
@@ -121,6 +122,17 @@ export async function renderConversations() {
       toast(`Импорт: всего ${r.total}, новых ${r.new}, обновлено ${r.updated}, без изменений ${r.unchanged}`);
       renderConversations();
     } catch (e) { toast(e.message, true); btn.disabled = false; }
+  };
+  root.querySelector("#export").onclick = async () => {
+    const group = root.querySelector("#gid").value.trim();
+    try {
+      const r = await api.exportResults(group);
+      const blob = new Blob([JSON.stringify(r.document, null, 2)], { type: "application/json" });
+      const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "results.json" });
+      a.click(); URL.revokeObjectURL(a.href);
+      const ok = r.document.results.filter((x) => x.status === "ok").length;
+      toast(r.errors.length ? `Выгружено с ошибками формата: ${r.errors[0]}` : `results.json: ${r.document.results.length} записей, ok ${ok}`, r.errors.length > 0);
+    } catch (e) { toast(e.message, true); }
   };
   root.querySelector("#imp-file").onchange = async (ev) => {
     const f = ev.target.files[0];

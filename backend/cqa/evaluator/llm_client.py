@@ -201,6 +201,8 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
         body["reasoning_effort"] = _EFFORT.get(settings.llm_effort, "medium")
     else:
         body["temperature"] = 0
+        if not settings.llm_think:
+            body["reasoning_effort"] = "none"  # Ollama: отключить размышления (think=false)
     calls: list[CallRecord] = []
     last_err = ""
     for attempt in range(settings.llm_max_retries + 1):

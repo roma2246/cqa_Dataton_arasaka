@@ -36,6 +36,7 @@ export const api = {
   batchRetry: (id) => request("POST", `/batches/${id}/retry`),
   batchCancel: (id) => request("POST", `/batches/${id}/cancel`),
   evaluation: (id) => request("GET", "/evaluations/" + id),
+  exportResults: (group) => request("GET", "/export/" + encodeURIComponent(group)),
   createAppeal: (evaluationId, criterion_id, comment) =>
     request("POST", `/evaluations/${evaluationId}/appeals`, { criterion_id, comment }),
   appeals: (status) => request("GET", "/appeals" + (status ? "?status=" + status : "")),

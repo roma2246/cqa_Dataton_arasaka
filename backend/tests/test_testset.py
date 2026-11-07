@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TS = json.loads((ROOT / "data/testsets/synthetic_v1.json").read_text(encoding="utf-8"))
 HOLD = json.loads((ROOT / "data/testsets/holdout_v1.json").read_text(encoding="utf-8"))
 EXT = json.loads((ROOT / "data/testsets/external_v1.json").read_text(encoding="utf-8"))
+OFF = json.loads((ROOT / "data/testsets/official_synth_v1.json").read_text(encoding="utf-8"))
 CHK = ChecklistDraft.model_validate_json((ROOT / TS["checklist"]).read_text(encoding="utf-8"))
 
 
@@ -27,9 +28,10 @@ def test_imports_and_language_parity():
     assert all(len(v) == 1 for v in by_sc.values())
 
 
-@pytest.mark.parametrize("ts", [TS, HOLD, EXT], ids=["synthetic", "holdout", "external"])
+@pytest.mark.parametrize("ts", [TS, HOLD, EXT, OFF], ids=["synthetic", "holdout", "external", "official"])
 def test_expected_answers_are_valid_for_checklist(ts):
-    crit = {c.criterion_id: c for c in CHK.criteria}
+    chk = ChecklistDraft.model_validate_json((ROOT / ts["checklist"]).read_text(encoding="utf-8"))
+    crit = {c.criterion_id: c for c in chk.criteria}
     convs = {c.conversation_id: c for c in parse_response(ts["dataset"])}
     for cid, exp in ts["expected"].items():
         msgs = {m.message_id: m for m in convs[cid].messages}

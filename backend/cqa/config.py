@@ -33,6 +33,8 @@ class Settings:
     # anthropic | openai_compat
     llm_provider: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "anthropic"))
     # Claude: уровень effort (low | medium | high | xhigh | max)
+    # Размышления локальной модели (Qwen3 и т.п.): on — качественнее, off — в ~2–3 раза быстрее
+    llm_think: bool = field(default_factory=lambda: os.getenv("LLM_THINK", "on") == "on")
     llm_effort: str = field(default_factory=lambda: os.getenv("LLM_EFFORT", "medium"))
     llm_base_url: str = field(default_factory=lambda: os.getenv("LLM_BASE_URL", ""))
     llm_api_key: str = field(default_factory=lambda: os.getenv("LLM_API_KEY", ""))
