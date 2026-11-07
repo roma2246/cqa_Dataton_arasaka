@@ -1,4 +1,6 @@
-"""SQLite-хранилище. Владелец: Участник 1.
+"""Хранилище: SQLite (локально) или PostgreSQL (на сервере, DATABASE_URL). Владелец: Участник 1.
+
+Один и тот же SQL для обеих баз: плейсхолдеры «?», чтение JSON — через _j(), ID новой записи — через _insert().
 
 Принципы:
 - исходные диалоги сохраняются как есть (raw_json) + нормализованные реплики;
@@ -9,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import threading
 from contextlib import contextmanager
@@ -99,6 +102,62 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def is_pg() -> bool:
+    return settings.database_url.startswith(("postgres://", "postgresql://"))
+
+
+class Row(dict):
+    """Строка результата: доступ и по имени колонки, и по номеру (как sqlite3.Row)."""
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return list(self.values())[key]
+        return super().__getitem__(key)
+
+
+class _PgConn:
+    """Обёртка psycopg-соединения с интерфейсом sqlite3: «?» -> «%s», строки -> Row."""
+    def __init__(self, conn):
+        self.conn = conn
+
+    @staticmethod
+    def _sql(sql: str) -> str:
+        return sql.replace("?", "%s")
+
+    def execute(self, sql: str, params=()):
+        cur = self.conn.cursor(row_factory=_pg_row_factory)
+        cur.execute(self._sql(sql), tuple(params))
+        return cur
+
+    def executemany(self, sql: str, seq):
+        cur = self.conn.cursor()
+        cur.executemany(self._sql(sql), [tuple(p) for p in seq])
+        return cur
+
+
+def _pg_row_factory(cursor):
+    names = [d.name for d in (cursor.description or [])]
+    return lambda values: Row(zip(names, values))
+
+
+_pool = None
+_pool_key = None
+
+
+def _pg_pool():
+    global _pool, _pool_key
+    key = (settings.database_url, settings.db_schema)
+    if _pool is None or _pool_key != key:
+        from psycopg_pool import ConnectionPool
+        kwargs = {"autocommit": False}
+        if settings.db_schema:
+            kwargs["options"] = f"-c search_path={settings.db_schema}"
+        if _pool is not None:
+            _pool.close()
+        _pool = ConnectionPool(settings.database_url, min_size=1, max_size=4, kwargs=kwargs, open=True)
+        _pool_key = key
+    return _pool
+
+
 def connect() -> sqlite3.Connection:
     settings.db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(settings.db_path, check_same_thread=False)
@@ -108,9 +167,18 @@ def connect() -> sqlite3.Connection:
 
 
 @contextmanager
-def tx() -> Iterator[sqlite3.Connection]:
+def tx() -> Iterator[Any]:
     """Короткая транзакция. НЕ держать во время LLM-запроса."""
     with _lock:
+        if is_pg():
+            with _pg_pool().connection() as pg:
+                try:
+                    yield _PgConn(pg)
+                    pg.commit()
+                except Exception:
+                    pg.rollback()
+                    raise
+            return
         conn = connect()
         try:
             yield conn
@@ -122,8 +190,38 @@ def tx() -> Iterator[sqlite3.Connection]:
             conn.close()
 
 
+def _j(col: str, key: str, kind: str = "num") -> str:
+    """Поле JSON-колонки в SQL: число / булево."""
+    if is_pg():
+        cast = "float8" if kind == "num" else "boolean"
+        return f"(({col})::json->>'{key}')::{cast}"
+    return f"json_extract({col}, '$.{key}')"
+
+
+def _insert(c: Any, sql: str, params: tuple, id_col: str) -> Optional[int]:
+    """INSERT -> ID новой записи (None, если запись не вставлена из-за ON CONFLICT DO NOTHING)."""
+    if is_pg():
+        row = c.execute(sql + f" RETURNING {id_col}", params).fetchone()
+        return row[0] if row else None
+    cur = c.execute(sql, params)
+    return cur.lastrowid if cur.rowcount else None
+
+
+def _schema() -> str:
+    if not is_pg():
+        return SCHEMA
+    return SCHEMA.replace("INTEGER PRIMARY KEY AUTOINCREMENT", "BIGSERIAL PRIMARY KEY")
+
+
 def init_db() -> None:
     with tx() as c:
+        if is_pg():
+            if settings.db_schema:
+                c.execute(f'CREATE SCHEMA IF NOT EXISTS "{settings.db_schema}"')
+            for stmt in [x.strip() for x in re.sub(r"--[^\n]*", "", _schema()).split(";") if x.strip()]:
+                c.execute(stmt)
+            c.execute("ALTER TABLE evaluations ADD COLUMN IF NOT EXISTS batch_id TEXT")
+            return
         c.executescript(SCHEMA)
         cols = {r["name"] for r in c.execute("PRAGMA table_info(evaluations)")}
         if "batch_id" not in cols:  # миграция БД, созданной до появления пакетов
@@ -190,12 +288,15 @@ def upsert_conversations(items: list[Conversation]) -> dict[str, int]:
             stats["updated" if row else "new"] += 1
             c.execute("DELETE FROM messages WHERE conversation_id=?", (conv.conversation_id,))
             c.execute(
-                "INSERT OR REPLACE INTO conversations VALUES (?,?,?,?,?,?,?)",
+                "INSERT INTO conversations (conversation_id, group_id, channel, language, audio_url, content_hash, "
+                "imported_at) VALUES (?,?,?,?,?,?,?) ON CONFLICT (conversation_id) DO UPDATE SET "
+                "group_id=excluded.group_id, channel=excluded.channel, language=excluded.language, "
+                "audio_url=excluded.audio_url, content_hash=excluded.content_hash, imported_at=excluded.imported_at",
                 (conv.conversation_id, conv.group_id, conv.channel, conv.language,
                  conv.audio_url, conv.content_hash, now()),
             )
             c.executemany(
-                "INSERT INTO messages VALUES (?,?,?,?,?,?)",
+                "INSERT INTO messages (conversation_id, message_id, idx, timestamp, speaker, text) VALUES (?,?,?,?,?,?)",
                 [(conv.conversation_id, m.message_id, m.index, m.timestamp, m.speaker, m.text)
                  for m in conv.messages],
             )
@@ -204,10 +305,10 @@ def upsert_conversations(items: list[Conversation]) -> dict[str, int]:
 
 def list_conversations(language: Optional[str] = None, channel: Optional[str] = None,
                        group_id: Optional[str] = None) -> list[dict[str, Any]]:
-    q = """SELECT c.*, (SELECT COUNT(*) FROM messages m WHERE m.conversation_id=c.conversation_id) AS message_count,
+    q = f"""SELECT c.*, (SELECT COUNT(*) FROM messages m WHERE m.conversation_id=c.conversation_id) AS message_count,
                   e.evaluation_id AS last_evaluation_id, e.status AS last_status, e.mode AS last_mode,
-                  json_extract(e.final_score_json, '$.total') AS last_total,
-                  json_extract(e.final_score_json, '$.critical_error') AS last_critical,
+                  {_j("e.final_score_json", "total")} AS last_total,
+                  {_j("e.final_score_json", "critical_error", "bool")} AS last_critical,
                   (SELECT COUNT(*) FROM appeals a WHERE a.evaluation_id=e.evaluation_id AND a.status='open') AS open_appeals
            FROM conversations c
            LEFT JOIN evaluations e ON e.evaluation_id = (
@@ -246,15 +347,12 @@ def save_checklist(draft: ChecklistDraft) -> ChecklistVersion:
                         (draft.checklist_id,)).fetchone()
         version = (row["v"] or 0) + 1
         created = now()
-        cur = c.execute(
-            "INSERT INTO checklist_versions (checklist_id, version, body_json, created_at) VALUES (?,?,?,?)",
-            (draft.checklist_id, version, draft.model_dump_json(), created),
-        )
-        vid = cur.lastrowid
+        vid = _insert(c, "INSERT INTO checklist_versions (checklist_id, version, body_json, created_at) VALUES (?,?,?,?)",
+                      (draft.checklist_id, version, draft.model_dump_json(), created), "version_id")
     return ChecklistVersion(**draft.model_dump(), version_id=vid, version=version, created_at=created)
 
 
-def _row_to_checklist(r: sqlite3.Row) -> ChecklistVersion:
+def _row_to_checklist(r: Any) -> ChecklistVersion:
     return ChecklistVersion(**json.loads(r["body_json"]), version_id=r["version_id"],
                             version=r["version"], created_at=r["created_at"])
 
@@ -276,10 +374,9 @@ def get_checklist(version_id: int) -> Optional[ChecklistVersion]:
 def create_evaluation(conversation_id: str, content_hash: str, version_id: int,
                       batch_id: Optional[str] = None) -> int:
     with tx() as c:
-        cur = c.execute(
-            "INSERT INTO evaluations (conversation_id, content_hash, checklist_version_id, status, batch_id, created_at) "
-            "VALUES (?,?,?,?,?,?)", (conversation_id, content_hash, version_id, "queued", batch_id, now()))
-        return cur.lastrowid
+        return _insert(c, "INSERT INTO evaluations (conversation_id, content_hash, checklist_version_id, status, "
+                          "batch_id, created_at) VALUES (?,?,?,?,?,?)",
+                       (conversation_id, content_hash, version_id, "queued", batch_id, now()), "evaluation_id")
 
 
 def update_evaluation(evaluation_id: int, **fields: Any) -> None:
@@ -319,10 +416,8 @@ def list_evaluations(conversation_id: str) -> list[dict[str, Any]]:
 
 def create_appeal(evaluation_id: int, criterion_id: str, comment: str) -> int:
     with tx() as c:
-        cur = c.execute(
-            "INSERT INTO appeals (evaluation_id, criterion_id, comment, status, created_at) VALUES (?,?,?,?,?)",
-            (evaluation_id, criterion_id, comment, "open", now()))
-        return cur.lastrowid
+        return _insert(c, "INSERT INTO appeals (evaluation_id, criterion_id, comment, status, created_at) VALUES (?,?,?,?,?)",
+                       (evaluation_id, criterion_id, comment, "open", now()), "appeal_id")
 
 
 def list_appeals(status: Optional[str] = None) -> list[dict[str, Any]]:
@@ -386,14 +481,13 @@ def criterion_fingerprint(criterion: Any) -> str:
 
 def add_calibration_example(**f: Any) -> Optional[int]:
     with tx() as c:
-        cur = c.execute(
-            "INSERT OR IGNORE INTO calibration_examples (criterion_id, criterion_fingerprint, conversation_id, "
-            "evaluation_id, appeal_id, excerpt_json, ai_status, ai_answer, correct_status, correct_answer, reason, "
-            "source, active, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?)",
+        return _insert(
+            c, "INSERT INTO calibration_examples (criterion_id, criterion_fingerprint, conversation_id, "
+               "evaluation_id, appeal_id, excerpt_json, ai_status, ai_answer, correct_status, correct_answer, reason, "
+               "source, active, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?) ON CONFLICT (appeal_id) DO NOTHING",
             (f["criterion_id"], f["criterion_fingerprint"], f["conversation_id"], f.get("evaluation_id"),
              f.get("appeal_id"), json.dumps(f["excerpt"], ensure_ascii=False), f.get("ai_status"), f.get("ai_answer"),
-             f["correct_status"], f.get("correct_answer"), f["reason"], f.get("source", "appeal"), now()))
-        return cur.lastrowid if cur.rowcount else None
+             f["correct_status"], f.get("correct_answer"), f["reason"], f.get("source", "appeal"), now()), "example_id")
 
 
 def list_calibration(active_only: bool = False) -> list[dict[str, Any]]:
@@ -450,6 +544,6 @@ def recent_evaluations(limit: int = 15) -> list[dict[str, Any]]:
     with tx() as c:
         rows = c.execute(
             "SELECT evaluation_id, conversation_id, status, model, error, created_at, finished_at, batch_id, "
-            "json_extract(final_score_json, '$.total') AS total, json_extract(final_score_json, '$.critical_error') AS critical "
+            f"{_j('final_score_json', 'total')} AS total, {_j('final_score_json', 'critical_error', 'bool')} AS critical "
             "FROM evaluations WHERE finished_at IS NOT NULL ORDER BY finished_at DESC LIMIT ?", (limit,)).fetchall()
     return [dict(r) for r in rows]

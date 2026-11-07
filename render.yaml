@@ -1,0 +1,41 @@
+# Render Blueprint: бесплатный веб-сервис из Dockerfile; база — Neon Postgres (DATABASE_URL).
+# Секреты (sync: false) задаются в панели Render или через API, в репозиторий не попадают.
+services:
+  - type: web
+    name: cqa-arasaka
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL          # Neon: postgresql://...?sslmode=require
+        sync: false
+      - key: LLM_API_KEY           # ключ Gemini
+        sync: false
+      - key: ORGANIZER_API_URL     # подписанная ссылка API организаторов
+        sync: false
+      - key: BASIC_AUTH_PASSWORD   # пароль входа на сайт
+        sync: false
+      - key: BASIC_AUTH_USER
+        value: arasaka
+      - key: EVALUATOR_MODE
+        value: real
+      - key: LLM_PROVIDER
+        value: openai_compat
+      - key: LLM_BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta/openai
+      - key: LLM_MODEL
+        value: gemini-3.6-flash
+      - key: LLM_FALLBACK_MODEL
+        value: gemini-3.5-flash-lite
+      - key: LLM_RPM
+        value: "10"
+      - key: LLM_TIMEOUT_S
+        value: "120"
+      - key: BATCH_CONCURRENCY
+        value: "3"
+      - key: TEAM_NAME
+        value: Arasaka
