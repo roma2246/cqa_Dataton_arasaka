@@ -408,3 +408,5 @@ h2 em { font-style: normal; color: var(--g); }
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
   .marquee .track { animation: none; }
 }
+.avatar img.zoom { transform: scale(1.35); transform-origin: 50% 22%; }
+.op:hover .avatar img.zoom { transform: scale(1.42); }
