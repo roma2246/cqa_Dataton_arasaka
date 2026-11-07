@@ -234,25 +234,31 @@
   gsap.to(".shields svg", { y: (i) => (i - 1) * 30, rotate: (i) => (i - 1) * 8, ease: "none",
     scrollTrigger: { trigger: ".cta-band", start: "top bottom", end: "bottom top", scrub: true } });
 
-  // ---------- Разлом: край рвётся от центра, обрывки кода влетают ----------
+  // ---------- Разлом: тёмный раздел поднимается снизу, рваный край выбрасывает частицы вверх ----------
+  // Пока разлом не дошёл до места и не «взорвался», раздел команды скрыт.
   const edge = $("#crack-edge");
   if (edge) {
-    const len = edge.getTotalLength();
-    const edges = $$(".rift .edge");
-    gsap.set(edges, { strokeDasharray: len, strokeDashoffset: len });
-    gsap.set(".rift .fill", { clipPath: "inset(0 50% 0 50%)" });
-    gsap.set(".rift .slices span", { autoAlpha: 0, x: (i) => (i % 2 ? 80 : -80) });
+    const rift = $("#rift"), cyber = $("#team");
     const fx = shardsFX();
-    ScrollTrigger.create({ trigger: "#rift", start: "top 85%", once: true, onEnter: () => {
-      fx.tear();
-      $("#rift").classList.add("flash");
+    let opened = false;
+    cyber.style.clipPath = "inset(100% 0 0 0)";
+    gsap.set(rift, { autoAlpha: 0 });
+    gsap.set(".rift .slices span", { autoAlpha: 0, y: 40 });
+    const open = () => {
+      if (opened) return; opened = true;
+      const r = rift.getBoundingClientRect();
+      const st = { d: Math.min(cyber.offsetHeight, Math.max(280, innerHeight - r.top + 60)) };
+      const apply = () => { gsap.set(rift, { y: st.d }); cyber.style.clipPath = `inset(${st.d}px 0 0 0)`; };
+      apply();
       gsap.timeline()
-        .to(".rift .fill", { clipPath: "inset(0 0% 0 0%)", duration: 0.7, ease: "expo.inOut" })
-        .to(edges, { strokeDashoffset: 0, duration: 0.9, ease: "power3.inOut", stagger: 0.06 }, 0)
-        .to("#rift", { keyframes: { x: [-7, 7, -5, 5, -2, 0] }, duration: 0.4, ease: "none" }, 0.35)
-        .to(".rift .slices span", { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "steps(6)" }, 0.5)
-        .add(() => gsap.set(edges, { clearProps: "strokeDasharray,strokeDashoffset" }));
-    } });
+        .set(rift, { autoAlpha: 1 })
+        .to(st, { d: 0, duration: 1.6, ease: "power2.inOut", onUpdate: () => { apply(); fx.rise(); } })
+        .add(() => { fx.tear(); rift.classList.add("flash"); })
+        .to(rift, { keyframes: { x: [-8, 8, -6, 6, -3, 0] }, duration: 0.45, ease: "none" })
+        .to(".rift .slices span", { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.06, ease: "steps(5)" }, "<")
+        .add(() => { cyber.style.clipPath = ""; gsap.set(rift, { clearProps: "transform" }); revealTeam(); }, "<0.15");
+    };
+    ScrollTrigger.create({ trigger: rift, start: "top 65%", once: true, onEnter: open });
   }
   // Частицы разлома: осколки светлой части, символы кода, искры. Canvas работает, только пока разлом на экране.
   function shardsFX() {
@@ -261,7 +267,7 @@
     const crack = []; for (let i = 0; i < PTS.length; i += 2) crack.push([PTS[i], PTS[i + 1]]);
     const CODE = "01アカサタナ{}<>/=#$%&;ERRx7F";
     const COL = ["#6bff8f", "#00f0ff", "#ff2a6d", "#e9fff0"];
-    let W = 0, H = 0, offY = 0, parts = [], raf = 0, visible = false, last = 0;
+    let W = 0, H = 0, offY = 0, parts = [], raf = 0, visible = false, last = 0, armed = false, lastTy = 0;
     const R = (a, b) => a + Math.random() * (b - a);
     function size() {
       const r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
@@ -294,22 +300,31 @@
       for (let i = 0; i < 7 * n; i++) spark(x, y, power);
       start();
     }
+    // финальный разлом: вся кромка разом выстреливает вверх
     function tear() {
-      size();
-      // разрыв идёт от центра к краям
-      for (let i = 0; i <= 26; i++) {
-        const t = i / 26, d = Math.abs(t - 0.5) * 2;
-        setTimeout(() => { const [x, y] = at(t); burst(x, y, 1.15 - d * 0.3, 1); }, d * 650);
+      armed = true;
+      for (let i = 0; i <= 30; i++) {
+        const t = i / 30;
+        setTimeout(() => { const [x, y] = at(t); burst(x, y, R(1.1, 1.55), 1); }, R(0, 160));
       }
-      setTimeout(() => { const [x, y] = at(0.5); burst(x, y, 1.6, 3); }, 30);
+    }
+    // пока край поднимается — из него летят искры, код и осколки
+    function rise() {
+      for (let i = 0; i < 2; i++) { const [x, y] = at(Math.random()); spark(x, y, 0.9); }
+      if (Math.random() < 0.6) { const [x, y] = at(Math.random()); glyph(x, y, 0.9); }
+      if (Math.random() < 0.45) { const [x, y] = at(Math.random()); shard(x, y, 0.8); }
+      start();
     }
     function frame(ts) {
       raf = 0;
       if (!visible && !parts.length) return;
       const dt = Math.min(2.5, last ? (ts - last) / 16.7 : 1); last = ts;
       ctx.clearRect(0, 0, W, H);
+      // canvas едет вместе с краем — вылетевшие частицы оставляем на месте страницы
+      const ty = +gsap.getProperty(rift, "y") || 0;
+      if (ty !== lastTy) { const dy = ty - lastTy; parts.forEach((p) => (p.y -= dy)); lastTy = ty; }
       // фоновые искры, пока трещина видна
-      if (visible && Math.random() < 0.35 * dt) { const [x, y] = at(Math.random()); Math.random() < 0.5 ? spark(x, y, 0.5) : glyph(x, y, 0.4); }
+      if (armed && visible && Math.random() < 0.35 * dt) { const [x, y] = at(Math.random()); Math.random() < 0.5 ? spark(x, y, 0.5) : glyph(x, y, 0.4); }
       const alive = [];
       for (const p of parts) {
         p.life += dt; p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.99;
@@ -340,10 +355,11 @@
     // быстрый скролл через разлом — дополнительные выбросы
     ScrollTrigger.create({ trigger: rift, start: "top bottom", end: "bottom top", onUpdate: (s) => {
       const v = Math.abs(s.getVelocity());
-      if (v > 900 && Math.random() < 0.5) { const [x, y] = at(Math.random()); burst(x, y, Math.min(1.4, v / 2000), 1); }
+      if (armed && v > 900 && Math.random() < 0.5) { const [x, y] = at(Math.random()); burst(x, y, Math.min(1.4, v / 2000), 1); }
     } });
     // курсор вдоль трещины высекает искры
     if (fine) addEventListener("mousemove", (e) => {
+      if (!armed) return;
       const r = rift.getBoundingClientRect();
       if (e.clientY < r.top - 30 || e.clientY > r.bottom + 10) return;
       const [x, y] = at(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
@@ -351,7 +367,8 @@
       if (Math.random() < 0.25) shard(x, y, 0.6);
       start();
     }, { passive: true });
-    return { tear };
+    size();
+    return { tear, rise };
   }
 
   // шапка темнеет уже над разломом
@@ -367,7 +384,10 @@
       el.textContent = text.slice(0, n) + [...text.slice(n)].map((c) => (c === " " ? " " : CH[(Math.random() * CH.length) | 0])).join("");
     }, onComplete: () => (el.textContent = text) });
   }
-  ScrollTrigger.create({ trigger: "#team", start: "top 70%", once: true, onEnter: () => {
+  // запускается, когда разлом доиграл
+  let teamShown = false;
+  function revealTeam() {
+    if (teamShown) return; teamShown = true;
     scramble(glitch, glitch.dataset.text, 1.4);
     gsap.fromTo(".op", { autoAlpha: 0, y: 70, clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
       { autoAlpha: 1, y: 0, clipPath: "polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px))",
@@ -382,7 +402,8 @@
       gsap.to(o, { n: txt.length, duration: txt.length * 0.045, delay: 0.9 + i * 0.25, ease: "none", onUpdate: () => (r.textContent = txt.slice(0, Math.round(o.n))) });
       gsap.from($$(".meter i", op), { scaleY: 0, transformOrigin: "bottom", duration: 0.2, stagger: 0.07, delay: 1 + i * 0.2 });
     });
-  } });
+  }
+  gsap.set(".op", { autoAlpha: 0 });
   $$(".op h3").forEach((h) => h.setAttribute("aria-label", h.textContent));
   $$(".op").forEach((op) => op.addEventListener("mouseenter", () => scramble($("h3", op), $("h3", op).getAttribute("aria-label"), 0.5)));
 
