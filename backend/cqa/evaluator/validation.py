@@ -60,6 +60,14 @@ def validate(results: list[CriterionResult], checklist: ChecklistDraft,
             continue
 
         issue = None
+        if r.status == "not_applicable" and not c.na_allowed and any(o.value == "no" for o in c.options):
+            # Официально «Нет» = действие было нужно, но его нет. N/A там, где N/A не бывает, означает
+            # «действия не было» -> «Нет»; просмотренный диапазон — весь разговор. Фиксируем в замечаниях.
+            problems.append(f"{cid}: N/A недопустим — засчитано как «Нет»")
+            r = r.model_copy(update={
+                "status": "applicable", "answer": "no", "na_reason": None,
+                "checked_range": r.checked_range or CheckedRange(from_message_id=conv.messages[0].message_id,
+                                                                 to_message_id=conv.messages[-1].message_id)})
         bad_ids = [i for i in r.evidence_message_ids if i not in msgs]
         if bad_ids:
             issue = f"несуществующие message_id {bad_ids}"

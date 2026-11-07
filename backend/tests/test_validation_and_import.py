@@ -64,10 +64,18 @@ def test_missing_criterion_becomes_needs_review():
     assert out[-1].status == "needs_review" and problems
 
 
-def test_na_forbidden():
+def test_na_forbidden_becomes_no():
     res = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="not_applicable", explanation=""))
+    out, problems = validate(res, CHECKLIST, conv())
+    g = next(r for r in out if r.criterion_id == "demo_greeting")
+    assert (g.status, g.answer) == ("applicable", "no") and g.checked_range is not None
+    assert any("засчитано как «Нет»" in p for p in problems)
+
+
+def test_na_forbidden_on_scale_needs_review():
+    res = full(demo_politeness=CriterionResult(criterion_id="demo_politeness", status="not_applicable", explanation=""))
     out, _ = validate(res, CHECKLIST, conv())
-    assert next(r for r in out if r.criterion_id == "demo_greeting").status == "needs_review"
+    assert next(r for r in out if r.criterion_id == "demo_politeness").status == "needs_review"
 
 
 def test_range_past_end_is_clamped_not_rejected():
