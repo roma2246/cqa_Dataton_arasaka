@@ -191,9 +191,14 @@ def upsert_conversations(items: list[Conversation]) -> dict[str, int]:
 def list_conversations(language: Optional[str] = None, channel: Optional[str] = None,
                        group_id: Optional[str] = None) -> list[dict[str, Any]]:
     q = """SELECT c.*, (SELECT COUNT(*) FROM messages m WHERE m.conversation_id=c.conversation_id) AS message_count,
-                  (SELECT e.evaluation_id FROM evaluations e WHERE e.conversation_id=c.conversation_id
-                   ORDER BY e.evaluation_id DESC LIMIT 1) AS last_evaluation_id
-           FROM conversations c WHERE 1=1"""
+                  e.evaluation_id AS last_evaluation_id, e.status AS last_status, e.mode AS last_mode,
+                  json_extract(e.final_score_json, '$.total') AS last_total,
+                  json_extract(e.final_score_json, '$.critical_error') AS last_critical,
+                  (SELECT COUNT(*) FROM appeals a WHERE a.evaluation_id=e.evaluation_id AND a.status='open') AS open_appeals
+           FROM conversations c
+           LEFT JOIN evaluations e ON e.evaluation_id = (
+               SELECT MAX(e2.evaluation_id) FROM evaluations e2 WHERE e2.conversation_id=c.conversation_id)
+           WHERE 1=1"""
     args: list[Any] = []
     for col, val in (("language", language), ("channel", channel), ("group_id", group_id)):
         if val:

@@ -16,41 +16,90 @@ export function toast(msg, isError = false) {
   t.textContent = msg;
   t.className = "show" + (isError ? " error" : "");
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => (t.className = ""), 4000);
+  toast._t = setTimeout(() => (t.className = ""), 4200);
 }
 
 export const STATUS_LABEL = { applicable: "Оценён", not_applicable: "N/A", needs_review: "Нужна проверка" };
+export const EVAL_STATUS = {
+  queued: ["В очереди", "accent"], running: ["Оценивается", "accent"], completed: ["Готово", "ok"],
+  failed: ["Ошибка", "bad"], canceled: ["Отменено", ""],
+};
+export const LANG = { RU: "Русский", KZ: "Қазақша", EN: "English" };
+export const CHANNEL = { "agent chat": "Чат", "voice call": "Звонок" };
+export const SPEAKER = { client: "Клиент", operator: "Оператор", bot: "Бот AIM", system: "Система" };
 
 // null -> "—", никогда не 0
 export const fmt = (v, digits = 2) => (v === null || v === undefined ? "—" : Number(v).toFixed(digits));
+export const pct = (v) => (v === null || v === undefined ? "—" : `${Number(v).toFixed(Number(v) % 1 ? 1 : 0)}%`);
+export const tone = (v) => (v === null || v === undefined ? "" : v >= 80 ? "good" : v >= 50 ? "mid" : "low");
 
-export function role() {
-  return document.getElementById("role").value;
+export function scoreBar(v) {
+  if (v === null || v === undefined) return '<span class="subtle">—</span>';
+  const t = tone(v);
+  return `<span class="score"><span class="bar ${t === "good" ? "" : t}"><i style="width:${Math.max(0, Math.min(100, v))}%"></i></span>${pct(v)}</span>`;
 }
 
-const roleSel = document.getElementById("role");
-try { roleSel.value = localStorage.getItem("cqa-role") || "operator"; } catch {}
-roleSel.addEventListener("change", () => {
-  try { localStorage.setItem("cqa-role", roleSel.value); } catch {}
-  route();
+export function chip(text, kind = "") {
+  return `<span class="chip ${kind}">${esc(text)}</span>`;
+}
+
+export function role() {
+  return document.querySelector("#role [aria-pressed='true']")?.dataset.v || "operator";
+}
+
+// ---- Роль (демо) ----
+const roleSeg = document.getElementById("role");
+function setRole(v, rerender = true) {
+  roleSeg.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+  try { localStorage.setItem("cqa-role", v); } catch {}
+  if (rerender) route();
+}
+try { setRole(localStorage.getItem("cqa-role") || "operator", false); } catch { setRole("operator", false); }
+roleSeg.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setRole(b.dataset.v); });
+
+// ---- Тема ----
+document.getElementById("theme").addEventListener("click", () => {
+  const cur = document.documentElement.dataset.theme
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = cur === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("cqa-theme", next); } catch {}
 });
+
+export async function refreshAppealsCount() {
+  try {
+    const n = (await api.appeals("open")).length;
+    const el = document.getElementById("appeals-count");
+    el.textContent = n;
+    el.hidden = !n;
+  } catch {}
+}
+
+function markNav(name) {
+  document.querySelectorAll(".nav a").forEach((a) => a.classList.toggle("active", a.dataset.route === name));
+}
 
 async function route() {
   const hash = location.hash.replace(/^#/, "") || "/";
+  window.scrollTo(0, 0);
   try {
-    if (hash.startsWith("/c/")) return await renderCard(decodeURIComponent(hash.slice(3)));
-    if (hash === "/checklist") return await renderChecklist();
-    if (hash === "/appeals") return await renderAppeals();
+    if (hash.startsWith("/c/")) { markNav("list"); return await renderCard(decodeURIComponent(hash.slice(3))); }
+    if (hash === "/checklist") { markNav("checklist"); return await renderChecklist(); }
+    if (hash === "/appeals") { markNav("appeals"); return await renderAppeals(); }
+    markNav("list");
     return await renderConversations();
   } catch (e) {
-    root.innerHTML = `<div class="panel st-failed">Ошибка: ${esc(e.message)}</div>`;
+    root.innerHTML = `<div class="alert bad">Ошибка: ${esc(e.message)}</div>`;
+  } finally {
+    refreshAppealsCount();
   }
 }
 
 window.addEventListener("hashchange", route);
 api.health().then((h) => {
   const b = document.getElementById("mode-badge");
-  b.textContent = h.evaluator_mode === "mock" ? "ТЕСТОВЫЙ режим оценщика (mock)" : "Модель: " + h.model;
-  b.className = "badge " + (h.evaluator_mode === "mock" ? "mock" : "real");
+  b.textContent = h.evaluator_mode === "mock" ? "Тестовый оценщик" : h.model;
+  b.className = "chip mode-pill " + (h.evaluator_mode === "mock" ? "warn" : "ok");
+  b.title = h.evaluator_mode === "mock" ? "Оценки — тестовые ответы без модели" : "Оценки выполняет модель " + h.model;
 }).catch(() => toast("Сервер недоступен", true));
 route();
