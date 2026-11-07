@@ -27,7 +27,10 @@ def pct(pair) -> float | None:
 
 
 def main() -> None:
-    iters = json.loads((REPORTS / "iterations.json").read_text(encoding="utf-8"))
+    import sys
+    manifest = sys.argv[1] if len(sys.argv) > 1 else "iterations.json"
+    out_name = sys.argv[2] if len(sys.argv) > 2 else "progress.html"
+    iters = json.loads((REPORTS / manifest).read_text(encoding="utf-8"))
     rows = []
     for it in iters:
         d, h, x = load(it.get("dev")), load(it.get("holdout")), load(it.get("external"))
@@ -44,7 +47,7 @@ def main() -> None:
             }
         rows.append(row)
     html = TEMPLATE.replace("__DATA__", json.dumps(rows, ensure_ascii=False)).replace("__TARGET__", str(TARGET))
-    out = REPORTS / "progress.html"
+    out = REPORTS / out_name
     out.write_text(html, encoding="utf-8")
     print(f"{out.relative_to(ROOT)}: {len(rows)} итераций")
 

@@ -86,3 +86,13 @@ def test_garbage_range_rejected():
                                              explanation="", checked_range=CheckedRange(from_message_id="m009", to_message_id="m002")))
     out, _ = validate(res, CHECKLIST, conv())
     assert next(r for r in out if r.criterion_id == "demo_greeting").status == "needs_review"
+
+
+def test_negative_without_refs_gets_full_range_positive_needs_evidence():
+    neg = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="applicable", answer="no", explanation=""))
+    out, _ = validate(neg, CHECKLIST, conv())
+    g = next(r for r in out if r.criterion_id == "demo_greeting")
+    assert g.status == "applicable" and (g.checked_range.from_message_id, g.checked_range.to_message_id) == ("m001", "m007")
+    pos = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="applicable", answer="yes", explanation=""))
+    out, _ = validate(pos, CHECKLIST, conv())
+    assert next(r for r in out if r.criterion_id == "demo_greeting").status == "needs_review"

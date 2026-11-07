@@ -61,7 +61,10 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
             raise
         calls += resp.calls
         try:
-            parsed = AIEvaluation.model_validate(json.loads(resp.text))
+            raw = json.loads(resp.text)
+            if prompt_builder.compact():
+                raw = prompt_builder.expand_compact(raw)
+            parsed = AIEvaluation.model_validate(raw)
             break
         except (json.JSONDecodeError, ValidationError) as e:
             last_err = str(e)[:300]

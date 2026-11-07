@@ -62,6 +62,7 @@ def main() -> int:
     ap.add_argument("--langs", default="", help="через запятую: RU,KZ,EN (по умолчанию все)")
     ap.add_argument("--seed-from", default="", help="tag прошлого прогона: его ошибки станут прецедентами")
     ap.add_argument("--seed-langs", default="", help="языки, ошибки которых берутся в прецеденты")
+    ap.add_argument("--checklist", help="путь к чек-листу вместо указанного в тест-сете")
     ap.add_argument("--resume", action="store_true", help="досчитать только несостоявшиеся оценки прогона --tag")
     args = ap.parse_args()
 
@@ -79,7 +80,7 @@ def main() -> int:
     storage.upsert_conversations(importer.parse_response(ts["dataset"]))
 
     # Версия чек-листа: переиспользуем идентичную, иначе сохраняем новую
-    draft = ChecklistDraft.model_validate_json((ROOT / ts["checklist"]).read_text(encoding="utf-8"))
+    draft = ChecklistDraft.model_validate_json((ROOT / (args.checklist or ts["checklist"])).read_text(encoding="utf-8"))
     vid = next((v.version_id for v in storage.list_checklists()
                 if [c.model_dump() for c in v.criteria] == [c.model_dump() for c in draft.criteria]), None)
     if vid is None:

@@ -82,8 +82,15 @@ def validate(results: list[CriterionResult], checklist: ChecklistDraft,
                 elif fixed != (r.checked_range.from_message_id, r.checked_range.to_message_id):
                     problems.append(f"{cid}: checked_range обрезан до границ диалога {fixed[0]}–{fixed[1]}")
                     r = r.model_copy(update={"checked_range": CheckedRange(from_message_id=fixed[0], to_message_id=fixed[1])})
-            if not issue and not r.evidence_message_ids and not r.checked_range:
-                issue = "нет ни доказательства, ни проверенного диапазона"
+            positive_claim = c.answer_type != "scale" and any(o.value == r.answer and o.score > 0 for o in c.options) \
+                and not c.is_critical
+            if not issue and not r.evidence_message_ids and not r.checked_range and positive_claim:
+                issue = "утверждение о действии оператора без ссылки на реплику"
+            elif not issue and not r.evidence_message_ids and not r.checked_range:
+                # «действия нет» без ссылок — считаем, что просмотрен весь разговор (а не отправляем на проверку)
+                problems.append(f"{cid}: нет ссылок — подставлен диапазон всего разговора")
+                r = r.model_copy(update={"checked_range": CheckedRange(
+                    from_message_id=conv.messages[0].message_id, to_message_id=conv.messages[-1].message_id)})
             # Авторство: если есть доказательства, хотя бы одно должно быть от оператора.
             # TODO(A03): уточнить - для каких ответов (положительный/отрицательный) это обязательно.
             if not issue and r.evidence_message_ids:

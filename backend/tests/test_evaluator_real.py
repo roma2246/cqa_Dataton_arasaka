@@ -56,3 +56,12 @@ def test_fails_after_two_bad_answers(monkeypatch):
 
 def test_unknown_usage_is_not_zero_cost():
     assert llm_client.cost_usd([llm_client.CallRecord(True, 0.1, "claude-opus-5-5", None, None)]) is None
+
+
+def test_compact_answer_is_expanded():
+    from cqa.evaluator import prompt_builder
+    raw = {"results": [{"criterion_id": "demo_next_step", "status": "not_applicable", "answer": None,
+                        "explanation": "Вопрос решён", "evidence_message_ids": [], "checked_range": "m001-m007"}]}
+    r = prompt_builder.expand_compact(raw)["results"][0]
+    assert r["checked_range"] == {"from_message_id": "m001", "to_message_id": "m007"}
+    assert r["na_reason"] == "Вопрос решён" and r["review_reason"] is None

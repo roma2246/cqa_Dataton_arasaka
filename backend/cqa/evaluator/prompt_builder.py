@@ -12,7 +12,7 @@ from ..models import ChecklistDraft, Conversation
 
 import os
 
-PROMPT_VERSION = os.getenv("PROMPT_VERSION", "evaluate_v2")
+PROMPT_VERSION = os.getenv("PROMPT_VERSION", "evaluate_v3")
 PROMPT_DIR = Path(__file__).resolve().parents[2] / "prompts"
 
 
@@ -101,7 +101,50 @@ def _nullable(schema: dict) -> dict:
     return {"anyOf": [schema, {"type": "null"}]}
 
 
+def compact() -> bool:
+    """Компактный ответ (с evaluate_v3): checked_range строкой, без na_reason/review_reason — на ~35% меньше токенов."""
+    return PROMPT_VERSION >= "evaluate_v3"
+
+
 def output_schema(checklist: ChecklistDraft) -> dict:
+    if compact():
+        return _compact_schema(checklist)
+    return _full_schema(checklist)
+
+
+def _compact_schema(checklist: ChecklistDraft) -> dict:
+    ids = [c.criterion_id for c in checklist.criteria]
+    item = {
+        "type": "object",
+        "properties": {
+            "criterion_id": {"type": "string", "enum": ids},
+            "status": {"type": "string", "enum": ["applicable", "not_applicable", "needs_review"]},
+            "answer": _nullable({"type": "string"}),
+            "explanation": {"type": "string"},
+            "evidence_message_ids": {"type": "array", "items": {"type": "string"}},
+            "checked_range": _nullable({"type": "string"}),
+        },
+        "required": ["criterion_id", "status", "answer", "explanation", "evidence_message_ids", "checked_range"],
+        "additionalProperties": False,
+    }
+    return {"type": "object", "properties": {"results": {"type": "array", "items": item}},
+            "required": ["results"], "additionalProperties": False}
+
+
+def expand_compact(raw: dict) -> dict:
+    """Компактный ответ -> полный формат CriterionResult."""
+    for r in raw.get("results") or []:
+        rng = r.get("checked_range")
+        if isinstance(rng, str):
+            parts = [p.strip() for p in rng.replace("–", "-").split("-") if p.strip()]
+            r["checked_range"] = ({"from_message_id": parts[0], "to_message_id": parts[-1]} if parts else None)
+        expl = r.get("explanation") or ""
+        r.setdefault("na_reason", expl if r.get("status") == "not_applicable" else None)
+        r.setdefault("review_reason", expl if r.get("status") == "needs_review" else None)
+    return raw
+
+
+def _full_schema(checklist: ChecklistDraft) -> dict:
     """JSON-схема ответа, построенная из текущей версии чек-листа (для structured output)."""
     ids = [c.criterion_id for c in checklist.criteria]
     item = {
