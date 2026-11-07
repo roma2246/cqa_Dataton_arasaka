@@ -35,6 +35,8 @@ class Settings:
     # Claude: уровень effort (low | medium | high | xhigh | max)
     # Размышления локальной модели (Qwen3 и т.п.): on — качественнее, off — в ~2–3 раза быстрее
     llm_think: bool = field(default_factory=lambda: os.getenv("LLM_THINK", "on") == "on")
+    # Уточняющий запрос по критериям, которые модель оставила «нужна проверка»
+    followup: bool = field(default_factory=lambda: os.getenv("LLM_FOLLOWUP", "on") == "on")
     llm_effort: str = field(default_factory=lambda: os.getenv("LLM_EFFORT", "medium"))
     llm_base_url: str = field(default_factory=lambda: os.getenv("LLM_BASE_URL", ""))
     llm_api_key: str = field(default_factory=lambda: os.getenv("LLM_API_KEY", ""))

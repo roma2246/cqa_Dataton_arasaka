@@ -77,3 +77,28 @@ def test_ultra_answer_is_expanded():
     assert (out[0]["status"], out[0]["answer"], out[0]["evidence_message_ids"]) == ("applicable", "yes", ["m004"])
     assert (out[1]["status"], out[1]["answer"], out[1]["na_reason"]) == ("not_applicable", None, "Общий вопрос")
     assert out[2]["status"] == "needs_review" and out[2]["checked_range"] == {"from_message_id": "m001", "to_message_id": "m007"}
+
+
+def test_needs_review_gets_one_followup(monkeypatch):
+    from cqa.config import settings as st
+    first = json.loads(json.dumps(GOOD))
+    first["results"][3].update(status="needs_review", answer=None, evidence_message_ids=[], review_reason="Неясно")
+    second = {"results": [dict(GOOD["results"][3])]}
+    answers = iter([json.dumps(first), json.dumps(second)])
+    seen = []
+
+    def fake(s, u, sch):
+        seen.append(u)
+        return llm_client.LLMResponse(next(answers), [call()])
+    monkeypatch.setattr(llm_client, "chat_json", fake)
+    monkeypatch.setattr(st, "followup", True)
+    monkeypatch.setattr(prompt_builder, "PROMPT_VERSION", "evaluate_v2")
+    out = service._real(CONV, CHK)
+    assert len(seen) == 2 and "demo_next_step: Неясно" in seen[1]
+    assert next(r for r in out.results if r.criterion_id == "demo_next_step").status == "applicable"
+    assert any("уточнено" in p for p in out.problems) and len(out.calls) == 2
+
+
+def test_facts_block_points_to_first_operator_reply():
+    f = prompt_builder.facts_block(CONV)  # fx-ru-001: оператор впервые в m004, после system m003 [00:38]
+    assert "m004" in f and "37 с" in f and "Все реплики оператора: m004, m006" in f

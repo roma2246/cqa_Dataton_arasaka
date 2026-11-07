@@ -76,6 +76,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
         raise llm_client.LLMError(f"Неверный JSON от модели после повтора: {last_err}", calls)
 
     results, problems = validate(parsed.results, checklist, conv)
+    results, problems = _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls)
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
         results=results, problems=problems, mode="real", model=", ".join(models) or settings.llm_model,
@@ -117,3 +118,39 @@ def _mock(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     results, problems = validate(results, checklist, conv)
     return EvaluatorOutput(results=results, problems=problems, mode="mock", model="mock",
                            prompt_version="mock", calls=[], cost_usd=0.0)
+
+
+def _parse(text: str) -> AIEvaluation:
+    raw = json.loads(text)
+    if prompt_builder.ultra():
+        raw = prompt_builder.expand_ultra(raw)
+    elif prompt_builder.compact():
+        raw = prompt_builder.expand_compact(raw)
+    return AIEvaluation.model_validate(raw)
+
+
+def _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls):
+    """Один уточняющий запрос по критериям, которые модель оставила «нужна проверка».
+    Если и после него решить нельзя — статус остаётся needs_review (ничего не подменяем)."""
+    pending = [r for r in results if r.status == "needs_review" and r.review_reason != "missing"]
+    if not pending or not settings.followup:
+        return results, problems
+    ids = {r.criterion_id for r in pending}
+    sub = checklist.model_copy(update={"criteria": [c for c in checklist.criteria if c.criterion_id in ids]})
+    ask = "\n".join(f"- {r.criterion_id}: {r.review_reason or r.explanation}" for r in pending)
+    user = (prompt_builder.user_prompt(sub, conv, examples)
+            + "\n\nВ прошлой оценке эти критерии остались без решения:\n" + ask
+            + "\nРеши их сейчас по instruction и na_rule: выбери ответ, либо not_applicable, если выполнено условие N/A. "
+              "needs_review допустим, только если в разговоре вообще нет материала для решения. "
+              "Верни JSON только по этим критериям.")
+    try:
+        resp = llm_client.chat_json(system, user, prompt_builder.output_schema(sub))
+        calls += resp.calls
+        fixed, extra = validate(_parse(resp.text).results, sub, conv)
+    except (llm_client.LLMError, json.JSONDecodeError, ValidationError) as e:
+        calls += getattr(e, "calls", [])
+        return results, problems + [f"уточнение не удалось: {str(e)[:120]}"]
+    by = {r.criterion_id: r for r in fixed if r.status != "needs_review"}
+    if by:
+        problems = problems + [f"уточнено повторным запросом: {', '.join(sorted(by))}"] + extra
+    return [by.get(r.criterion_id, r) for r in results], problems

@@ -78,6 +78,51 @@ def transcript_lines(conv: Conversation) -> str:
                      for m in conv.messages)
 
 
+_MMSS = re.compile(r"^(\d{1,3}):(\d\d)$")
+
+
+def _seconds(ts: str) -> float | None:
+    """MM:SS у чатов или ISO 8601 у звонков -> секунды (для пауз). None, если не разобрать."""
+    m = _MMSS.match(ts or "")
+    if m:
+        return int(m.group(1)) * 60 + int(m.group(2))
+    try:
+        from datetime import datetime
+        return datetime.fromisoformat(ts).timestamp()
+    except (TypeError, ValueError):
+        return None
+
+
+def facts_block(conv: Conversation) -> str:
+    """Факты, которые сервер вычисляет сам, чтобы модель не ошибалась в позициях и паузах."""
+    ops = [m for m in conv.messages if m.speaker == "operator"]
+    if not ops:
+        return "<facts>\nВ разговоре нет реплик оператора.\n</facts>\n\n"
+    first = ops[0]
+    before = [m for m in conv.messages[: first.index] if m.speaker in ("client", "system")]
+    lines = [f"Первый ответ оператора — {first.message_id} [{_short_time(first.timestamp)}]: "
+             f"«{' '.join(first.text.split())[:160]}». Критерии про «первый ответ» оценивай по этой реплике."]
+    if before:
+        prev = before[-1]
+        a, b = _seconds(prev.timestamp), _seconds(first.timestamp)
+        if a is not None and b is not None and b >= a:
+            lines.append(f"Перед ним последняя реплика клиента/системы — {prev.message_id} [{_short_time(prev.timestamp)}]; "
+                         f"пауза до первой реакции оператора: {int(b - a)} с (порог чек-листа — 180 с).")
+    gaps = []
+    for i, m in enumerate(conv.messages):
+        if m.speaker != "operator" or m is first:
+            continue
+        prev_c = next((x for x in reversed(conv.messages[:i]) if x.speaker == "client"), None)
+        if prev_c and conv.messages[i - 1].speaker == "client":
+            a, b = _seconds(prev_c.timestamp), _seconds(m.timestamp)
+            if a is not None and b is not None and b - a > 180:
+                gaps.append(f"{m.message_id} (+{int(b - a)} с)")
+    if gaps:
+        lines.append("Ответы оператора позже 3 минут после клиента: " + ", ".join(gaps))
+    lines.append("Все реплики оператора: " + ", ".join(m.message_id for m in ops))
+    return "<facts>\n" + "\n".join(lines) + "\n</facts>\n\n"
+
+
 def user_prompt(checklist: ChecklistDraft, conv: Conversation, examples: list[dict] | None = None) -> str:
     if os.getenv("TRANSCRIPT_FORMAT", "lines") == "json":
         body = json.dumps([{"message_id": m.message_id, "timestamp": m.timestamp, "speaker": m.speaker, "text": m.text}
@@ -88,6 +133,7 @@ def user_prompt(checklist: ChecklistDraft, conv: Conversation, examples: list[di
     return (
         "<checklist>\n" + crit + "\n</checklist>\n\n"
         + calibration_block(examples or [])
+        + facts_block(conv)
         + f"<conversation channel=\"{conv.channel}\" language=\"{conv.language}\" "
         f"first_message_id=\"{conv.messages[0].message_id}\" last_message_id=\"{conv.messages[-1].message_id}\" "
         f"messages=\"{len(conv.messages)}\">\n"
