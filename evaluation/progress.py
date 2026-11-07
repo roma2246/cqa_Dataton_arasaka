@@ -1,0 +1,158 @@
+"""График прогресса «дообучения» по итерациям. Владелец: Участник 4.
+
+Читает evaluation/reports/iterations.json (список итераций и имена отчётов) и рисует
+evaluation/reports/progress.html — одна страница без внешних зависимостей.
+
+Запуск:  .venv/bin/python evaluation/progress.py
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+REPORTS = ROOT / "evaluation" / "reports"
+TARGET = 90  # порог «сносно», % совпадений с эталоном
+
+
+def load(tag: str | None) -> dict | None:
+    if not tag:
+        return None
+    p = REPORTS / f"{tag}.json"
+    return json.loads(p.read_text(encoding="utf-8"))["summary"] if p.exists() else None
+
+
+def pct(pair) -> float | None:
+    return round(100 * pair[0] / pair[1], 1) if pair and pair[1] else None
+
+
+def main() -> None:
+    iters = json.loads((REPORTS / "iterations.json").read_text(encoding="utf-8"))
+    rows = []
+    for it in iters:
+        d, h = load(it.get("dev")), load(it.get("holdout"))
+        row = {"iter": it["iter"], "name": it["name"], "changes": it["changes"], "model": it.get("model", "")}
+        for key, s in (("dev", d), ("hold", h)):
+            row[key] = None if not s else {
+                "acc": pct(s["accuracy"]), "n": s["accuracy"],
+                "evidence": pct(s["evidence"]),
+                "langs": {k: pct(v) for k, v in s["by_language"].items()},
+                "crit": {k: pct(v) for k, v in s["by_criterion"].items()},
+                "done": s["evaluations"]["completed"], "total": s["evaluations"]["total"],
+                "latency": s["latency_s_avg"], "cost": s["cost_usd"]["per_eval"],
+            }
+        rows.append(row)
+    html = TEMPLATE.replace("__DATA__", json.dumps(rows, ensure_ascii=False)).replace("__TARGET__", str(TARGET))
+    out = REPORTS / "progress.html"
+    out.write_text(html, encoding="utf-8")
+    print(f"{out.relative_to(ROOT)}: {len(rows)} итераций")
+
+
+TEMPLATE = r"""<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Прогресс оценщика</title>
+<style>
+.viz-root{color-scheme:light;--surface-1:#fcfcfb;--surface-2:#f2f1ee;--text-primary:#0b0b0b;--text-secondary:#52514e;
+ --text-muted:#7a7974;--grid:#e6e5e1;--axis:#c9c8c2;--series-1:#2a78d6;--series-2:#eb6834;--good:#1a7f37;--bad:#c4312f}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{color-scheme:dark;--surface-1:#1a1a19;
+ --surface-2:#242422;--text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#8f8e86;--grid:#2e2e2b;--axis:#46453f;
+ --series-1:#3987e5;--series-2:#d95926;--good:#46b85c;--bad:#e66767}}
+:root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#1a1a19;--surface-2:#242422;--text-primary:#f0efec;
+ --text-secondary:#c3c2b7;--text-muted:#8f8e86;--grid:#2e2e2b;--axis:#46453f;--series-1:#3987e5;--series-2:#d95926;--good:#46b85c;--bad:#e66767}
+html,body{margin:0}body{background:var(--surface-1)}
+.viz-root{background:var(--surface-1);color:var(--text-primary);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
+ max-width:980px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:28px 0 8px}.muted{color:var(--text-secondary)}.small{font-size:12.5px;color:var(--text-muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--surface-2);border-radius:12px;padding:12px 14px}.tile .v{font-size:28px;font-weight:650;font-variant-numeric:tabular-nums}
+.tile .l{font-size:12.5px;color:var(--text-secondary)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text-secondary);margin:6px 0}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.chart{position:relative}svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--surface-1);border:1px solid var(--axis);border-radius:8px;padding:8px 10px;
+ font-size:12.5px;box-shadow:0 6px 20px rgba(0,0,0,.15);display:none;min-width:200px;max-width:280px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:6px 8px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top}
+th{color:var(--text-secondary);font-weight:600}td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ok{color:var(--good);font-weight:600}.no{color:var(--bad);font-weight:600}
+</style></head>
+<body><div class="viz-root">
+<h1>Как оценщик учится</h1>
+<div class="muted">Доля ответов модели, совпавших с эталоном, по итерациям улучшений. Порог «сносно» — __TARGET__%.</div>
+<div class="tiles" id="tiles"></div>
+
+<h2>Совпадение с эталоном по итерациям</h2>
+<div class="legend"><span><i style="background:var(--series-1)"></i>Набор для настройки — на нём ищем ошибки</span>
+<span><i style="background:var(--series-2)"></i>Отложенный набор — новые диалоги, по нему ничего не настраиваем</span>
+<span><i style="background:var(--text-muted);height:0;border-top:2px dashed var(--text-muted)"></i>Порог __TARGET__%</span></div>
+<div class="chart" id="chart"></div>
+<div class="small">Если оранжевая линия растёт вместе с синей — улучшение настоящее. Если растёт только синяя — модель «зазубрила» настроечный набор.</div>
+
+<h2>По языкам на отложенном наборе</h2>
+<div id="langs"></div>
+
+<h2>Итерации подробно</h2>
+<div id="table"></div>
+</div>
+<script>
+const D = __DATA__, T = __TARGET__;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const f = v => v == null ? "—" : (Number.isInteger(v) ? v : v.toFixed(1)) + "%";
+const last = D[D.length - 1] || {};
+const best = D.filter(r => r.hold).reduce((a, r) => (!a || r.hold.acc > a.hold.acc) ? r : a, null);
+document.getElementById("tiles").innerHTML = [
+  ["Отложенный набор сейчас", f(last.hold?.acc), last.hold ? `${last.hold.n[0]} из ${last.hold.n[1]} ответов` : "ещё не прогнан"],
+  ["Набор для настройки сейчас", f(last.dev?.acc), last.dev ? `${last.dev.n[0]} из ${last.dev.n[1]} ответов` : "—"],
+  ["Порог «сносно»", T + "%", last.hold && last.hold.acc >= T ? "достигнут на отложенном" : "ещё не достигнут"],
+  ["Доказательства верные", f(last.hold?.evidence ?? last.dev?.evidence), "ссылка на нужную реплику оператора"],
+].map(([l, v, s]) => `<div class="tile"><div class="l">${l}</div><div class="v">${v}</div><div class="small">${esc(s)}</div></div>`).join("");
+
+// ---- линейный график ----
+const W = 900, H = 340, m = {l: 44, r: 150, t: 14, b: 54};
+const n = Math.max(D.length, 2), x = i => m.l + (W - m.l - m.r) * (D.length < 2 ? 0.5 : i / (D.length - 1));
+const y = v => m.t + (H - m.t - m.b) * (1 - v / 100);
+let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Совпадение с эталоном по итерациям">`;
+for (const g of [0, 25, 50, 75, 100]) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(g)}" y2="${y(g)}" stroke="var(--grid)"/>
+  <text x="${m.l - 8}" y="${y(g) + 4}" text-anchor="end" font-size="12" fill="var(--text-muted)">${g}%</text>`;
+s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(T)}" y2="${y(T)}" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="${W - m.r + 6}" y="${y(T) + 4}" font-size="12" fill="var(--text-muted)">порог ${T}%</text>`;
+D.forEach((r, i) => s += `<text x="${x(i)}" y="${H - m.b + 20}" text-anchor="middle" font-size="12" fill="var(--text-secondary)">${i}</text>
+  <text x="${x(i)}" y="${H - m.b + 36}" text-anchor="middle" font-size="11.5" fill="var(--text-muted)">${esc(r.name)}</text>`);
+for (const [key, color, label] of [["dev", "var(--series-1)", "настройка"], ["hold", "var(--series-2)", "отложенный"]]) {
+  const pts = D.map((r, i) => r[key] ? [x(i), y(r[key].acc), r[key].acc] : null).filter(Boolean);
+  if (pts.length > 1) s += `<polyline points="${pts.map(p => p[0] + "," + p[1]).join(" ")}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach(p => s += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${color}" stroke="var(--surface-1)" stroke-width="2"/>`);
+  const e = pts[pts.length - 1];
+  if (e) s += `<text x="${W - m.r + 6}" y="${e[1] + (key === "dev" ? -6 : 14)}" font-size="12.5" fill="var(--text-primary)">${label} ${f(e[2])}</text>`;
+}
+D.forEach((r, i) => s += `<rect class="hit" data-i="${i}" x="${x(i) - 30}" y="${m.t}" width="60" height="${H - m.t - m.b}" fill="transparent"/>`);
+s += `<line id="cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" visibility="hidden"/></svg><div class="tip" id="tip"></div>`;
+const chart = document.getElementById("chart"); chart.innerHTML = s;
+const tip = document.getElementById("tip"), cross = document.getElementById("cross");
+chart.querySelectorAll(".hit").forEach(h => {
+  h.addEventListener("mousemove", ev => {
+    const r = D[h.dataset.i], b = chart.getBoundingClientRect();
+    cross.setAttribute("x1", x(+h.dataset.i)); cross.setAttribute("x2", x(+h.dataset.i)); cross.setAttribute("visibility", "visible");
+    tip.innerHTML = `<b>Итерация ${r.iter}: ${esc(r.name)}</b><div class="small">${esc(r.changes)}</div>
+      <div>Настройка: <b>${f(r.dev?.acc)}</b>${r.dev ? ` (${r.dev.n[0]}/${r.dev.n[1]})` : ""}</div>
+      <div>Отложенный: <b>${f(r.hold?.acc)}</b>${r.hold ? ` (${r.hold.n[0]}/${r.hold.n[1]})` : ""}</div>`;
+    tip.style.display = "block";
+    const px = ev.clientX - b.left + 14; tip.style.left = Math.min(px, b.width - 290) + "px"; tip.style.top = (ev.clientY - b.top + 10) + "px";
+  });
+  h.addEventListener("mouseleave", () => { tip.style.display = "none"; cross.setAttribute("visibility", "hidden"); });
+});
+
+// ---- языки (последняя итерация с отложенным набором) ----
+const L = (D.filter(r => r.hold).pop() || {}).hold;
+document.getElementById("langs").innerHTML = !L ? '<div class="muted">Нет данных</div>' : `<table><tr><th>Язык</th><th>Совпадение</th><th></th></tr>${
+  Object.entries(L.langs).map(([k, v]) => `<tr><td>${k}</td><td class="n">${f(v)}</td><td>${v >= 85 ? '<span class="ok">✓ ≥ 85%</span>' : '<span class="no">✕ ниже 85%</span>'}</td></tr>`).join("")}</table>`;
+
+// ---- таблица итераций ----
+document.getElementById("table").innerHTML = `<table><tr><th>#</th><th>Что изменили</th><th>Настройка</th><th>Отложенный</th><th>Время / диалог</th><th>Модель</th></tr>${
+  D.map(r => `<tr><td class="n">${r.iter}</td><td><b>${esc(r.name)}</b><div class="small">${esc(r.changes)}</div></td>
+    <td class="n">${f(r.dev?.acc)}</td><td class="n">${f(r.hold?.acc)}</td>
+    <td class="n">${r.hold?.latency ?? r.dev?.latency ?? "—"} с</td><td class="small">${esc(r.model)}</td></tr>`).join("")}</table>`;
+</script></body></html>
+"""
+
+if __name__ == "__main__":
+    main()

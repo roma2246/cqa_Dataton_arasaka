@@ -31,8 +31,10 @@ cd backend && ../.venv/bin/uvicorn cqa.main:app --reload --port 8000
 
 По умолчанию `EVALUATOR_MODE=mock` — **тестовый** ответ без модели (в UI жёлтая плашка).
 
-Настоящая оценка — **Gemini 3.6 Flash** с резервной 3.8 Flash (выбор команды): в `.env` вписать `LLM_API_KEY`
-(ключ из https://aistudio.google.com/apikey) и поставить `EVALUATOR_MODE=real`.
+Настоящая оценка — два варианта:
+- **Локально и бесплатно: Ollama + `qwen3:8b`** — транскрипты не покидают компьютер. Установка: [docs/LOCAL_MODEL.md](docs/LOCAL_MODEL.md).
+- **Облако: Gemini 3.6 Flash** (резерв 3.8 Flash) — `LLM_MODEL=gemini-3.6-flash`, `LLM_API_KEY` из https://aistudio.google.com/apikey.
+
 Проверить доступ одним коротким вызовом:
 
 ```bash

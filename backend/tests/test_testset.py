@@ -6,8 +6,11 @@ from pathlib import Path
 from cqa.importer import parse_response
 from cqa.models import ChecklistDraft
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 TS = json.loads((ROOT / "data/testsets/synthetic_v1.json").read_text(encoding="utf-8"))
+HOLD = json.loads((ROOT / "data/testsets/holdout_v1.json").read_text(encoding="utf-8"))
 CHK = ChecklistDraft.model_validate_json((ROOT / TS["checklist"]).read_text(encoding="utf-8"))
 
 
@@ -23,10 +26,11 @@ def test_imports_and_language_parity():
     assert all(len(v) == 1 for v in by_sc.values())
 
 
-def test_expected_answers_are_valid_for_checklist():
+@pytest.mark.parametrize("ts", [TS, HOLD], ids=["synthetic", "holdout"])
+def test_expected_answers_are_valid_for_checklist(ts):
     crit = {c.criterion_id: c for c in CHK.criteria}
-    convs = {c.conversation_id: c for c in parse_response(TS["dataset"])}
-    for cid, exp in TS["expected"].items():
+    convs = {c.conversation_id: c for c in parse_response(ts["dataset"])}
+    for cid, exp in ts["expected"].items():
         msgs = {m.message_id: m for m in convs[cid].messages}
         for k, e in exp.items():
             c = crit[k]
@@ -47,3 +51,10 @@ def test_authorship_traps_present():
         if m["scenario"] in ("bot_greeting_only", "client_greets_only"):
             assert TS["expected"][cid]["demo_greeting"]["answers"] == ["no"]
             assert not any(x.speaker == "operator" and i == 0 for i, x in enumerate(convs[cid].messages))
+
+
+def test_holdout_does_not_reuse_dev_texts():
+    dev = {m["text"] for r in TS["dataset"]["data"]["records"] for m in r["transcript"] if m["speaker"] == "operator"}
+    hold = {m["text"] for r in HOLD["dataset"]["data"]["records"] for m in r["transcript"] if m["speaker"] == "operator"}
+    assert not dev & hold  # реплики операторов в отложенном наборе новые
+    assert set(TS["expected"]).isdisjoint(HOLD["expected"])

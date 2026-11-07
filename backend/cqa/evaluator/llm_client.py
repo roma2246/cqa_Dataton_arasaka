@@ -13,6 +13,7 @@ import json
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -187,7 +188,7 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
     base = settings.llm_base_url or (GEMINI_BASE_URL if model.startswith("gemini") else "")
     if not (base and model):
         raise LLMError("LLM_BASE_URL / LLM_MODEL не заданы в .env")
-    if not settings.llm_api_key:
+    if not settings.llm_api_key and not is_local():
         raise LLMError("Не задан LLM_API_KEY в .env")
     body: dict[str, Any] = {
         "model": model,
@@ -208,7 +209,7 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
         req = urllib.request.Request(
             base.rstrip("/") + "/chat/completions",
             data=json.dumps(body).encode("utf-8"),
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {settings.llm_api_key}"},
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {settings.llm_api_key or 'local'}"},
         )
         try:
             with urllib.request.urlopen(req, timeout=settings.llm_timeout_s, context=SSL_CONTEXT) as resp:
@@ -256,10 +257,19 @@ KNOWN_PRICES = {
 }
 
 
-def _price(model: Optional[str]) -> tuple[float, float]:
+def is_local() -> bool:
+    """Модель на этом компьютере (Ollama и т.п.) — вызовы бесплатны."""
+    host = urllib.parse.urlsplit(settings.llm_base_url).hostname or ""
+    return settings.llm_provider == "openai_compat" and host in ("localhost", "127.0.0.1", "::1")
+
+
+def _price(model: Optional[str]) -> Optional[tuple[float, float]]:
+    """Цена за 1 млн токенов; (0, 0) — бесплатно (локально); None — неизвестна."""
     if settings.llm_price_input_per_m or settings.llm_price_output_per_m:
         return settings.llm_price_input_per_m, settings.llm_price_output_per_m
-    return KNOWN_PRICES.get(model or "", (0.0, 0.0))
+    if model in KNOWN_PRICES:
+        return KNOWN_PRICES[model]
+    return (0.0, 0.0) if is_local() else None
 
 
 def cost_usd(calls: list[CallRecord]) -> Optional[float]:
@@ -271,8 +281,9 @@ def cost_usd(calls: list[CallRecord]) -> Optional[float]:
             if c.ok:
                 return None
             continue  # сетевой сбой/HTTP-ошибка без ответа
-        pin, pout = _price(c.model)
-        if pin == 0 and pout == 0:
+        price = _price(c.model)
+        if price is None:
             return None
+        pin, pout = price
         total += ((c.input_tokens or 0) * pin + (c.output_tokens or 0) * pout) / 1_000_000
     return round(total, 6)

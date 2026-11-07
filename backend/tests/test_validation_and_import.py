@@ -68,3 +68,21 @@ def test_na_forbidden():
     res = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="not_applicable", explanation=""))
     out, _ = validate(res, CHECKLIST, conv())
     assert next(r for r in out if r.criterion_id == "demo_greeting").status == "needs_review"
+
+
+def test_range_past_end_is_clamped_not_rejected():
+    from cqa.models import CheckedRange
+    res = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="applicable", answer="no",
+                                             explanation="", checked_range=CheckedRange(from_message_id="m001", to_message_id="m014")))
+    out, problems = validate(res, CHECKLIST, conv())  # в диалоге 7 реплик
+    g = next(r for r in out if r.criterion_id == "demo_greeting")
+    assert g.status == "applicable" and g.checked_range.to_message_id == "m007"
+    assert any("обрезан" in p for p in problems)
+
+
+def test_garbage_range_rejected():
+    from cqa.models import CheckedRange
+    res = full(demo_greeting=CriterionResult(criterion_id="demo_greeting", status="applicable", answer="no",
+                                             explanation="", checked_range=CheckedRange(from_message_id="m009", to_message_id="m002")))
+    out, _ = validate(res, CHECKLIST, conv())
+    assert next(r for r in out if r.criterion_id == "demo_greeting").status == "needs_review"

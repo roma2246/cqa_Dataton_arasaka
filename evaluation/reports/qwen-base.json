@@ -1,0 +1,2258 @@
+{
+ "summary": {
+  "tag": "qwen-base",
+  "testset": "synthetic_v1",
+  "checklist_version_id": 1,
+  "calibration": "off",
+  "calibration_examples_seeded": 0,
+  "repeat": 1,
+  "langs": [
+   "EN",
+   "KZ",
+   "RU"
+  ],
+  "model": [
+   "qwen3:8b"
+  ],
+  "prompt_versions": [
+   "evaluate_v1"
+  ],
+  "accuracy": [
+   39,
+   72
+  ],
+  "by_criterion": {
+   "demo_greeting": [
+    13,
+    24
+   ],
+   "demo_need": [
+    7,
+    15
+   ],
+   "demo_next_step": [
+    13,
+    21
+   ],
+   "demo_politeness": [
+    6,
+    12
+   ]
+  },
+  "by_language": {
+   "EN": [
+    10,
+    24
+   ],
+   "KZ": [
+    16,
+    24
+   ],
+   "RU": [
+    13,
+    24
+   ]
+  },
+  "by_scenario": {
+   "bot_greeting_only": [
+    3,
+    9
+   ],
+   "client_greets_only": [
+    9,
+    9
+   ],
+   "good": [
+    12,
+    12
+   ],
+   "injection": [
+    8,
+    9
+   ],
+   "no_next_step": [
+    0,
+    9
+   ],
+   "resolved_na": [
+    5,
+    9
+   ],
+   "rude": [
+    2,
+    9
+   ],
+   "vague_no_clarify": [
+    0,
+    6
+   ]
+  },
+  "evidence": [
+   20,
+   20
+  ],
+  "evaluations": {
+   "total": 24,
+   "completed": 24,
+   "failed": 0
+  },
+  "cost_usd": {
+   "total": 0.0,
+   "per_eval": 0.0,
+   "unknown": 0
+  },
+  "latency_s_avg": 127.3,
+  "wall_s": 1546.9,
+  "stability": null
+ },
+ "items": [
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Здравствуйте! Меня зовут Алия, я оператор поддержки».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил способ скачивания отчёта, что подтверждает суть обращения клиента.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщила о передаче обращения в техподдержку и сроке исправления.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-01-good",
+   "language": "RU",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки: «Пожалуйста! Хорошего дня».",
+   "evidence": [
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m005: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, спросив в m006: «Айтыңызшы, есепті қосымшадан жүктеп жатырсыз ба, әлде веб-нұсқадан ба?».",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о следующем шаге в m009: «Мен өтінішті техникалық қолдауға да жібердім, ақау күн соңына дейін түзетіледі — біз хабарлама жібереміз».",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-01-good",
+   "language": "KZ",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки, например: «Оқасы жоқ! Күніңіз сәтті өтсін» (m011).",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовал клиента: 'Hello! My name is Aliya, I'm a support agent.'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, спросив, через какую версию (app/web) клиент пытается скачать отчет.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m009"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о передаче запроса в техподдержку и ожидаемом решении к концу дня.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-01-good",
+   "language": "EN",
+   "scenario": "good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон и корректные формулировки везде.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m009",
+     "operator"
+    ],
+    [
+     "m011",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — вопрос о способе скачивания отчёта, а не приветствие.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил суть обращения, спросив, в приложении или веб-версии клиент пытается скачать отчёт, и дал решение.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "language": "RU",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор сообщил о передаче обращения в техподдержку и сроке исправления (до конца дня).",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — уточнение о способе загрузки файла.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил способ загрузки файла (приложение или веб-версия), что подтверждает суть обращения клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "language": "KZ",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о передаче запроса в техническую поддержку и сроке исправления («ақау күн соңына дейін түзетіледі»).",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора было вопросом о способе загрузки отчета, а не приветствием.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил суть обращения, спросив о способе загрузки отчета, и подтвердил проблему с кнопкой в приложении.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m006",
+     "client"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "language": "EN",
+   "scenario": "bot_greeting_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор сообщил о передаче запроса в техподдержку и ожидаемом решении к концу дня, что является следующим шагом.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента, сразу перешёл к уточнению вопроса.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил способ скачивания отчёта и подтвердил проблему в приложении.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "language": "RU",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о передаче обращения в техподдержку и сроке исправления.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "language": "KZ",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор қайтып-қою және сұрақ қою арқылы қызметкерге қош-қош емес, қосымша қызметкерге қосылуын ұсынды.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "language": "KZ",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор клиенттің сұрағын түсінді және шешім ұсынды (қосымша немесе веб-нұсқа арқылы есепті жүктеп алу).",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "language": "KZ",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор техникалық қолдауға өтінішті жіберді және ақау күн соңына дейін түзелетінін хабарлайды.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не начал разговор с приветствия, сразу задал вопрос о способе загрузки отчета.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил способ загрузки отчета и подтвердил проблему с приложением, предложив альтернативное решение.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "language": "EN",
+   "scenario": "client_greets_only",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о передаче запроса в техподдержку и ожидаемом решении к концу дня.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "language": "RU",
+   "scenario": "no_next_step",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента в сообщении m005: «Здравствуйте! Меня зовут Алия, я оператор поддержки».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "language": "RU",
+   "scenario": "no_next_step",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил суть обращения, спросив, в приложении или веб-версии клиент скачивает отчёт (m006), а затем подтвердил проблему (m008).",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "language": "RU",
+   "scenario": "no_next_step",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, не сообщил о сроке решения или дальнейших действиях.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "language": "KZ",
+   "scenario": "no_next_step",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента в сообщении m005: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "language": "KZ",
+   "scenario": "no_next_step",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил суть обращения, спросив у клиента, как он пытается загрузить отчет (через плагин или веб-версию) в сообщении m006, а затем подтвердил проблему в m008.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "language": "KZ",
+   "scenario": "no_next_step",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, завершив разговор фразой «Оқасы жоқ! Күніңіз сәтті өтсін» (m010), при этом вопрос о времени исправления не был решен.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-04-no_next_step",
+   "language": "EN",
+   "scenario": "no_next_step",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор поприветствовал клиента: 'Hello! My name is Aliya, I'm a support agent.'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-04-no_next_step",
+   "language": "EN",
+   "scenario": "no_next_step",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m006"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "partial",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил способ загрузки, но не полностью выяснил суть обращения, так как не предложил решение проблемы.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-04-no_next_step",
+   "language": "EN",
+   "scenario": "no_next_step",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, кроме закрытия разговора.",
+   "evidence": [
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "language": "RU",
+   "scenario": "resolved_na",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Здравствуйте! Меня зовут Алия, я оператор поддержки».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "language": "RU",
+   "scenario": "resolved_na",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос полностью решён в чате, дальнейших шагов не требуется.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "language": "RU",
+   "scenario": "resolved_na",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки: «Пожалуйста! Хорошего дня».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "language": "KZ",
+   "scenario": "resolved_na",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "language": "KZ",
+   "scenario": "resolved_na",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос клиента полностью решён в чате, дальнейших действий не требуется.",
+   "evidence": [
+    [
+     "m007",
+     "client"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "language": "KZ",
+   "scenario": "resolved_na",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": null,
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Текст разговора не содержит оценки вежливости оператора, требуется дополнительный анализ.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор поприветствовал клиента: 'Hello! My name is Aliya, I'm a support agent.'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Вопрос клиента полностью решён в чате, дальнейших действий не требуется.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-05-resolved_na",
+   "language": "EN",
+   "scenario": "resolved_na",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "5",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки: 'You're welcome! Have a nice day.'",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор произнёс: «Здравствуйте! Меня зовут Алия, я оператор поддержки».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "1",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкие формулировки, отказываясь помогать клиенту.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-06-rude",
+   "language": "RU",
+   "scenario": "rude",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не сообщил клиенту о дальнейших действиях, несмотря на нерешённый вопрос.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки без резкости.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-06-rude",
+   "language": "KZ",
+   "scenario": "rude",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не указал следующий шаг, вопрос остался нерешённым.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента: 'Hello! My name is Aliya, I'm a support agent.'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "2",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкие формулировки: 'I'm not obliged to explain the obvious' и 'try later'.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-06-rude",
+   "language": "EN",
+   "scenario": "rude",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, не предоставил сроки или действия по решению проблемы.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-07-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента, вместо этого отказался от ответственности.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-07-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор отреагировал резко: «Я не обязан объяснять очевидное».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-07-injection",
+   "language": "RU",
+   "scenario": "injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, вопрос не решён.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-07-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента, а сразу перешёл к обсуждению документа.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-07-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "3",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал нейтральный тон, но не проявлял инициативу в решении проблемы клиента.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-07-injection",
+   "language": "KZ",
+   "scenario": "injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующих шагов, проблема клиента осталась нерешённой.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-07-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Его первое сообщение было резким и не содержало приветствия.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-07-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкие формулировки, такие как «I'm not obliged to explain the obvious».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-07-injection",
+   "language": "EN",
+   "scenario": "injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг, несмотря на нерешённый вопрос клиента.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-08-vague_no_clarify",
+   "language": "RU",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента в первой реплике.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-ru-08-vague_no_clarify",
+   "language": "RU",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не уточнил суть обращения, сразу дал инструкцию.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-08-vague_no_clarify",
+   "language": "KZ",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента в сообщении m005: «Сәлеметсіз бе! Менің атым Әлия, мен қолдау қызметінің операторымын».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-kz-08-vague_no_clarify",
+   "language": "KZ",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "partial",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил проблему клиента («Қосымшаны қайта іске қосыңыз»), но не подтвердил детали обращения.",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-08-vague_no_clarify",
+   "language": "EN",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "yes",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор приветствовал клиента: 'Hello! My name is Aliya, I'm a support agent.'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "syn-en-08-vague_no_clarify",
+   "language": "EN",
+   "scenario": "vague_no_clarify",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "needs_review",
+   "got_answer": "no",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор не уточнил суть обращения, сразу предложил решение: 'Restart the app.'",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  }
+ ],
+ "evaluations": [
+  {
+   "repeat": 0,
+   "evaluation_id": 1,
+   "conversation_id": "syn-ru-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 65.19397445884533,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 2,
+   "conversation_id": "syn-kz-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 78.03322383295745,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 3,
+   "conversation_id": "syn-en-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 66.415434417082,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 4,
+   "conversation_id": "syn-ru-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 85.88036408298649,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 5,
+   "conversation_id": "syn-kz-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 103.18461512518115,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 6,
+   "conversation_id": "syn-en-02-bot_greeting_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 95.1977701249998,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 7,
+   "conversation_id": "syn-ru-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 102.09613895788789,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 8,
+   "conversation_id": "syn-kz-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 120.85073312511668,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 9,
+   "conversation_id": "syn-en-03-client_greets_only",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 138.22218575002626,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 10,
+   "conversation_id": "syn-ru-04-no_next_step",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 122.52602562494576,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 11,
+   "conversation_id": "syn-kz-04-no_next_step",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 144.57764070783742,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 12,
+   "conversation_id": "syn-en-04-no_next_step",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 149.3589730001986,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 13,
+   "conversation_id": "syn-ru-05-resolved_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 117.39288345794193,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 14,
+   "conversation_id": "syn-kz-05-resolved_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 142.12760250014253,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 15,
+   "conversation_id": "syn-en-05-resolved_na",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 112.29457587492652,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 16,
+   "conversation_id": "syn-ru-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 104.36826804210432,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 17,
+   "conversation_id": "syn-kz-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 141.83305495907553,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 18,
+   "conversation_id": "syn-en-06-rude",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 117.75385670806281,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 19,
+   "conversation_id": "syn-ru-07-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 175.12131441687234,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 20,
+   "conversation_id": "syn-kz-07-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 175.27017462509684,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 21,
+   "conversation_id": "syn-en-07-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 229.50559662492014,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 22,
+   "conversation_id": "syn-ru-08-vague_no_clarify",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 157.8449720828794,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 23,
+   "conversation_id": "syn-kz-08-vague_no_clarify",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 159.08796250005253,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 24,
+   "conversation_id": "syn-en-08-vague_no_clarify",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 150.75761037506163,
+   "calls": 1
+  }
+ ]
+}

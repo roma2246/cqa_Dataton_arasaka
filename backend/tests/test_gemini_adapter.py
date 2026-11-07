@@ -126,3 +126,23 @@ def test_prepaid_credits_depleted_is_quota(gemini, monkeypatch):
     with pytest.raises(llm_client.QuotaExceeded):
         llm_client.chat_json("sys", "user", SCHEMA)
     assert len(sent) == 1
+
+
+def test_local_model_is_free_and_needs_no_key(gemini, monkeypatch):
+    monkeypatch.setattr(settings, "llm_model", "qwen3:8b")
+    monkeypatch.setattr(settings, "llm_base_url", "http://localhost:11434/v1")
+    monkeypatch.setattr(settings, "llm_api_key", "")
+    monkeypatch.setattr(settings, "llm_fallback_model", "")
+    local = json.loads(json.dumps(OK)); local["model"] = "qwen3:8b"
+    sent = gemini([local])
+    r = llm_client.chat_json("sys", "user", SCHEMA)
+    assert sent[0][0] == "http://localhost:11434/v1/chat/completions"
+    assert "reasoning_effort" not in sent[0][1]
+    assert llm_client.cost_usd(r.calls) == 0.0  # бесплатно, а не «неизвестно»
+
+
+def test_unknown_remote_price_is_none(monkeypatch):
+    monkeypatch.setattr(settings, "llm_base_url", "https://api.example.com/v1")
+    monkeypatch.setattr(settings, "llm_price_input_per_m", 0.0)
+    monkeypatch.setattr(settings, "llm_price_output_per_m", 0.0)
+    assert llm_client.cost_usd([llm_client.CallRecord(True, 1, "mystery-model", 10, 10)]) is None

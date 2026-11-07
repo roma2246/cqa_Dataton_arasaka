@@ -6,7 +6,25 @@
 """
 from __future__ import annotations
 
-from ..models import ChecklistDraft, Conversation, CriterionResult
+import re
+
+from ..models import CheckedRange, ChecklistDraft, Conversation, CriterionResult
+
+_MID = re.compile(r"^m(\d{3,})$")
+
+
+def _clamp_range(a: str, b: str, conv: Conversation) -> tuple[str, str] | None:
+    """Диапазон, выходящий за края диалога, обрезается (это «смотрел до конца»), а не отклоняется.
+    None — если ID не в формате mNNN или начало позже конца."""
+    ma, mb = _MID.match(a or ""), _MID.match(b or "")
+    if not (ma and mb):
+        return None
+    n = len(conv.messages)
+    ia, ib = int(ma.group(1)), int(mb.group(1))
+    if ia > ib or ia > n:
+        return None
+    ia, ib = max(ia, 1), min(ib, n)
+    return conv.messages[ia - 1].message_id, conv.messages[ib - 1].message_id
 
 
 def validate(results: list[CriterionResult], checklist: ChecklistDraft,
@@ -58,9 +76,12 @@ def validate(results: list[CriterionResult], checklist: ChecklistDraft,
                 except (TypeError, ValueError):
                     issue = f"ответ '{r.answer}' не число"
             if not issue and r.checked_range:
-                a, b = r.checked_range.from_message_id, r.checked_range.to_message_id
-                if a not in order or b not in order or order[a] > order[b]:
+                fixed = _clamp_range(r.checked_range.from_message_id, r.checked_range.to_message_id, conv)
+                if fixed is None:
                     issue = "некорректный checked_range"
+                elif fixed != (r.checked_range.from_message_id, r.checked_range.to_message_id):
+                    problems.append(f"{cid}: checked_range обрезан до границ диалога {fixed[0]}–{fixed[1]}")
+                    r = r.model_copy(update={"checked_range": CheckedRange(from_message_id=fixed[0], to_message_id=fixed[1])})
             if not issue and not r.evidence_message_ids and not r.checked_range:
                 issue = "нет ни доказательства, ни проверенного диапазона"
             # Авторство: если есть доказательства, хотя бы одно должно быть от оператора.
