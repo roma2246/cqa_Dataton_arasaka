@@ -42,8 +42,9 @@ def _api_message(detail: str) -> str:
 
 
 def _is_quota(code: int, msg: str) -> bool:
+    """429 с квотой/биллингом или 402 (закончились предоплаченные кредиты) — повтор бесполезен."""
     m = msg.lower()
-    return code == 429 and ("quota" in m or "billing" in m)
+    return code == 402 or (code == 429 and ("quota" in m or "billing" in m or "credit" in m))
 
 
 _rate_lock = threading.Lock()
@@ -226,8 +227,8 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
             last_err = f"HTTP {e.code}: {msg}"
             calls.append(CallRecord(False, time.monotonic() - t0, model, error=f"HTTP {e.code}"))
             if _is_quota(e.code, msg):
-                raise QuotaExceeded(f"Исчерпана квота {model} (HTTP 429). Включите оплату в Google AI Studio "
-                                    f"или дождитесь сброса суточного лимита. {msg}", calls)
+                raise QuotaExceeded(f"Исчерпана квота или кредиты {model} (HTTP {e.code}). Пополните баланс "
+                                    f"в Google AI Studio или используйте другой ключ/модель. {msg}", calls)
             if e.code == 400 and body["response_format"]["type"] == "json_schema":
                 # Провайдер не принял схему — пробуем режим JSON без схемы; валидатор всё равно проверит ответ
                 body["response_format"] = {"type": "json_object"}

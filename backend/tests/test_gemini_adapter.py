@@ -117,3 +117,12 @@ def test_rate_limit_paces_calls(gemini, monkeypatch):
     llm_client.chat_json("sys", "user", SCHEMA)
     llm_client.chat_json("sys", "user", SCHEMA)
     assert slept and slept[-1] == pytest.approx(1.0, abs=0.2)  # 60 rpm -> интервал ~1 с
+
+
+def test_prepaid_credits_depleted_is_quota(gemini, monkeypatch):
+    monkeypatch.setattr(settings, "llm_fallback_model", "")
+    body = b'[{"error": {"code": 402, "message": "Your prepayment credits are depleted."}}]'
+    sent = gemini([urllib.error.HTTPError("u", 402, "pay", {}, io.BytesIO(body))])
+    with pytest.raises(llm_client.QuotaExceeded):
+        llm_client.chat_json("sys", "user", SCHEMA)
+    assert len(sent) == 1
