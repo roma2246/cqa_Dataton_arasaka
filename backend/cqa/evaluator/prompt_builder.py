@@ -101,12 +101,46 @@ def _nullable(schema: dict) -> dict:
     return {"anyOf": [schema, {"type": "null"}]}
 
 
+def ultra() -> bool:
+    """Ультракомпактный ответ (с evaluate_v4): короткие ключи, статус в ответе — примерно вдвое меньше токенов."""
+    return PROMPT_VERSION >= "evaluate_v4"
+
+
+def _ultra_schema(checklist: ChecklistDraft) -> dict:
+    ids = [c.criterion_id for c in checklist.criteria]
+    answers = sorted({o.value for c in checklist.criteria for o in c.options}
+                     | {str(v) for c in checklist.criteria if c.scale for v in range(c.scale.min, c.scale.max + 1)}
+                     | {"NA", "?"})
+    item = {"type": "object",
+            "properties": {"id": {"type": "string", "enum": ids}, "a": {"type": "string", "enum": answers},
+                           "e": {"type": "array", "items": {"type": "string"}},
+                           "r": _nullable({"type": "string"}), "x": {"type": "string"}},
+            "required": ["id", "a", "e", "r", "x"], "additionalProperties": False}
+    return {"type": "object", "properties": {"results": {"type": "array", "items": item}},
+            "required": ["results"], "additionalProperties": False}
+
+
+def expand_ultra(raw: dict) -> dict:
+    """{"id","a","e","r","x"} -> полный формат CriterionResult."""
+    out = []
+    for r in raw.get("results") or []:
+        a = r.get("a")
+        status = "not_applicable" if a == "NA" else "needs_review" if a in ("?", None) else "applicable"
+        out.append({"criterion_id": r.get("id"), "status": status,
+                    "answer": a if status == "applicable" else None,
+                    "explanation": r.get("x") or "", "evidence_message_ids": r.get("e") or [],
+                    "checked_range": r.get("r")})
+    return expand_compact({"results": out})
+
+
 def compact() -> bool:
     """Компактный ответ (с evaluate_v3): checked_range строкой, без na_reason/review_reason — на ~35% меньше токенов."""
     return PROMPT_VERSION >= "evaluate_v3"
 
 
 def output_schema(checklist: ChecklistDraft) -> dict:
+    if ultra():
+        return _ultra_schema(checklist)
     if compact():
         return _compact_schema(checklist)
     return _full_schema(checklist)

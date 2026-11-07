@@ -62,7 +62,9 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
         calls += resp.calls
         try:
             raw = json.loads(resp.text)
-            if prompt_builder.compact():
+            if prompt_builder.ultra():
+                raw = prompt_builder.expand_ultra(raw)
+            elif prompt_builder.compact():
                 raw = prompt_builder.expand_compact(raw)
             parsed = AIEvaluation.model_validate(raw)
             break

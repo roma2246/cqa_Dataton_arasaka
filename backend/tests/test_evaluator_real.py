@@ -65,3 +65,15 @@ def test_compact_answer_is_expanded():
     r = prompt_builder.expand_compact(raw)["results"][0]
     assert r["checked_range"] == {"from_message_id": "m001", "to_message_id": "m007"}
     assert r["na_reason"] == "Вопрос решён" and r["review_reason"] is None
+
+
+def test_ultra_answer_is_expanded():
+    from cqa.evaluator import prompt_builder
+    raw = {"results": [
+        {"id": "a1", "a": "yes", "e": ["m004"], "r": None, "x": "Поздоровался"},
+        {"id": "a2", "a": "NA", "e": [], "r": None, "x": "Общий вопрос"},
+        {"id": "a3", "a": "?", "e": [], "r": "m001-m007", "x": "Неясно"}]}
+    out = prompt_builder.expand_ultra(raw)["results"]
+    assert (out[0]["status"], out[0]["answer"], out[0]["evidence_message_ids"]) == ("applicable", "yes", ["m004"])
+    assert (out[1]["status"], out[1]["answer"], out[1]["na_reason"]) == ("not_applicable", None, "Общий вопрос")
+    assert out[2]["status"] == "needs_review" and out[2]["checked_range"] == {"from_message_id": "m001", "to_message_id": "m007"}
