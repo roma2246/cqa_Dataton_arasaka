@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import urllib.parse
-import urllib.request
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
@@ -17,7 +17,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import importer, storage
+from . import audio as audio_adapter, http, importer, storage
 from .config import ROOT, settings
 from .evaluator import evaluate
 from .models import (
@@ -39,12 +39,17 @@ def startup() -> None:
     if not storage.list_checklists():
         demo = ROOT / "data" / "fixtures" / "checklist_demo.json"
         storage.save_checklist(ChecklistDraft.model_validate_json(demo.read_text(encoding="utf-8")))
+    # Восстановление после перезапуска: незавершённые задачи снова в очередь
+    for eid in storage.unfinished_evaluations():
+        executor.submit(_run_evaluation, eid)
 
 
 @app.get("/api/health")
 def health() -> dict[str, Any]:
-    return {"ok": True, "evaluator_mode": settings.evaluator_mode,
-            "model": settings.llm_model if settings.evaluator_mode == "real" else "mock"}
+    model = "mock"
+    if settings.evaluator_mode == "real":
+        model = settings.llm_model or ("claude-opus-5-5" if settings.llm_provider == "anthropic" else "?")
+    return {"ok": True, "evaluator_mode": settings.evaluator_mode, "provider": settings.llm_provider, "model": model}
 
 
 # ---------- Импорт ----------
@@ -62,10 +67,10 @@ def import_organizer(body: ImportOrganizerBody) -> dict[str, Any]:
     qs["group_id"] = body.group_id
     url = urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(qs)))
     try:
-        with urllib.request.urlopen(url, timeout=60) as r:
-            data = json.loads(r.read().decode("utf-8"))
-    except Exception as e:  # noqa: BLE001
-        raise HTTPException(502, f"API организаторов недоступен: {type(e).__name__}")
+        data = http.get_json(url, timeout=90)
+    except Exception as e:  # noqa: BLE001 - не выводим URL: в нём подпись
+        reason = getattr(e, "reason", None) or getattr(e, "code", None) or type(e).__name__
+        raise HTTPException(502, f"API организаторов недоступен: {reason}")
     return _import(data, body.group_id)
 
 
@@ -131,10 +136,11 @@ def save_checklist(draft: ChecklistDraft) -> dict[str, Any]:
 # ---------- Оценка ----------
 
 def _run_evaluation(evaluation_id: int) -> None:
+    if not storage.claim_evaluation(evaluation_id):
+        return  # отменена или уже выполняется
     ev = storage.get_evaluation(evaluation_id)
     conv = storage.get_conversation(ev["conversation_id"])
     chk = storage.get_checklist(ev["checklist_version_id"])
-    storage.update_evaluation(evaluation_id, status="running")
     try:
         out = evaluate(conv, chk)  # долгий вызов - вне транзакции
         sc = score(chk, out.results)
@@ -148,19 +154,21 @@ def _run_evaluation(evaluation_id: int) -> None:
             cost_usd=out.cost_usd, finished_at=storage.now(),
         )
     except Exception as e:  # noqa: BLE001 - сбой сохраняем как failed, а не как оценку
+        from .evaluator.llm_client import cost_usd
         calls = getattr(e, "calls", [])
         storage.update_evaluation(
             evaluation_id, status="failed", error=f"{type(e).__name__}: {e}",
-            usage_json=json.dumps({"calls": [c.__dict__ for c in calls]}), finished_at=storage.now())
+            usage_json=json.dumps({"calls": [c.__dict__ for c in calls]}),
+            cost_usd=cost_usd(calls) if calls else None, finished_at=storage.now())
 
 
-def _start(conversation_id: str, version_id: int) -> int:
+def _start(conversation_id: str, version_id: int, batch_id: Optional[str] = None) -> int:
     conv = storage.get_conversation(conversation_id)
     if not conv:
         raise HTTPException(404, f"Диалог {conversation_id} не найден")
     if not storage.get_checklist(version_id):
         raise HTTPException(404, "Версия чек-листа не найдена")
-    eid = storage.create_evaluation(conversation_id, conv.content_hash, version_id)
+    eid = storage.create_evaluation(conversation_id, conv.content_hash, version_id, batch_id)
     executor.submit(_run_evaluation, eid)
     return eid
 
@@ -180,7 +188,36 @@ class BatchBody(BaseModel):
 @app.post("/api/evaluations/batch")
 def start_batch(body: BatchBody) -> dict[str, Any]:
     ids = body.conversation_ids or [c["conversation_id"] for c in storage.list_conversations(group_id=body.group_id)]
-    return {"evaluation_ids": [_start(cid, body.checklist_version_id) for cid in ids]}
+    if not ids:
+        raise HTTPException(422, "Нет диалогов для оценки")
+    batch_id = uuid.uuid4().hex[:12]
+    return {"batch_id": batch_id,
+            "evaluation_ids": [_start(cid, body.checklist_version_id, batch_id) for cid in ids]}
+
+
+@app.get("/api/batches/{batch_id}")
+def batch(batch_id: str) -> dict[str, Any]:
+    st = storage.batch_status(batch_id)
+    if not st["total"]:
+        raise HTTPException(404, "Пакет не найден")
+    return st
+
+
+@app.post("/api/batches/{batch_id}/retry")
+def batch_retry(batch_id: str) -> dict[str, Any]:
+    """Повтор только неуспешных: новая попытка, старая с ошибкой остаётся в истории."""
+    st = storage.batch_status(batch_id)
+    retried = []
+    for it in st["failed"]:
+        ev = storage.get_evaluation(it["evaluation_id"])
+        retried.append(_start(it["conversation_id"], ev["checklist_version_id"], batch_id))
+    return {"retried": len(retried), "evaluation_ids": retried}
+
+
+@app.post("/api/batches/{batch_id}/cancel")
+def batch_cancel(batch_id: str) -> dict[str, Any]:
+    """Останавливает задачи, которые ещё не начались. Идущие вызовы модели завершатся."""
+    return {"canceled": storage.cancel_batch(batch_id)}
 
 
 @app.get("/api/evaluations/{evaluation_id}")
@@ -246,11 +283,11 @@ def decide(appeal_id: int, body: DecisionCreate) -> dict[str, Any]:
 @app.get("/api/conversations/{conversation_id}/audio")
 def audio(conversation_id: str) -> dict[str, Any]:
     """audio_url организаторов - HTML-страница плеера, НЕ аудиофайл.
-    Минимум: открыть штатный плеер. TODO(B06): серверный адаптер media source."""
+    Возвращаем штатный плеер и, если удалось проверить, прямой media-источник для <audio>."""
     conv = storage.get_conversation(conversation_id)
     if not conv or not conv.audio_url:
         raise HTTPException(404, "Записи нет")
-    return {"player_url": conv.audio_url, "kind": "external_player"}
+    return audio_adapter.resolve(conv.audio_url)
 
 
 # ---------- UI ----------

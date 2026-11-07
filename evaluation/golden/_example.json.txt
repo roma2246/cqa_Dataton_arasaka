@@ -1,0 +1,11 @@
+{
+  "conversation_id": "fx-ru-001",
+  "checklist_version_id": 1,
+  "split": "dev",
+  "results": [
+    {"criterion_id": "demo_greeting", "status": "applicable", "answer": "yes", "evidence_message_ids": ["m004"]},
+    {"criterion_id": "demo_need", "status": "applicable", "answer": "yes", "evidence_message_ids": ["m004"]},
+    {"criterion_id": "demo_politeness", "status": "applicable", "answer": "5", "evidence_message_ids": []},
+    {"criterion_id": "demo_next_step", "status": "applicable", "answer": "yes", "evidence_message_ids": ["m006"]}
+  ]
+}

@@ -51,3 +51,39 @@ def user_prompt(checklist: ChecklistDraft, conv: Conversation) -> str:
         + json.dumps(transcript, ensure_ascii=False, indent=0) + "\n</conversation>\n\n"
         "Верни JSON строго по схеме из системной инструкции: по одному объекту на каждый criterion_id."
     )
+
+
+def _nullable(schema: dict) -> dict:
+    return {"anyOf": [schema, {"type": "null"}]}
+
+
+def output_schema(checklist: ChecklistDraft) -> dict:
+    """JSON-схема ответа, построенная из текущей версии чек-листа (для structured output)."""
+    ids = [c.criterion_id for c in checklist.criteria]
+    item = {
+        "type": "object",
+        "properties": {
+            "criterion_id": {"type": "string", "enum": ids},
+            "status": {"type": "string", "enum": ["applicable", "not_applicable", "needs_review"]},
+            "answer": _nullable({"type": "string"}),
+            "explanation": {"type": "string"},
+            "evidence_message_ids": {"type": "array", "items": {"type": "string"}},
+            "checked_range": _nullable({
+                "type": "object",
+                "properties": {"from_message_id": {"type": "string"}, "to_message_id": {"type": "string"}},
+                "required": ["from_message_id", "to_message_id"],
+                "additionalProperties": False,
+            }),
+            "na_reason": _nullable({"type": "string"}),
+            "review_reason": _nullable({"type": "string"}),
+        },
+        "required": ["criterion_id", "status", "answer", "explanation", "evidence_message_ids",
+                     "checked_range", "na_reason", "review_reason"],
+        "additionalProperties": False,
+    }
+    return {
+        "type": "object",
+        "properties": {"results": {"type": "array", "items": item}},
+        "required": ["results"],
+        "additionalProperties": False,
+    }

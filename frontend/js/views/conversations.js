@@ -62,14 +62,69 @@ export async function renderConversations() {
       renderConversations();
     } catch (e) { toast(e.message, true); }
   };
-  root.querySelector("#batch").onclick = async () => {
-    // TODO(F06): прогресс пакета, повтор неуспешных, отображение ошибок по диалогам
+  root.querySelector("#batch").onclick = async (ev) => {
+    if (!shown.length) return toast("Нет диалогов для оценки", true);
+    if (!confirm(`Запустить оценку ${shown.length} диалогов? Каждая оценка — вызов модели.`)) return;
+    ev.target.disabled = true;
     try {
       const r = await api.startBatch({
         checklist_version_id: Number(root.querySelector("#batch-ver").value),
         conversation_ids: shown.map((c) => c.conversation_id),
       });
-      toast(`Запущено оценок: ${r.evaluation_ids.length}`);
+      try { localStorage.setItem("cqa-batch", r.batch_id); } catch {}
+      toast(`Пакет ${r.batch_id}: ${r.evaluation_ids.length} оценок в очереди`);
+      drawBatch(r.batch_id);
     } catch (e) { toast(e.message, true); }
+    ev.target.disabled = false;
   };
+
+  let lastBatch = null;
+  try { lastBatch = localStorage.getItem("cqa-batch"); } catch {}
+  if (lastBatch) drawBatch(lastBatch);
+}
+
+// ---- Прогресс пакета (F06) ----
+let batchTimer = null;
+const ST = { queued: "в очереди", running: "выполняется", completed: "готово", failed: "ошибка", canceled: "отменено" };
+
+async function drawBatch(batchId) {
+  clearTimeout(batchTimer);
+  let box = root.querySelector("#batch-panel");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "batch-panel";
+    box.className = "panel";
+    root.insertBefore(box, root.children[1] || null);
+  }
+  let st;
+  try { st = await api.batch(batchId); }
+  catch (e) { box.remove(); return; }
+  if (location.hash && location.hash !== "#/") return; // ушли со страницы
+  const c = st.counts, done = (c.completed || 0) + (c.failed || 0) + (c.canceled || 0);
+  box.innerHTML = `
+    <div class="row" style="justify-content:space-between">
+      <h3>Пакет ${esc(batchId)} — ${done}/${st.total}${st.done ? " (завершён)" : ""}</h3>
+      <div class="row">
+        ${st.failed.length ? `<button class="secondary" id="b-retry">Повторить неуспешные (${st.failed.length})</button>` : ""}
+        ${!st.done ? '<button class="secondary" id="b-cancel">Остановить новые задачи</button>' : ""}
+        <button class="secondary" id="b-hide">Скрыть</button>
+      </div>
+    </div>
+    <progress max="${st.total}" value="${done}" style="width:100%"></progress>
+    <div class="muted">${Object.entries(c).map(([k, v]) => `${ST[k] || k}: ${v}`).join(" · ")}
+      · попыток: ${st.attempts} · стоимость: ${st.cost_usd == null ? "—" : "$" + Number(st.cost_usd).toFixed(4)}</div>
+    ${st.failed.map((f) => `<div class="st-failed"><a href="#/c/${encodeURIComponent(f.conversation_id)}">${esc(f.conversation_id)}</a>: ${esc(f.error)}</div>`).join("")}`;
+  box.querySelector("#b-retry")?.addEventListener("click", async () => {
+    try { const r = await api.batchRetry(batchId); toast(`Повтор: ${r.retried}`); drawBatch(batchId); }
+    catch (e) { toast(e.message, true); }
+  });
+  box.querySelector("#b-cancel")?.addEventListener("click", async () => {
+    try { const r = await api.batchCancel(batchId); toast(`Отменено задач в очереди: ${r.canceled}`); drawBatch(batchId); }
+    catch (e) { toast(e.message, true); }
+  });
+  box.querySelector("#b-hide").addEventListener("click", () => {
+    try { localStorage.removeItem("cqa-batch"); } catch {}
+    box.remove();
+  });
+  if (!st.done) batchTimer = setTimeout(() => drawBatch(batchId), 2000);
 }

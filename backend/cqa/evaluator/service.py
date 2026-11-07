@@ -37,17 +37,36 @@ def evaluate(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
 
 
 def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
-    resp = llm_client.chat_json(prompt_builder.system_prompt(), prompt_builder.user_prompt(checklist, conv))
-    try:
-        parsed = AIEvaluation.model_validate(json.loads(resp.text))
-    except (json.JSONDecodeError, ValidationError) as e:
-        # TODO(A06): один повтор с сообщением об ошибке формата
-        raise llm_client.LLMError(f"Неверный JSON от модели: {e}") from e
+    system = prompt_builder.system_prompt()
+    user = prompt_builder.user_prompt(checklist, conv)
+    schema = prompt_builder.output_schema(checklist)
+    calls: list[llm_client.CallRecord] = []
+    parsed: Optional[AIEvaluation] = None
+    last_err = ""
+    # Не более одного повтора при неверном формате; все вызовы учитываются в стоимости.
+    for _attempt in range(2):
+        try:
+            resp = llm_client.chat_json(system, user, schema)
+        except llm_client.LLMError as e:
+            e.calls = calls + e.calls
+            raise
+        calls += resp.calls
+        try:
+            parsed = AIEvaluation.model_validate(json.loads(resp.text))
+            break
+        except (json.JSONDecodeError, ValidationError) as e:
+            last_err = str(e)[:300]
+            user = (prompt_builder.user_prompt(checklist, conv)
+                    + f"\n\nПредыдущий ответ не прошёл проверку формата: {last_err}\nВерни корректный JSON.")
+    if parsed is None:
+        raise llm_client.LLMError(f"Неверный JSON от модели после повтора: {last_err}", calls)
+
     results, problems = validate(parsed.results, checklist, conv)
+    models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
-        results=results, problems=problems, mode="real", model=settings.llm_model,
+        results=results, problems=problems, mode="real", model=", ".join(models) or settings.llm_model,
         prompt_version=prompt_builder.PROMPT_VERSION,
-        calls=[c.__dict__ for c in resp.calls], cost_usd=llm_client.cost_usd(resp.calls),
+        calls=[c.__dict__ for c in calls], cost_usd=llm_client.cost_usd(calls),
     )
 
 

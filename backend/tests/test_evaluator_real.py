@@ -1,0 +1,58 @@
+"""Реальный путь оценщика без сети: подменяем chat_json. Владелец: Участник 2."""
+import json
+from pathlib import Path
+
+import pytest
+
+from cqa.config import settings
+from cqa.evaluator import llm_client, prompt_builder, service
+from cqa.importer import parse_response
+from cqa.models import ChecklistDraft
+
+ROOT = Path(__file__).resolve().parents[2]
+CONV = parse_response(json.loads((ROOT / "data/fixtures/sample_dataset.json").read_text(encoding="utf-8")))[0]
+CHK = ChecklistDraft.model_validate_json((ROOT / "data/fixtures/checklist_demo.json").read_text(encoding="utf-8"))
+
+GOOD = {"results": [
+    {"criterion_id": "demo_greeting", "status": "applicable", "answer": "yes", "explanation": "m004",
+     "evidence_message_ids": ["m004"], "checked_range": None, "na_reason": None, "review_reason": None},
+    {"criterion_id": "demo_need", "status": "applicable", "answer": "yes", "explanation": "",
+     "evidence_message_ids": ["m004"], "checked_range": None, "na_reason": None, "review_reason": None},
+    {"criterion_id": "demo_politeness", "status": "applicable", "answer": "5", "explanation": "",
+     "evidence_message_ids": ["m004", "m006"], "checked_range": None, "na_reason": None, "review_reason": None},
+    {"criterion_id": "demo_next_step", "status": "applicable", "answer": "yes", "explanation": "",
+     "evidence_message_ids": ["m006"], "checked_range": None, "na_reason": None, "review_reason": None},
+]}
+
+
+def call(tokens=(1000, 500)):
+    return llm_client.CallRecord(True, 0.1, "claude-opus-5-5", *tokens)
+
+
+def test_schema_built_from_checklist():
+    s = prompt_builder.output_schema(CHK)
+    ids = s["properties"]["results"]["items"]["properties"]["criterion_id"]["enum"]
+    assert ids == [c.criterion_id for c in CHK.criteria]
+
+
+def test_retry_once_on_bad_json_and_cost_counts_both(monkeypatch):
+    answers = iter(["не json", json.dumps(GOOD)])
+    monkeypatch.setattr(llm_client, "chat_json", lambda s, u, sch: llm_client.LLMResponse(next(answers), [call()]))
+    monkeypatch.setattr(settings, "llm_price_input_per_m", 0.0)
+    monkeypatch.setattr(settings, "llm_price_output_per_m", 0.0)
+    out = service._real(CONV, CHK)
+    assert len(out.calls) == 2
+    # 2 × (1000×4 + 500×20)/1e6 = 0.028
+    assert out.cost_usd == pytest.approx(0.028)
+    assert all(r.status == "applicable" for r in out.results)
+
+
+def test_fails_after_two_bad_answers(monkeypatch):
+    monkeypatch.setattr(llm_client, "chat_json", lambda s, u, sch: llm_client.LLMResponse("{}", [call()]))
+    with pytest.raises(llm_client.LLMError) as e:
+        service._real(CONV, CHK)
+    assert len(e.value.calls) == 2
+
+
+def test_unknown_usage_is_not_zero_cost():
+    assert llm_client.cost_usd([llm_client.CallRecord(True, 0.1, "claude-opus-5-5", None, None)]) is None

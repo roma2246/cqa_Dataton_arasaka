@@ -30,12 +30,16 @@ class Settings:
     organizer_api_url: str = field(default_factory=lambda: os.getenv("ORGANIZER_API_URL", ""))
     # mock - тестовый ответ (явно помечается в UI); real - настоящая модель
     evaluator_mode: str = field(default_factory=lambda: os.getenv("EVALUATOR_MODE", "mock"))
+    # anthropic | openai_compat
+    llm_provider: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "anthropic"))
+    # Claude: уровень effort (low | medium | high | xhigh | max)
+    llm_effort: str = field(default_factory=lambda: os.getenv("LLM_EFFORT", "medium"))
     llm_base_url: str = field(default_factory=lambda: os.getenv("LLM_BASE_URL", ""))
     llm_api_key: str = field(default_factory=lambda: os.getenv("LLM_API_KEY", ""))
     llm_model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", ""))
     llm_price_input_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_INPUT_PER_M", "0")))
     llm_price_output_per_m: float = field(default_factory=lambda: float(os.getenv("LLM_PRICE_OUTPUT_PER_M", "0")))
-    llm_timeout_s: int = field(default_factory=lambda: int(os.getenv("LLM_TIMEOUT_S", "90")))
+    llm_timeout_s: int = field(default_factory=lambda: int(os.getenv("LLM_TIMEOUT_S", "300")))
     llm_max_retries: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_RETRIES", "2")))
     batch_concurrency: int = field(default_factory=lambda: int(os.getenv("BATCH_CONCURRENCY", "4")))
 

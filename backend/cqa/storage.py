@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS evaluations (
     conversation_id TEXT NOT NULL,
     content_hash TEXT NOT NULL,
     checklist_version_id INTEGER NOT NULL,
-    status TEXT NOT NULL,             -- queued | running | completed | failed
+    status TEXT NOT NULL,             -- queued | running | completed | failed | canceled
+    batch_id TEXT,
     mode TEXT,                        -- mock | real
     model TEXT, prompt_version TEXT,
     ai_results_json TEXT,             -- исходный ответ ИИ (не меняется!)
@@ -110,6 +111,55 @@ def tx() -> Iterator[sqlite3.Connection]:
 def init_db() -> None:
     with tx() as c:
         c.executescript(SCHEMA)
+        cols = {r["name"] for r in c.execute("PRAGMA table_info(evaluations)")}
+        if "batch_id" not in cols:  # миграция БД, созданной до появления пакетов
+            c.execute("ALTER TABLE evaluations ADD COLUMN batch_id TEXT")
+
+
+def unfinished_evaluations() -> list[int]:
+    """Оценки, прерванные перезапуском сервера."""
+    with tx() as c:
+        c.execute("UPDATE evaluations SET status='queued' WHERE status='running'")
+        return [r[0] for r in c.execute("SELECT evaluation_id FROM evaluations WHERE status='queued' ORDER BY evaluation_id")]
+
+
+def claim_evaluation(evaluation_id: int) -> bool:
+    """queued -> running атомарно. False, если задачу отменили или уже взяли."""
+    with tx() as c:
+        cur = c.execute("UPDATE evaluations SET status='running' WHERE evaluation_id=? AND status='queued'",
+                        (evaluation_id,))
+        return cur.rowcount == 1
+
+
+def batch_status(batch_id: str) -> dict[str, Any]:
+    """Прогресс пакета по ПОСЛЕДНЕЙ попытке для каждого диалога."""
+    with tx() as c:
+        rows = c.execute(
+            """SELECT e.evaluation_id, e.conversation_id, e.status, e.error, e.cost_usd, e.model
+               FROM evaluations e
+               WHERE e.batch_id=? AND e.evaluation_id = (
+                   SELECT MAX(e2.evaluation_id) FROM evaluations e2
+                   WHERE e2.batch_id=e.batch_id AND e2.conversation_id=e.conversation_id)
+               ORDER BY e.conversation_id""", (batch_id,)).fetchall()
+        all_cost = c.execute("SELECT SUM(cost_usd), COUNT(*) FROM evaluations WHERE batch_id=?",
+                             (batch_id,)).fetchone()
+    items = [dict(r) for r in rows]
+    counts: dict[str, int] = {}
+    for it in items:
+        counts[it["status"]] = counts.get(it["status"], 0) + 1
+    return {
+        "batch_id": batch_id, "total": len(items), "counts": counts,
+        "done": all(i["status"] in ("completed", "failed", "canceled") for i in items),
+        "attempts": all_cost[1], "cost_usd": all_cost[0],  # стоимость по всем попыткам, включая повторы
+        "failed": [i for i in items if i["status"] == "failed"],
+        "items": items,
+    }
+
+
+def cancel_batch(batch_id: str) -> int:
+    with tx() as c:
+        return c.execute("UPDATE evaluations SET status='canceled', finished_at=? WHERE batch_id=? AND status='queued'",
+                         (now(), batch_id)).rowcount
 
 
 # ---------- Диалоги ----------
@@ -204,11 +254,12 @@ def get_checklist(version_id: int) -> Optional[ChecklistVersion]:
 
 # ---------- Оценки ----------
 
-def create_evaluation(conversation_id: str, content_hash: str, version_id: int) -> int:
+def create_evaluation(conversation_id: str, content_hash: str, version_id: int,
+                      batch_id: Optional[str] = None) -> int:
     with tx() as c:
         cur = c.execute(
-            "INSERT INTO evaluations (conversation_id, content_hash, checklist_version_id, status, created_at) "
-            "VALUES (?,?,?,?,?)", (conversation_id, content_hash, version_id, "queued", now()))
+            "INSERT INTO evaluations (conversation_id, content_hash, checklist_version_id, status, batch_id, created_at) "
+            "VALUES (?,?,?,?,?,?)", (conversation_id, content_hash, version_id, "queued", batch_id, now()))
         return cur.lastrowid
 
 

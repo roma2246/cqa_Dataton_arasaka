@@ -32,6 +32,9 @@ export const api = {
   startEvaluation: (conversation_id, checklist_version_id) =>
     request("POST", "/evaluations", { conversation_id, checklist_version_id }),
   startBatch: (body) => request("POST", "/evaluations/batch", body),
+  batch: (id) => request("GET", "/batches/" + id),
+  batchRetry: (id) => request("POST", `/batches/${id}/retry`),
+  batchCancel: (id) => request("POST", `/batches/${id}/cancel`),
   evaluation: (id) => request("GET", "/evaluations/" + id),
   createAppeal: (evaluationId, criterion_id, comment) =>
     request("POST", `/evaluations/${evaluationId}/appeals`, { criterion_id, comment }),

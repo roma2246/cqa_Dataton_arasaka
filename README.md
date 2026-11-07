@@ -30,7 +30,11 @@ cd backend && ../.venv/bin/uvicorn cqa.main:app --reload --port 8000
 или загрузить из API организаторов (нужен `ORGANIZER_API_URL` в `.env`).
 
 По умолчанию `EVALUATOR_MODE=mock` — **тестовый** ответ без модели (в UI жёлтая плашка).
-Для настоящей оценки: `EVALUATOR_MODE=real` + `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, цены.
+
+Настоящая оценка через Claude: в `.env` задать `EVALUATOR_MODE=real`, `LLM_PROVIDER=anthropic`,
+`ANTHROPIC_API_KEY=...` (модель по умолчанию `claude-opus-5-5`; дешевле — `LLM_MODEL=claude-sonnet-5-5`).
+Через Gemini/OpenAI: `LLM_PROVIDER=openai_compat`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, цены `LLM_PRICE_*`.
+После изменения `.env` перезапустите сервер.
 
 ## Тесты
 
@@ -42,6 +46,8 @@ cd backend && ../.venv/bin/pytest -q
 
 ```
 backend/cqa/main.py          API (Участник 1)
+backend/cqa/audio.py         адаптер записи звонков (Участник 1)
+backend/cqa/http.py          HTTP с сертификатами certifi
 backend/cqa/storage.py       SQLite, версии, атомарные решения (Участник 1)
 backend/cqa/models.py        общий контракт (Участник 1, согласуется всеми)
 backend/cqa/evaluator/       модель, промпт, валидация доказательств (Участник 2)
@@ -51,7 +57,7 @@ backend/cqa/importer.py      импорт набора организаторо�
 frontend/                    весь интерфейс (Участник 3)
 data/fixtures/               синтетические примеры (НЕ реальные данные)
 data/checklists/             официальный чек-лист в JSON (Участник 4, Q01)
-evaluation/                  эталоны и приёмка (Участник 4)
+evaluation/                  эталоны и compare.py (Участник 4)
 docs/API_CONTRACT.md         контракт API
 ```
 

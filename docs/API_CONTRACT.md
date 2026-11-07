@@ -10,7 +10,7 @@
 | Критерий `status` | `applicable` | применим и оценён |
 | | `not_applicable` | N/A разрешён и обоснован правилом |
 | | `needs_review` | данных не хватает / ответ модели невалиден |
-| Оценка `status` | `queued`, `running`, `completed`, `failed` | состояние задачи |
+| Оценка `status` | `queued`, `running`, `completed`, `failed`, `canceled` | состояние задачи; после перезапуска сервера `queued/running` выполняются снова |
 | Апелляция `status` | `open`, `confirmed`, `changed` | |
 
 `total: null` ≠ 0. N/A, неполнота и сбой не смешиваются.
@@ -24,12 +24,15 @@
 | POST | `/import/json` | ответ API организаторов целиком | то же |
 | GET | `/conversations` | `?language=&channel=&group_id=` | список с `message_count`, `last_evaluation_id` |
 | GET | `/conversations/{id}` | — | `Conversation` + `messages[]` + `evaluations[]` |
-| GET | `/conversations/{id}/audio` | — | `{player_url, kind:"external_player"}` |
+| GET | `/conversations/{id}/audio` | — | `{player_url, media_url, media_type, error}` — `media_url` только если сервер проверил `audio/*` |
 | GET | `/checklists` | — | версии, новые сверху |
 | GET | `/checklists/{version_id}` | — | `ChecklistVersion` |
 | POST | `/checklists` | `ChecklistDraft` | новая неизменяемая версия |
 | POST | `/evaluations` | `{conversation_id, checklist_version_id}` | `{evaluation_id, status:"queued"}` |
-| POST | `/evaluations/batch` | `{checklist_version_id, conversation_ids? , group_id?}` | `{evaluation_ids[]}` |
+| POST | `/evaluations/batch` | `{checklist_version_id, conversation_ids? , group_id?}` | `{batch_id, evaluation_ids[]}` |
+| GET | `/batches/{batch_id}` | — | `{total, counts, done, attempts, cost_usd, failed[], items[]}` (по последней попытке на диалог) |
+| POST | `/batches/{batch_id}/retry` | — | `{retried, evaluation_ids[]}` — новые попытки только для `failed` |
+| POST | `/batches/{batch_id}/cancel` | — | `{canceled}` — отменяет ещё не начатые (`queued` → `canceled`) |
 | GET | `/evaluations/{id}` | — | см. ниже |
 | POST | `/evaluations/{id}/appeals` | `{criterion_id, comment}` | `{appeal_id, status}` |
 | GET | `/appeals` | `?status=open` | список |

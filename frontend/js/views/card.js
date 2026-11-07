@@ -19,7 +19,8 @@ export async function renderCard(conversationId, selectedEvalId) {
       <div>
         <h2>${esc(conv.conversation_id)}</h2>
         <span class="muted">${esc(conv.channel)} · ${esc(conv.language)} · группа ${esc(conv.group_id)} · ${conv.messages.length} реплик</span>
-        ${conv.audio_url ? ' · <button class="secondary" id="audio">Открыть запись</button>' : ""}
+        ${conv.audio_url ? ' · <button class="secondary" id="audio">Прослушать запись</button>' : ""}
+        <div id="audio-box"></div>
       </div>
       <div class="row">
         <select id="ver">${versions.map((v) => `<option value="${v.version_id}">v${v.version} — ${esc(v.name)}</option>`).join("")}</select>
@@ -48,10 +49,28 @@ export async function renderCard(conversationId, selectedEvalId) {
     } catch (e) { toast(e.message, true); }
   };
   root.querySelector("#evsel")?.addEventListener("change", (e) => renderCard(conversationId, Number(e.target.value)));
-  root.querySelector("#audio")?.addEventListener("click", async () => {
-    // audio_url - HTML-страница плеера, НЕ аудиофайл; открываем штатный плеер. TODO(F05/B06)
-    try { const a = await api.audio(conversationId); window.open(a.player_url, "_blank", "noopener"); }
-    catch (e) { toast(e.message, true); }
+  root.querySelector("#audio")?.addEventListener("click", async (e) => {
+    // audio_url — HTML-страница плеера, НЕ аудиофайл. Сервер извлекает и проверяет media-источник.
+    // Перемотку к реплике не делаем: начало записи (t0) не сверено с ISO-временем транскрипта.
+    const box = root.querySelector("#audio-box");
+    e.target.disabled = true;
+    box.innerHTML = '<span class="muted">Проверяем запись…</span>';
+    try {
+      const a = await api.audio(conversationId);
+      const player = `<a href="${esc(a.player_url)}" target="_blank" rel="noopener noreferrer">штатный плеер ↗</a>`;
+      if (a.media_url) {
+        box.innerHTML = `<audio controls preload="metadata" style="width:100%;margin-top:6px" src="${esc(a.media_url)}"></audio>
+          <div class="muted">Тип: ${esc(a.media_type)} · ${player}</div>`;
+        box.querySelector("audio").addEventListener("error", () => {
+          box.insertAdjacentHTML("beforeend", `<div class="st-failed">Браузер не смог загрузить запись — откройте ${player}</div>`);
+        });
+      } else {
+        box.innerHTML = `<div class="st-failed">${esc(a.error || "Запись недоступна")}</div><div>${player}</div>`;
+      }
+    } catch (err) {
+      box.innerHTML = `<div class="st-failed">${esc(err.message)}</div>`;
+      e.target.disabled = false;
+    }
   });
 
   if (ev && (ev.status === "queued" || ev.status === "running")) {
@@ -65,6 +84,7 @@ function renderResult(ev, chk) {
   if (!ev) return `<div class="panel muted">Оценок ещё нет. Выберите версию чек-листа и запустите оценку.</div>`;
   if (ev.status === "queued" || ev.status === "running") return `<div class="panel">Оценка #${ev.evaluation_id}: ${ev.status}…</div>`;
   if (ev.status === "failed") return `<div class="panel st-failed">Оценка не удалась: ${esc(ev.error)}</div>`;
+  if (ev.status === "canceled") return `<div class="panel muted">Оценка #${ev.evaluation_id} отменена до запуска.</div>`;
 
   const crit = Object.fromEntries((chk?.criteria || []).map((c) => [c.criterion_id, c]));
   const fin = ev.final_score, ai = ev.ai_score;
