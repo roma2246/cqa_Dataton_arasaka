@@ -404,8 +404,17 @@ def calibration_toggle(example_id: int, body: CalibrationToggle) -> dict[str, An
 
 # ---------- Аналитика ----------
 
-def _official_vid(checklist_version_id: Optional[int]) -> int:
-    vid = checklist_version_id or next((v.version_id for v in storage.list_checklists() if v.checklist_id == "official"), None)
+def _official_vid(checklist_version_id: Optional[int], group_id: Optional[str] = None) -> int:
+    """Явно заданная версия; иначе — последняя версия официального чек-листа, по которой в наборе есть оценки."""
+    if checklist_version_id:
+        return checklist_version_id
+    with storage.tx() as db:
+        r = db.execute("""SELECT MAX(e.checklist_version_id) FROM evaluations e
+                          JOIN checklist_versions v ON v.version_id = e.checklist_version_id
+                          JOIN conversations c ON c.conversation_id = e.conversation_id
+                          WHERE v.checklist_id = 'official' AND e.status = 'completed'"""
+                       + (" AND c.group_id = ?" if group_id else ""), (group_id,) if group_id else ()).fetchone()
+    vid = (r[0] if r else None) or next((v.version_id for v in storage.list_checklists() if v.checklist_id == "official"), None)
     if not vid:
         raise HTTPException(404, "Нет официального чек-листа")
     return vid
@@ -414,7 +423,7 @@ def _official_vid(checklist_version_id: Optional[int]) -> int:
 @app.get("/api/analytics")
 def analytics(group_id: Optional[str] = "DEV", checklist_version_id: Optional[int] = None) -> dict[str, Any]:
     from . import analytics as an
-    return an.summary(group_id or None, _official_vid(checklist_version_id))
+    return an.summary(group_id or None, _official_vid(checklist_version_id, group_id or None))
 
 
 class AskBody(BaseModel):
@@ -428,7 +437,7 @@ def analytics_ask(body: AskBody) -> dict[str, Any]:
     from .evaluator.llm_client import LLMError
     if settings.evaluator_mode != "real":
         raise HTTPException(409, "ИИ-аналитик доступен с настоящей моделью (EVALUATOR_MODE=real)")
-    stats = an.summary(body.group_id or None, _official_vid(None))
+    stats = an.summary(body.group_id or None, _official_vid(None, body.group_id or None))
     try:
         return an.ask(stats, body.question)
     except LLMError as e:
@@ -490,7 +499,7 @@ def public_stats() -> dict[str, Any]:
     out: dict[str, Any] = {"model": settings.llm_model if settings.evaluator_mode == "real" else "mock",
                            "team": settings.team_name}
     try:
-        a = an.summary("DEV", _official_vid(None))
+        a = an.summary("DEV", _official_vid(None, "DEV"))
         out.update({k: a[k] for k in ("evaluated", "avg_total", "critical_count", "by_language")})
         out["criteria"] = [{k: c[k] for k in ("title", "weight", "score_pct")} for c in a["criteria"]]
     except Exception:  # noqa: BLE001 — витрина не должна падать

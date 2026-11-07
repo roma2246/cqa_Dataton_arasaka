@@ -171,9 +171,10 @@ h2 em { font-style: normal; color: var(--g); }
 /* Как работает */
 .how { background: var(--soft); border-radius: 40px; margin: 0 16px; }
 .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; position: relative; }
-.steps .line { position: absolute; left: 6%; right: 6%; top: 34px; height: 4px; z-index: 0; }
-.steps .line svg { width: 100%; height: 4px; overflow: visible; }
-.steps .line path { stroke: var(--g); stroke-width: 3; stroke-dasharray: 8 8; fill: none; }
+/* от центра квадрата «01» до центра «04»: колонка = (100% − 3 промежутка по 22px) / 4, центр квадрата — 35px */
+.steps .line { position: absolute; left: 35px; right: calc((100% - 66px) / 4 - 35px); top: 33px; height: 4px; z-index: 0; border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--g) 0 12px, transparent 12px 20px); }
+.step .n { z-index: 1; }
 .step { position: relative; z-index: 1; }
 .step .n { width: 70px; height: 70px; border-radius: 22px; background: #fff; display: grid; place-items: center; font-size: 26px; font-weight: 800;
   color: var(--g-dark); box-shadow: 0 0 0 1px var(--line), 0 14px 30px -16px rgba(15, 35, 24, .45); margin-bottom: 22px; position: relative; }
@@ -315,7 +316,7 @@ h2 em { font-style: normal; color: var(--g); }
 .op .id em { font-style: normal; color: var(--neon); display: flex; align-items: center; gap: 6px; }
 .op .id em::before { content: ""; width: 7px; height: 7px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 10px var(--neon); animation: blink 1.4s infinite; }
 @keyframes blink { 50% { opacity: .25; } }
-.avatar { width: 100%; aspect-ratio: 1.25; margin: 16px 0 18px; position: relative; display: grid; place-items: center; overflow: hidden;
+.avatar { width: 100%; aspect-ratio: 1; margin: 16px 0 18px; position: relative; display: grid; place-items: center; overflow: hidden;
   background: radial-gradient(circle at 50% 40%, rgba(107, 255, 143, .18), transparent 65%), #060b08;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%); }
 .avatar::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(107, 255, 143, .1) 1px, transparent 1px),
@@ -327,7 +328,13 @@ h2 em { font-style: normal; color: var(--g); }
   text-shadow: 0 0 22px rgba(107, 255, 143, .45); position: relative; letter-spacing: .02em; }
 .op:hover .avatar b { animation: jit .35s steps(2) 2; }
 @keyframes jit { 0% { transform: translate(2px, -1px); color: rgba(255, 42, 109, .5); } 50% { transform: translate(-2px, 1px); color: rgba(0, 240, 255, .5); } 100% { transform: none; } }
-.avatar .ret { position: absolute; inset: 12px; border: 1px dashed rgba(107, 255, 143, .25); }
+.avatar .ret { position: absolute; inset: 12px; border: 1px dashed rgba(107, 255, 143, .25); z-index: 2; }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 22%; z-index: 0;
+  filter: saturate(1.15) contrast(1.05); transition: transform .5s, filter .3s; }
+.avatar::before, .avatar::after { z-index: 1; }
+.avatar.has-photo::before { opacity: .45; }
+.avatar.has-photo b { display: none; }
+.op:hover .avatar img { transform: scale(1.05); filter: saturate(1.3) contrast(1.1) hue-rotate(-8deg); }
 .op h3 { font-family: "Orbitron", var(--mono); font-size: 16.5px; line-height: 1.25; margin: 0 0 6px; color: #fff; letter-spacing: .03em; min-height: 2.5em; }
 .op .role { font-size: 12.5px; color: var(--neon-2); min-height: 1.4em; }
 .op .role::after { content: "▌"; color: var(--neon); animation: blink 1s steps(1) infinite; margin-left: 2px; }
