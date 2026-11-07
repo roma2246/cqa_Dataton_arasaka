@@ -127,6 +127,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
 
     results, problems = validate(parsed.results, checklist, conv)
     results, problems = _guard_identification(results, problems, conv)
+    results, problems = _guard_disclosure(results, problems)
     results, problems = _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls)
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
@@ -193,6 +194,22 @@ def _guard_identification(results, problems, conv):
             problems = problems + ["идентификация «Да» без проверки личности — отправлено на уточнение"]
         out.append(r)
     return out, problems
+
+
+def _guard_disclosure(results, problems):
+    """Идентификация «Нет» по чек-листу значит: данные счёта названы без проверки — это и грубая ошибка (раскрытие).
+    Если модель поставила «Нет» по идентификации, а грубую ошибку не отметила, — уточняющий запрос по грубой ошибке."""
+    by = {r.criterion_id: r for r in results}
+    ident, crit = by.get("identification"), by.get("critical")
+    if not (ident and crit and ident.status == "applicable" and ident.answer == "no"
+            and crit.status == "applicable" and crit.answer == "no"):
+        return results, problems
+    why = ("Идентификация «Нет»: если оператор назвал данные конкретного счёта (баланс, ограничение, операции) "
+           "без подтверждённой проверки — это раскрытие конфиденциальной информации, грубая ошибка «Да». "
+           "«Нет» — только если данных счёта оператор не называл.")
+    fixed = crit.model_copy(update={"status": "needs_review", "answer": None, "review_reason": why})
+    return [fixed if r.criterion_id == "critical" else r for r in results], problems + [
+        "идентификация «Нет» без флага грубой ошибки — отправлено на уточнение"]
 
 
 def _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls):

@@ -142,3 +142,15 @@ def test_identification_yes_without_verification_goes_to_review():
     conv.messages.append(NS(text="Личность клиента подтверждена."))
     out, _ = _guard_identification([r], [], conv)
     assert out[0].answer == "yes"
+
+
+def test_identification_no_sends_critical_to_review():
+    from cqa.evaluator.service import _guard_disclosure
+    from cqa.models import CriterionResult
+    i = CriterionResult(criterion_id="identification", status="applicable", answer="no", explanation="e")
+    c = CriterionResult(criterion_id="critical", status="applicable", answer="no", explanation="e")
+    out, probs = _guard_disclosure([i, c], [])
+    assert out[1].status == "needs_review" and probs
+    i2 = i.model_copy(update={"status": "not_applicable", "answer": None})
+    out, _ = _guard_disclosure([i2, c], [])
+    assert out[1].answer == "no"
