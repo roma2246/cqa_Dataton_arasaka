@@ -11,6 +11,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 TS = json.loads((ROOT / "data/testsets/synthetic_v1.json").read_text(encoding="utf-8"))
 HOLD = json.loads((ROOT / "data/testsets/holdout_v1.json").read_text(encoding="utf-8"))
+EXT = json.loads((ROOT / "data/testsets/external_v1.json").read_text(encoding="utf-8"))
 CHK = ChecklistDraft.model_validate_json((ROOT / TS["checklist"]).read_text(encoding="utf-8"))
 
 
@@ -26,7 +27,7 @@ def test_imports_and_language_parity():
     assert all(len(v) == 1 for v in by_sc.values())
 
 
-@pytest.mark.parametrize("ts", [TS, HOLD], ids=["synthetic", "holdout"])
+@pytest.mark.parametrize("ts", [TS, HOLD, EXT], ids=["synthetic", "holdout", "external"])
 def test_expected_answers_are_valid_for_checklist(ts):
     crit = {c.criterion_id: c for c in CHK.criteria}
     convs = {c.conversation_id: c for c in parse_response(ts["dataset"])}
@@ -58,3 +59,10 @@ def test_holdout_does_not_reuse_dev_texts():
     hold = {m["text"] for r in HOLD["dataset"]["data"]["records"] for m in r["transcript"] if m["speaker"] == "operator"}
     assert not dev & hold  # реплики операторов в отложенном наборе новые
     assert set(TS["expected"]).isdisjoint(HOLD["expected"])
+
+
+def test_external_has_attribution_and_one_operator_line():
+    assert {src["license"] for src in EXT["sources"]} == {"CC BY 4.0", "OpenRAIL++", "Apache-2.0"}
+    for r in EXT["dataset"]["data"]["records"]:
+        assert [m["speaker"] for m in r["transcript"]].count("operator") == 1
+        assert EXT["meta"][r["conversation_id"]]["source"]

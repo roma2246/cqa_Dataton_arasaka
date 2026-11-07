@@ -13,4 +13,4 @@ if [ -n "$HOLD_TAG" ] && [ "$HOLD_TAG" != "-" ]; then
   "$PY" evaluation/run_eval.py --tag "$HOLD_TAG" --testset data/testsets/holdout_v1.json "${COMMON[@]}" "$@" > "data/$HOLD_TAG.log" 2>&1
 fi
 "$PY" evaluation/progress.py
-grep -h "Совпадение" evaluation/reports/"$DEV_TAG".md evaluation/reports/"$HOLD_TAG".md 2>/dev/null
+grep -h "Совпадение" evaluation/reports/"$DEV_TAG".md evaluation/reports/"$HOLD_TAG".md 2>/dev/null || true

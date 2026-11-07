@@ -7,3 +7,4 @@ data/*.sqlite3*
 data/raw/
 *.log
 .DS_Store
+data/external/

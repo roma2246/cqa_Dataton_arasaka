@@ -146,3 +146,10 @@ def test_unknown_remote_price_is_none(monkeypatch):
     monkeypatch.setattr(settings, "llm_price_input_per_m", 0.0)
     monkeypatch.setattr(settings, "llm_price_output_per_m", 0.0)
     assert llm_client.cost_usd([llm_client.CallRecord(True, 1, "mystery-model", 10, 10)]) is None
+
+
+def test_prompt_too_close_to_context_is_error(gemini, monkeypatch):
+    monkeypatch.setattr(settings, "llm_context_tokens", 2000)
+    gemini([OK])  # prompt_tokens=1000 >= 2000-1500
+    with pytest.raises(llm_client.LLMError, match="контекст"):
+        llm_client.chat_json("sys", "user", SCHEMA)

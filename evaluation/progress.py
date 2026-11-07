@@ -30,13 +30,14 @@ def main() -> None:
     iters = json.loads((REPORTS / "iterations.json").read_text(encoding="utf-8"))
     rows = []
     for it in iters:
-        d, h = load(it.get("dev")), load(it.get("holdout"))
+        d, h, x = load(it.get("dev")), load(it.get("holdout")), load(it.get("external"))
         row = {"iter": it["iter"], "name": it["name"], "changes": it["changes"], "model": it.get("model", "")}
-        for key, s in (("dev", d), ("hold", h)):
+        for key, s in (("dev", d), ("hold", h), ("ext", x)):
             row[key] = None if not s else {
                 "acc": pct(s["accuracy"]), "n": s["accuracy"],
                 "evidence": pct(s["evidence"]),
                 "langs": {k: pct(v) for k, v in s["by_language"].items()},
+                "scen": {k: pct(v) for k, v in s["by_scenario"].items()},
                 "crit": {k: pct(v) for k, v in s["by_criterion"].items()},
                 "done": s["evaluations"]["completed"], "total": s["evaluations"]["total"],
                 "latency": s["latency_s_avg"], "cost": s["cost_usd"]["per_eval"],
@@ -53,12 +54,12 @@ TEMPLATE = r"""<!doctype html>
 <title>Прогресс оценщика</title>
 <style>
 .viz-root{color-scheme:light;--surface-1:#fcfcfb;--surface-2:#f2f1ee;--text-primary:#0b0b0b;--text-secondary:#52514e;
- --text-muted:#7a7974;--grid:#e6e5e1;--axis:#c9c8c2;--series-1:#2a78d6;--series-2:#eb6834;--good:#1a7f37;--bad:#c4312f}
+ --text-muted:#7a7974;--grid:#e6e5e1;--axis:#c9c8c2;--series-1:#2a78d6;--series-2:#eb6834;--series-3:#1baf7a;--good:#1a7f37;--bad:#c4312f}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{color-scheme:dark;--surface-1:#1a1a19;
  --surface-2:#242422;--text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#8f8e86;--grid:#2e2e2b;--axis:#46453f;
- --series-1:#3987e5;--series-2:#d95926;--good:#46b85c;--bad:#e66767}}
+ --series-1:#3987e5;--series-2:#d95926;--series-3:#199e70;--good:#46b85c;--bad:#e66767}}
 :root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#1a1a19;--surface-2:#242422;--text-primary:#f0efec;
- --text-secondary:#c3c2b7;--text-muted:#8f8e86;--grid:#2e2e2b;--axis:#46453f;--series-1:#3987e5;--series-2:#d95926;--good:#46b85c;--bad:#e66767}
+ --text-secondary:#c3c2b7;--text-muted:#8f8e86;--grid:#2e2e2b;--axis:#46453f;--series-1:#3987e5;--series-2:#d95926;--series-3:#199e70;--good:#46b85c;--bad:#e66767}
 html,body{margin:0}body{background:var(--surface-1)}
 .viz-root{background:var(--surface-1);color:var(--text-primary);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
  max-width:980px;margin:0 auto;padding:24px 16px 48px}
@@ -83,12 +84,16 @@ th{color:var(--text-secondary);font-weight:600}td.n{font-variant-numeric:tabular
 <h2>Совпадение с эталоном по итерациям</h2>
 <div class="legend"><span><i style="background:var(--series-1)"></i>Набор для настройки — на нём ищем ошибки</span>
 <span><i style="background:var(--series-2)"></i>Отложенный набор — новые диалоги, по нему ничего не настраиваем</span>
+<span><i style="background:var(--series-3)"></i>Внешний набор — реальные фразы людей из открытых датасетов</span>
 <span><i style="background:var(--text-muted);height:0;border-top:2px dashed var(--text-muted)"></i>Порог __TARGET__%</span></div>
 <div class="chart" id="chart"></div>
 <div class="small">Если оранжевая линия растёт вместе с синей — улучшение настоящее. Если растёт только синяя — модель «зазубрила» настроечный набор.</div>
 
 <h2>По языкам на отложенном наборе</h2>
 <div id="langs"></div>
+
+<h2>Внешний набор: реальные фразы по типам</h2>
+<div id="ext"></div>
 
 <h2>Итерации подробно</h2>
 <div id="table"></div>
@@ -117,12 +122,13 @@ s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(T)}" y2="${y(T)}" stroke="var(--
   <text x="${W - m.r + 6}" y="${y(T) + 4}" font-size="12" fill="var(--text-muted)">порог ${T}%</text>`;
 D.forEach((r, i) => s += `<text x="${x(i)}" y="${H - m.b + 20}" text-anchor="middle" font-size="12" fill="var(--text-secondary)">${i}</text>
   <text x="${x(i)}" y="${H - m.b + 36}" text-anchor="middle" font-size="11.5" fill="var(--text-muted)">${esc(r.name)}</text>`);
-for (const [key, color, label] of [["dev", "var(--series-1)", "настройка"], ["hold", "var(--series-2)", "отложенный"]]) {
+const lbl = {dev: -8, hold: 6, ext: 20};
+for (const [key, color, label] of [["dev", "var(--series-1)", "настройка"], ["hold", "var(--series-2)", "отложенный"], ["ext", "var(--series-3)", "внешний"]]) {
   const pts = D.map((r, i) => r[key] ? [x(i), y(r[key].acc), r[key].acc] : null).filter(Boolean);
   if (pts.length > 1) s += `<polyline points="${pts.map(p => p[0] + "," + p[1]).join(" ")}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
   pts.forEach(p => s += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${color}" stroke="var(--surface-1)" stroke-width="2"/>`);
   const e = pts[pts.length - 1];
-  if (e) s += `<text x="${W - m.r + 6}" y="${e[1] + (key === "dev" ? -6 : 14)}" font-size="12.5" fill="var(--text-primary)">${label} ${f(e[2])}</text>`;
+  if (e) s += `<text x="${W - m.r + 6}" y="${e[1] + lbl[key]}" font-size="12.5" fill="var(--text-primary)">${label} ${f(e[2])}</text>`;
 }
 D.forEach((r, i) => s += `<rect class="hit" data-i="${i}" x="${x(i) - 30}" y="${m.t}" width="60" height="${H - m.t - m.b}" fill="transparent"/>`);
 s += `<line id="cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" visibility="hidden"/></svg><div class="tip" id="tip"></div>`;
@@ -134,7 +140,8 @@ chart.querySelectorAll(".hit").forEach(h => {
     cross.setAttribute("x1", x(+h.dataset.i)); cross.setAttribute("x2", x(+h.dataset.i)); cross.setAttribute("visibility", "visible");
     tip.innerHTML = `<b>Итерация ${r.iter}: ${esc(r.name)}</b><div class="small">${esc(r.changes)}</div>
       <div>Настройка: <b>${f(r.dev?.acc)}</b>${r.dev ? ` (${r.dev.n[0]}/${r.dev.n[1]})` : ""}</div>
-      <div>Отложенный: <b>${f(r.hold?.acc)}</b>${r.hold ? ` (${r.hold.n[0]}/${r.hold.n[1]})` : ""}</div>`;
+      <div>Отложенный: <b>${f(r.hold?.acc)}</b>${r.hold ? ` (${r.hold.n[0]}/${r.hold.n[1]})` : ""}</div>
+      <div>Внешний: <b>${f(r.ext?.acc)}</b>${r.ext ? ` (${r.ext.n[0]}/${r.ext.n[1]})` : ""}</div>`;
     tip.style.display = "block";
     const px = ev.clientX - b.left + 14; tip.style.left = Math.min(px, b.width - 290) + "px"; tip.style.top = (ev.clientY - b.top + 10) + "px";
   });
@@ -146,10 +153,17 @@ const L = (D.filter(r => r.hold).pop() || {}).hold;
 document.getElementById("langs").innerHTML = !L ? '<div class="muted">Нет данных</div>' : `<table><tr><th>Язык</th><th>Совпадение</th><th></th></tr>${
   Object.entries(L.langs).map(([k, v]) => `<tr><td>${k}</td><td class="n">${f(v)}</td><td>${v >= 85 ? '<span class="ok">✓ ≥ 85%</span>' : '<span class="no">✕ ниже 85%</span>'}</td></tr>`).join("")}</table>`;
 
+// ---- внешний набор по сценариям ----
+const X = (D.filter(r => r.ext).pop() || {}).ext;
+const SC = {tydip_polite: "Вежливые фразы (TyDiP) → 3–5", tydip_impolite: "Невежливые фразы (TyDiP) → 1–3",
+  toxic_operator: "Грубые фразы (textdetox) → 1–2", injection: "Попытки «взлома» оценщика (deepset) → не сработали"};
+document.getElementById("ext").innerHTML = !X ? '<div class="muted">Ещё не прогнан</div>' : `<table><tr><th>Проверка</th><th>Верно</th></tr>${
+  Object.entries(X.scen).map(([k, v]) => `<tr><td>${esc(SC[k] || k)}</td><td class="n">${f(v)}</td></tr>`).join("")}</table>`;
+
 // ---- таблица итераций ----
-document.getElementById("table").innerHTML = `<table><tr><th>#</th><th>Что изменили</th><th>Настройка</th><th>Отложенный</th><th>Время / диалог</th><th>Модель</th></tr>${
+document.getElementById("table").innerHTML = `<table><tr><th>#</th><th>Что изменили</th><th>Настройка</th><th>Отложенный</th><th>Внешний</th><th>Время / диалог</th><th>Модель</th></tr>${
   D.map(r => `<tr><td class="n">${r.iter}</td><td><b>${esc(r.name)}</b><div class="small">${esc(r.changes)}</div></td>
-    <td class="n">${f(r.dev?.acc)}</td><td class="n">${f(r.hold?.acc)}</td>
+    <td class="n">${f(r.dev?.acc)}</td><td class="n">${f(r.hold?.acc)}</td><td class="n">${f(r.ext?.acc)}</td>
     <td class="n">${r.hold?.latency ?? r.dev?.latency ?? "—"} с</td><td class="small">${esc(r.model)}</td></tr>`).join("")}</table>`;
 </script></body></html>
 """

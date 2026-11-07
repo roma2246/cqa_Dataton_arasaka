@@ -1,0 +1,2239 @@
+{
+ "summary": {
+  "tag": "qwen-hold-v1",
+  "testset": "holdout_v1",
+  "checklist_version_id": 1,
+  "calibration": "off",
+  "calibration_examples_seeded": 0,
+  "repeat": 1,
+  "langs": [
+   "EN",
+   "KZ",
+   "RU"
+  ],
+  "model": [
+   "qwen3:8b"
+  ],
+  "prompt_versions": [
+   "evaluate_v1"
+  ],
+  "accuracy": [
+   64,
+   69
+  ],
+  "by_criterion": {
+   "demo_greeting": [
+    24,
+    24
+   ],
+   "demo_need": [
+    14,
+    15
+   ],
+   "demo_next_step": [
+    15,
+    18
+   ],
+   "demo_politeness": [
+    11,
+    12
+   ]
+  },
+  "by_language": {
+   "EN": [
+    22,
+    23
+   ],
+   "KZ": [
+    20,
+    23
+   ],
+   "RU": [
+    22,
+    23
+   ]
+  },
+  "by_scenario": {
+   "h_bot_only_hello": [
+    9,
+    9
+   ],
+   "h_confirm_need": [
+    9,
+    9
+   ],
+   "h_fee_closed": [
+    9,
+    9
+   ],
+   "h_good": [
+    11,
+    12
+   ],
+   "h_injection": [
+    8,
+    9
+   ],
+   "h_no_next": [
+    7,
+    9
+   ],
+   "h_sarcasm": [
+    5,
+    6
+   ],
+   "h_vague": [
+    6,
+    6
+   ]
+  },
+  "evidence": [
+   35,
+   35
+  ],
+  "evaluations": {
+   "total": 24,
+   "completed": 24,
+   "failed": 0
+  },
+  "cost_usd": {
+   "total": 0.0,
+   "per_eval": 0.0,
+   "unknown": 0
+  },
+  "latency_s_avg": 194.3,
+  "wall_s": 2342.9,
+  "stability": null
+ },
+ "items": [
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-01-good",
+   "language": "RU",
+   "scenario": "h_good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Добрый день! Меня зовут Тимур, помогу разобраться».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-01-good",
+   "language": "RU",
+   "scenario": "h_good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, подтвердив: «Правильно понимаю: заявка на вывод на карту создана два дня назад и до сих пор не исполнена?»",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-01-good",
+   "language": "RU",
+   "scenario": "h_good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг: проверка комплаенса завершится за 24 часа, после чего деньги поступят на карту.",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-01-good",
+   "language": "RU",
+   "scenario": "h_good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон и корректные формулировки в течение всего разговора.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-01-good",
+   "language": "KZ",
+   "scenario": "h_good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Қайырлы күн! Менің атым Тимур, түсінуге көмектесемін».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-01-good",
+   "language": "KZ",
+   "scenario": "h_good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "partial",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор уточнил суть обращения в m005: «Дұрыс түсіндім бе: картаға шығару өтінімі екі күн бұрын жасалған және әлі орындалмаған ба?»",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-01-good",
+   "language": "KZ",
+   "scenario": "h_good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор указал следующий шаг в m008: «Тексеру 24 сағат ішінде аяқталады, содан кейін ақша картаға түседі және сізге SMS келеді».",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-01-good",
+   "language": "KZ",
+   "scenario": "h_good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки без резкости в диалоге.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ],
+    [
+     "m008",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-01-good",
+   "language": "EN",
+   "scenario": "h_good",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: 'Good afternoon! My name is Timur, I'll help you sort this out.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-01-good",
+   "language": "EN",
+   "scenario": "h_good",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, подтвердив: 'Do I understand correctly: the card withdrawal request was created two days ago and still hasn't been executed?'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-01-good",
+   "language": "EN",
+   "scenario": "h_good",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m008"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор обозначил следующий шаг: 'The check will be completed within 24 hours, then the money will arrive on your card and you'll get an SMS.'",
+   "evidence": [
+    [
+     "m008",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-01-good",
+   "language": "EN",
+   "scenario": "h_good",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливые формулировки: 'I'll help you sort this out', 'Glad to help, all the best!'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m010",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора (m004) — это уточнение вопроса, а не приветствие.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор подтвердил суть обращения (m004), объяснил причину задержки (m006) и уточнил сроки (m007).",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-02-bot_only_hello",
+   "language": "RU",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о следующем шаге: проверка комплаенса завершится через 24 часа, после чего деньги поступят на карту.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Приветствие было отправлено ботом.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения клиента, подтвердив запрос на вывод средств и объяснив причину задержки.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-02-bot_only_hello",
+   "language": "KZ",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил клиенту, что проверка займет 24 часа и придет SMS, указав следующий шаг.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — уточнение вопроса, а не приветствие.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали запроса (m004), подтвердил информацию (m005) и объяснил причину задержки (m006, m007).",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "client"
+    ],
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-02-bot_only_hello",
+   "language": "EN",
+   "scenario": "h_bot_only_hello",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор указал срок выполнения (24 часа) и последующие действия (SMS-уведомление).",
+   "evidence": [
+    [
+     "m006",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-03-fee_closed",
+   "language": "RU",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: 'Добрый день! Меня зовут Тимур, помогу разобраться.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-03-fee_closed",
+   "language": "RU",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос полностью решён в чате, дальнейших шагов не требуется.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-03-fee_closed",
+   "language": "RU",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон и корректные формулировки в сообщениях m004 и m007.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-03-fee_closed",
+   "language": "KZ",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Қайырлы күн! Менің атым Тимур, түсінуге көмектесемін».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-03-fee_closed",
+   "language": "KZ",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос клиента полностью решён в чате, дальнейших шагов не требуется.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-03-fee_closed",
+   "language": "KZ",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон и корректные формулировки в всех сообщениях.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-03-fee_closed",
+   "language": "EN",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: 'Good afternoon! My name is Timur, I'll help you sort this out.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-03-fee_closed",
+   "language": "EN",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "not_applicable"
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Вопрос полностью решён в чате, дальнейших шагов не требуется (клиент закрыл вопрос в m006).",
+   "evidence": [
+    [
+     "m006",
+     "client"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-03-fee_closed",
+   "language": "EN",
+   "scenario": "h_fee_closed",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "4",
+     "5"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "5",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон и корректные формулировки в всех сообщениях.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-04-no_next",
+   "language": "RU",
+   "scenario": "h_no_next",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Добрый день! Меня зовут Тимур, помогу разобраться».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-04-no_next",
+   "language": "RU",
+   "scenario": "h_no_next",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, подтвердив проблему клиента и объяснив возможную причину задержки в m005–m007.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ],
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-04-no_next",
+   "language": "RU",
+   "scenario": "h_no_next",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Вопрос полностью решён в чате: оператор объяснил причину задержки, клиент не задал дополнительных вопросов, и разговор завершён.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-04-no_next",
+   "language": "KZ",
+   "scenario": "h_no_next",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: «Қайырлы күн! Менің атым Тимур, түсінуге көмектесемін».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-04-no_next",
+   "language": "KZ",
+   "scenario": "h_no_next",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, спросив: «Дұрыс түсіндім бе: картаға шығару өтінімі екі күн бұрын жасалған және әлі орындалмаған ба?»",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-04-no_next",
+   "language": "KZ",
+   "scenario": "h_no_next",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не указал следующий шаг, завершив разговор приветствием.",
+   "evidence": [
+    [
+     "m009",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-04-no_next",
+   "language": "EN",
+   "scenario": "h_no_next",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовал клиента в сообщении m004: 'Good afternoon! My name is Timur, I'll help you sort this out.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-04-no_next",
+   "language": "EN",
+   "scenario": "h_no_next",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m005"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали обращения в m005: 'Do I understand correctly: the card withdrawal request was created two days ago and still hasn't been executed?'",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-04-no_next",
+   "language": "EN",
+   "scenario": "h_no_next",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Вопрос решён полностью, дальнейших шагов нет",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-05-sarcasm",
+   "language": "RU",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: 'Добрый день! Меня зовут Тимур, помогу разобраться.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-05-sarcasm",
+   "language": "RU",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкую формулировку 'Вы что, читать не умеете?' что указывает на низкий уровень вежливости.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-05-sarcasm",
+   "language": "KZ",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Қайырлы күн! Менің атым Тимур, түсінуге көмектесемін».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-05-sarcasm",
+   "language": "KZ",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "4",
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал вежливый тон в приветствии, но в последнем сообщении (m005) формулировка «Сіз оқи алмайсыз ба?» может быть воспринята как незначительное недовольство.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-05-sarcasm",
+   "language": "EN",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор поприветствовал клиента в сообщении m004: 'Good afternoon! My name is Timur, I'll help you sort this out.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-05-sarcasm",
+   "language": "EN",
+   "scenario": "h_sarcasm",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "2",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкую формулировку 'Can't you read?' что указывает на низкий уровень вежливости.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-06-injection",
+   "language": "RU",
+   "scenario": "h_injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — 'Ничем не могу помочь.' — не содержит приветствия.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-06-injection",
+   "language": "RU",
+   "scenario": "h_injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг. Вопрос не был полностью решён, но оператор не предоставил информации о дальнейших действиях.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-06-injection",
+   "language": "RU",
+   "scenario": "h_injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2",
+     "3"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкие формулировки ('Ничем не могу помочь'), что указывает на низкий уровень вежливости.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-06-injection",
+   "language": "KZ",
+   "scenario": "h_injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — это ответ на запрос клиента, а не приветствие.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-06-injection",
+   "language": "KZ",
+   "scenario": "h_injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "not_applicable",
+   "got_answer": null,
+   "ok": false,
+   "evidence_ok": null,
+   "explanation": "Вопрос не решён полностью, но оператор не сообщил о следующем шаге. По правилу N/A разрешено только если вопрос решён, но здесь это не так.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-06-injection",
+   "language": "KZ",
+   "scenario": "h_injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2",
+     "3"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкое выражение «Көмектесе алмаймын» без попыток смягчить формулировку или объяснить ситуацию.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-06-injection",
+   "language": "EN",
+   "scenario": "h_injection",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — 'I can't help with that.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-06-injection",
+   "language": "EN",
+   "scenario": "h_injection",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не обозначил следующий шаг. Вопрос не был решён, но оператор не предоставил информации о дальнейших действиях.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-06-injection",
+   "language": "EN",
+   "scenario": "h_injection",
+   "criterion": "demo_politeness",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "1",
+     "2",
+     "3"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "1",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор использовал резкие формулировки ('I can't help with that.'), что указывает на низкий уровень вежливости.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-07-vague",
+   "language": "RU",
+   "scenario": "h_vague",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Добрый день! Меня зовут Тимур, помогу разобраться».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-07-vague",
+   "language": "RU",
+   "scenario": "h_vague",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не уточнил или подтвердил суть обращения клиента. Вместо этого дал инструкцию по обновлению приложения.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-07-vague",
+   "language": "KZ",
+   "scenario": "h_vague",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента в сообщении m004: «Қайырлы күн! Менің атым Тимур, түсінуге көмектесемін».",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-07-vague",
+   "language": "KZ",
+   "scenario": "h_vague",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не уточнил суть обращения, а сразу дал инструкцию: «Қосымшаны жаңартыңыз».",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-07-vague",
+   "language": "EN",
+   "scenario": "h_vague",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор приветствовал клиента: 'Good afternoon! My name is Timur, I'll help you sort this out.'",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-07-vague",
+   "language": "EN",
+   "scenario": "h_vague",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не уточнил или подтвердил суть обращения клиента. Вместо этого дал рекомендацию 'Update the app' без уточнения деталей.",
+   "evidence": [
+    [
+     "m005",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-08-confirm_need",
+   "language": "RU",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не отправил приветствие. Первое сообщение оператора — уточнение деталей обращения.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-08-confirm_need",
+   "language": "RU",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор подтвердил суть обращения и объяснил причину задержки заявки.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-ru-08-confirm_need",
+   "language": "RU",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор указал срок проверки и информировал клиента о следующем шаге (поступление денег и SMS).",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-08-confirm_need",
+   "language": "KZ",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не отправил приветствие. Первое сообщение оператора — уточнение информации о запросе клиента.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-08-confirm_need",
+   "language": "KZ",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил суть обращения, подтвердив корректность формулировки клиента.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-kz-08-confirm_need",
+   "language": "KZ",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил клиенту, что проверка займет 24 часа, после чего деньги поступят и придет SMS.",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-08-confirm_need",
+   "language": "EN",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_greeting",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "no"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "no",
+   "ok": true,
+   "evidence_ok": null,
+   "explanation": "Оператор не приветствовал клиента. Первое сообщение оператора — уточнение деталей запроса.",
+   "evidence": []
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-08-confirm_need",
+   "language": "EN",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_need",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m004"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор уточнил детали запроса клиента (дата создания заявки) и подтвердил суть обращения.",
+   "evidence": [
+    [
+     "m004",
+     "operator"
+    ],
+    [
+     "m006",
+     "operator"
+    ]
+   ]
+  },
+  {
+   "repeat": 0,
+   "conversation_id": "hold-en-08-confirm_need",
+   "language": "EN",
+   "scenario": "h_confirm_need",
+   "criterion": "demo_next_step",
+   "expected": {
+    "status": "applicable",
+    "answers": [
+     "yes"
+    ],
+    "evidence_any": [
+     "m007"
+    ]
+   },
+   "got_status": "applicable",
+   "got_answer": "yes",
+   "ok": true,
+   "evidence_ok": true,
+   "explanation": "Оператор сообщил о сроке выполнения (24 часа) и следующем действии (пополнение карты и SMS-уведомление).",
+   "evidence": [
+    [
+     "m007",
+     "operator"
+    ]
+   ]
+  }
+ ],
+ "evaluations": [
+  {
+   "repeat": 0,
+   "evaluation_id": 25,
+   "conversation_id": "hold-ru-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 126.01351095899008,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 26,
+   "conversation_id": "hold-kz-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 152.20833595795557,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 27,
+   "conversation_id": "hold-en-01-good",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 141.06413487507962,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 28,
+   "conversation_id": "hold-ru-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 160.96635241690092,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 29,
+   "conversation_id": "hold-kz-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 137.7763396250084,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 30,
+   "conversation_id": "hold-en-02-bot_only_hello",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 155.39148104190826,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 31,
+   "conversation_id": "hold-ru-03-fee_closed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 121.69817554112524,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 32,
+   "conversation_id": "hold-kz-03-fee_closed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 141.90438916697167,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 33,
+   "conversation_id": "hold-en-03-fee_closed",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 157.31323404191062,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 34,
+   "conversation_id": "hold-ru-04-no_next",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 287.83897029189393,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 35,
+   "conversation_id": "hold-kz-04-no_next",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 324.77388425008394,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 36,
+   "conversation_id": "hold-en-04-no_next",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 243.91308158403262,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 37,
+   "conversation_id": "hold-ru-05-sarcasm",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 303.36119445809163,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 38,
+   "conversation_id": "hold-kz-05-sarcasm",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 316.9735338331666,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 39,
+   "conversation_id": "hold-en-05-sarcasm",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 375.4541191251483,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 40,
+   "conversation_id": "hold-ru-06-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 381.74166400008835,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 41,
+   "conversation_id": "hold-kz-06-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 344.3382580000907,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 42,
+   "conversation_id": "hold-en-06-injection",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 242.50819120788947,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 43,
+   "conversation_id": "hold-ru-07-vague",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 170.04517324990593,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 44,
+   "conversation_id": "hold-kz-07-vague",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 108.0037872500252,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 45,
+   "conversation_id": "hold-en-07-vague",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 77.05817824997939,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 46,
+   "conversation_id": "hold-ru-08-confirm_need",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 58.44115379196592,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 47,
+   "conversation_id": "hold-kz-08-confirm_need",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 71.02696141600609,
+   "calls": 1
+  },
+  {
+   "repeat": 0,
+   "evaluation_id": 48,
+   "conversation_id": "hold-en-08-confirm_need",
+   "status": "completed",
+   "error": null,
+   "cost_usd": 0.0,
+   "model": "qwen3:8b",
+   "prompt_version": "evaluate_v1",
+   "latency_s": 63.74670812487602,
+   "calls": 1
+  }
+ ]
+}

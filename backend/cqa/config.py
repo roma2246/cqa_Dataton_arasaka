@@ -44,10 +44,14 @@ class Settings:
     llm_timeout_s: int = field(default_factory=lambda: int(os.getenv("LLM_TIMEOUT_S", "300")))
     # Ограничение частоты запросов к модели на процесс, запросов в минуту (0 — без ограничения)
     llm_rpm: int = field(default_factory=lambda: int(os.getenv("LLM_RPM", "0")))
+    # Контекст локальной модели (OLLAMA_CONTEXT_LENGTH). Если промпт не оставляет места под ответ — ошибка, а не молчаливая обрезка
+    llm_context_tokens: int = field(default_factory=lambda: int(os.getenv("LLM_CONTEXT_TOKENS", "0")))
     llm_max_retries: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_RETRIES", "2")))
     # Калибровка: решения проверяющего подставляются в промпт как прецеденты (on | off)
     calibration: bool = field(default_factory=lambda: os.getenv("LLM_CALIBRATION", "on") == "on")
     calibration_per_criterion: int = field(default_factory=lambda: int(os.getenv("LLM_CALIBRATION_PER_CRITERION", "3")))
+    # Название команды для results.json (Приложение «Как сдать результаты»)
+    team_name: str = field(default_factory=lambda: os.getenv("TEAM_NAME", "Arasaka"))
     batch_concurrency: int = field(default_factory=lambda: int(os.getenv("BATCH_CONCURRENCY", "4")))
 
 

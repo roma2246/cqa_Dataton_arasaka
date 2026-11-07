@@ -25,9 +25,9 @@ cd ~/.local/ollama && tar -xzf ollama-darwin.tgz && rm ollama-darwin.tgz
 
 ## 2. Запуск сервера
 
-Контекст по умолчанию у Ollama маленький — длинный транскрипт был бы молча обрезан. Поэтому 16 тыс. токенов:
+Контекст по умолчанию у Ollama маленький — длинный транскрипт был бы молча обрезан. Самый длинный звонок DEV (115 реплик) = 6.3 тыс. токенов промпта + ~2 тыс. ответа, поэтому 12 тыс. (на 16 ГБ памяти больше 2×12k не ставить):
 ```bash
-OLLAMA_CONTEXT_LENGTH=16384 OLLAMA_NUM_PARALLEL=2 OLLAMA_HOST=127.0.0.1:11434 ~/.local/ollama/ollama serve
+OLLAMA_CONTEXT_LENGTH=12288 OLLAMA_NUM_PARALLEL=2 OLLAMA_HOST=127.0.0.1:11434 ~/.local/ollama/ollama serve
 ```
 
 ## 3. Модель
@@ -46,6 +46,8 @@ LLM_MODEL=qwen3:8b
 LLM_FALLBACK_MODEL=
 LLM_API_KEY=
 LLM_TIMEOUT_S=600
+LLM_CONTEXT_TOKENS=12288
+BATCH_CONCURRENCY=2
 ```
 Стоимость локальных вызовов учитывается как **$0** (а не «неизвестна»). Ключ не нужен.
 

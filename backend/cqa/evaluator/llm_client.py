@@ -217,6 +217,10 @@ def _openai_compat_model(system: str, user: str, schema: Optional[dict], model: 
             pin, pout = _usage(data.get("usage") or {})
             rec = CallRecord(True, time.monotonic() - t0, data.get("model") or model, pin, pout)
             calls.append(rec)
+            if settings.llm_context_tokens and pin and pin >= settings.llm_context_tokens - 1500:
+                rec.error = "context"
+                raise LLMError(f"Диалог не помещается в контекст модели: промпт {pin} из {settings.llm_context_tokens} "
+                               f"токенов. Увеличьте OLLAMA_CONTEXT_LENGTH и LLM_CONTEXT_TOKENS.", calls)
             choice = data["choices"][0]
             if choice.get("finish_reason") == "length":
                 rec.error = "max_tokens"
