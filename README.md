@@ -1,5 +1,13 @@
 # CQA — Conversation Quality Analytics (Freedom Broker Hackathon, команда 4)
 
+**Команда: ARASAKA**
+- Aibolat Adaibekov — тимлид · Front, SQL, Neon
+- Ramazan Gabdulgumarov — делал всё
+- Alizhan Balken — Test, Deploy, Docs
+- Alan Bergaly — Data Import · Analytics · Export
+
+Сайт: https://cqarasaka.vercel.app
+
 Прототип: настраиваемый чек-лист → автоматическая оценка оператора (RU/KZ/EN) → доказательства
 по репликам → апелляция → решение проверяющего → пересчитанный итог.
 
