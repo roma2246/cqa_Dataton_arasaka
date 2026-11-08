@@ -16,7 +16,7 @@
   let liveReady = null;
   const liveData = fetch("/api/public/stats").then((r) => r.json()).then((s) => {
     if (!s.evaluated) { $("#live-sub").textContent = "Оценок пока нет."; return; }
-    $("#live-sub").textContent = `${s.evaluated} диалогов оценено моделью ${s.model}. Только агрегаты — тексты переписок не публикуются.`;
+    $("#live-sub").textContent = `${s.evaluated} диалогов оценено моделью ${s.model}. Любой диалог с разбором — в приложении, без пароля.`;
     const crit = s.criteria.filter((c) => c.score_pct != null).sort((a, b) => a.score_pct - b.score_pct);
     $("#crit-rows").innerHTML = crit.map((c) => row(c.title, c.score_pct)).join("");
     $("#lang-rows").innerHTML = Object.entries(s.by_language).map(([k, v]) => row(`${LANG[k] || k} · ${v.n}`, v.avg)).join("");

@@ -185,3 +185,11 @@ def test_public_pages_open_with_auth(client, monkeypatch):
         assert client.get(asset).status_code == 200, asset
     assert client.get("/api/conversations").status_code == 401
     assert client.get("/api/conversations", auth=("u", "p")).status_code == 200
+
+
+def test_rate_limit_on_llm_endpoints(client, monkeypatch):
+    from cqa import main
+    monkeypatch.setitem(main._RATE, ("POST", "/api/analytics/ask"), 2)
+    main._HITS.clear()
+    codes = [client.post("/api/analytics/ask", json={"group_id": "FIXTURE"}).status_code for _ in range(3)]
+    assert codes[:2] != [429, 429] and codes[2] == 429

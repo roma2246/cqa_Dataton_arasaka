@@ -53,6 +53,32 @@ def _public(path: str) -> bool:
     return path in _PUBLIC or path.startswith(("/reports/", "/ui/vendor/", "/ui/img/"))
 
 
+# Ограничение частоты для запросов, которые тратят лимит модели (сайт открыт без пароля).
+# Счётчик в памяти процесса: на Vercel — на экземпляр функции, этого достаточно против случайного перерасхода.
+import time as _time
+from collections import defaultdict as _dd, deque as _deque
+
+_RATE = {("POST", "/api/evaluations"): 60, ("POST", "/api/evaluations/batch"): 3, ("POST", "/api/analytics/ask"): 20,
+         ("POST", "/api/import/organizer"): 5}
+_HITS: dict = _dd(_deque)
+
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    limit = _RATE.get((request.method, request.url.path))
+    if limit and os.getenv("RATE_LIMIT", "1") != "0":
+        ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+              or (request.client.host if request.client else "?"))
+        q, now = _HITS[(ip, request.url.path)], _time.time()
+        while q and now - q[0] > 3600:
+            q.popleft()
+        if len(q) >= limit:
+            return Response('{"detail":"Слишком много запросов с вашего адреса, попробуйте через час"}',
+                            status_code=429, media_type="application/json")
+        q.append(now)
+    return await call_next(request)
+
+
 @app.middleware("http")
 async def basic_auth(request: Request, call_next):
     if not _AUTH_PASS or _public(request.url.path):
