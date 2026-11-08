@@ -127,9 +127,11 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
 
     results, problems = validate(parsed.results, checklist, conv)
     results, problems = _guard_identification(results, problems, conv)
+    orig_crit = next((r for r in results if r.criterion_id == "critical"), None)
     results, problems = _guard_disclosure(results, problems)
     results, problems = _guard_discovery(results, problems, conv)
     results, problems = _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls)
+    results, problems = _undo_disclosure_review(results, problems, orig_crit)
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
         results=results, problems=problems, mode="real", model=", ".join(models) or settings.llm_model,
@@ -210,6 +212,18 @@ def _guard_discovery(results, problems, conv):
             problems = problems + ["потребность «Да» без вопросов оператора — отправлено на уточнение"]
         out.append(r)
     return out, problems
+
+
+def _undo_disclosure_review(results, problems, orig_crit):
+    """Грубая ошибка уходила на уточнение только из-за «Идентификация: Нет». Если после уточнения идентификация
+    не «Нет» (данных счёта не называли), повода нет — возвращаем исходный ответ модели по грубой ошибке."""
+    if orig_crit is None or not any("без флага грубой ошибки" in p for p in problems):
+        return results, problems
+    ident = next((r for r in results if r.criterion_id == "identification"), None)
+    if ident and ident.status == "applicable" and ident.answer == "no":
+        return results, problems
+    return ([orig_crit if r.criterion_id == "critical" else r for r in results],
+            problems + ["идентификация не «Нет» после уточнения — грубая ошибка по исходному ответу"])
 
 
 def _guard_disclosure(results, problems):

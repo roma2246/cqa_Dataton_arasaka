@@ -168,3 +168,16 @@ def test_discovery_yes_without_operator_questions_goes_to_review():
     conv.messages.append(NS(message_id="m3", speaker="operator", text="Вы в приложении или в веб-версии?"))
     out, _ = _guard_discovery([r], [], conv)
     assert out[0].answer == "yes"
+
+
+def test_undo_disclosure_review_when_identification_not_no():
+    from cqa.evaluator.service import _undo_disclosure_review
+    from cqa.models import CriterionResult
+    orig = CriterionResult(criterion_id="critical", status="applicable", answer="no", explanation="e")
+    flipped = orig.model_copy(update={"answer": "yes"})
+    na = CriterionResult(criterion_id="identification", status="not_applicable", explanation="e", na_reason="общий вопрос")
+    out, _ = _undo_disclosure_review([na, flipped], ["идентификация «Нет» без флага грубой ошибки — отправлено на уточнение"], orig)
+    assert out[1].answer == "no"
+    no = CriterionResult(criterion_id="identification", status="applicable", answer="no", explanation="e")
+    out, _ = _undo_disclosure_review([no, flipped], ["идентификация «Нет» без флага грубой ошибки — отправлено на уточнение"], orig)
+    assert out[1].answer == "yes"
