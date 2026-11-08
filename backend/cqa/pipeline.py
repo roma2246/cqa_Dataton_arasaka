@@ -95,12 +95,14 @@ def main() -> int:
 
     vid = official_version()
     batch = f"{args.set}-{int(time.time())}"
-    todo = [c for c in ids if not (args.skip_done and c in done_ids(vid, ids))]
+    done = done_ids(vid, ids) if args.skip_done else set()   # один проход, а не на каждый диалог
+    todo = [c for c in ids if c not in done]
     print(f"Оцениваем {len(todo)} (модель {settings.llm_model or settings.llm_provider}, потоков {args.workers})")
     if todo:
         run(todo, vid, batch, args.workers)
     for attempt in range(args.retries):
-        failed = [c for c in ids if c not in done_ids(vid, ids)]
+        ok_ids = done_ids(vid, ids)
+        failed = [c for c in ids if c not in ok_ids]
         if not failed:
             break
         print(f"Повтор {attempt + 1}: {len(failed)} диалогов")
