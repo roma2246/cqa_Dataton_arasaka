@@ -31,7 +31,7 @@
       <span><b>CQA</b><small>КОМАНДА ARASAKA</small></span>
     </a>
     <nav class="nav" aria-label="Разделы">
-      <a href="#accuracy">Точность</a><a href="#how">Как работает</a><a href="#features">Возможности</a><a href="#live">Живые данные</a><a href="#team">Команда</a>
+      <a href="#accuracy">Точность</a><a href="#how">Как работает</a><a href="#features">Возможности</a><a href="#cases">Разбор чатов</a><a href="#live">Живые данные</a><a href="#team">Команда</a>
     </nav>
     <a class="btn sm" href="/ui/"><span>Открыть приложение</span><svg><use href="#arrow"/></svg></a>
   </div>
@@ -149,6 +149,23 @@
           <h3>Свой чек-лист</h3><p>Критерии, веса, правила N/A и примеры правятся в интерфейсе. Каждая правка — новая версия, старые оценки не меняются.</p></div>
         <div class="feat reveal-up"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 14l2 2 4-4"/></svg></div>
           <h3>Готово к сдаче</h3><p>Выгрузка results.json в формате организаторов с самопроверкой, пакетная оценка с прогрессом и оценкой времени.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="cases">
+    <div class="wrap">
+      <span class="kicker reveal">Разбор настоящих чатов</span>
+      <h2 class="split">Нажмите на пункт — <em>увидите реплику</em>, на которой основан ответ</h2>
+      <p class="sub reveal">Три диалога из DEV-набора организаторов и их оценка нашей системой — прямо из базы, без правок.</p>
+      <div class="case-tabs" id="case-tabs">
+        <button data-id="p1-kz-015" aria-pressed="true">Данные счёта без проверки · KZ</button>
+        <button data-id="p1-ru-022" aria-pressed="false">«Скиньте деньги мне на карту» · RU</button>
+        <button data-id="p1-ru-010" aria-pressed="false">Образцовый диалог · RU</button>
+      </div>
+      <div class="case reveal-up">
+        <div class="case-chat card" id="case-chat"><div class="loading">Загружаю диалог…</div></div>
+        <div class="case-eval card" id="case-eval"></div>
       </div>
     </div>
   </section>

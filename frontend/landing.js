@@ -25,6 +25,62 @@
     liveReady && liveReady();
   }).catch(() => { $("#live-sub").textContent = "Не удалось загрузить живые данные."; });
 
+  // ---------- Разбор настоящих чатов: диалог + оценка из базы, клик по пункту подсвечивает реплики ----------
+  const SPK = { client: "Клиент", operator: "Оператор", bot: "Бот", system: "Система" };
+  const chkCache = {};
+  async function loadCase(id) {
+    const chat = $("#case-chat"), ev = $("#case-eval");
+    if (!chat) return;
+    chat.innerHTML = '<div class="loading">Загружаю диалог…</div>'; ev.innerHTML = "";
+    try {
+      const c = await fetch("/api/conversations/" + id).then((r) => r.json());
+      const last = (c.evaluations || []).find((e) => e.status === "completed");
+      const e = await fetch("/api/evaluations/" + last.evaluation_id).then((r) => r.json());
+      const vid = e.checklist_version_id;
+      const chk = chkCache[vid] || (chkCache[vid] = await fetch("/api/checklists/" + vid).then((r) => r.json()));
+      const crit = Object.fromEntries(chk.criteria.map((x) => [x.criterion_id, x]));
+      const boiler = new Set(c.channel === "voice call" ? [] : ["m002", "m003"]);
+      chat.innerHTML = c.messages.filter((m) => !boiler.has(m.message_id)).map((m) =>
+        `<div class="m ${m.speaker}" data-mid="${m.message_id}"><small>${m.message_id} · ${SPK[m.speaker] || m.speaker}</small>${esc(m.text)}</div>`).join("");
+      const fs = e.final_score;
+      const label = (r) => {
+        const cr = crit[r.criterion_id] || {};
+        if (r.status === "not_applicable") return ["N/A", "na"];
+        if (r.status === "needs_review") return ["проверка", "na"];
+        if (cr.is_critical) return r.answer === "yes" ? ["нарушение", "bad"] : ["нет", "ok"];
+        if (cr.answer_type === "yes_no") return r.answer === "yes" ? ["Да", "ok"] : ["Нет", "bad"];
+        const mx = Math.max(...(cr.options || []).map((o) => +o.value));
+        return [`${r.answer} из ${mx}`, +r.answer === mx ? "ok" : +r.answer === 0 ? "bad" : ""];
+      };
+      ev.innerHTML = `<div class="case-total"><b>${fs.total == null ? "—" : Math.round(fs.total * 10) / 10}</b><span>из 100</span>
+          ${fs.critical_error ? '<span class="flag">грубая ошибка</span>' : ""}</div>` +
+        e.final_results.map((r) => { const [t, k] = label(r); return `<div class="ci" data-ev="${(r.evidence_message_ids || []).join(" ")}">
+          <div class="t"><span>${esc((crit[r.criterion_id] || {}).title || r.criterion_id)}</span><span class="a ${k}">${t}</span></div>
+          <p>${esc(r.explanation || r.na_reason || "")}${(r.evidence_message_ids || []).length ? " · реплики " + r.evidence_message_ids.join(", ") : ""}</p></div>`; }).join("");
+      $$(".ci", ev).forEach((el) => el.addEventListener("click", () => {
+        const opening = !el.classList.contains("on");
+        $$(".ci", ev).forEach((x) => x.classList.toggle("on", x === el && opening));
+        $$(".m", chat).forEach((m) => m.classList.toggle("hl", false));
+        const ids = opening ? el.dataset.ev.split(" ").filter(Boolean) : [];
+        ids.forEach((mid) => { const m = chat.querySelector(`[data-mid="${mid}"]`); if (m) m.classList.add("hl"); });
+        const first = ids.length && chat.querySelector(`[data-mid="${ids[0]}"]`);
+        if (first) chat.scrollTo({ top: first.offsetTop - chat.offsetTop - 60, behavior: "smooth" });
+      }));
+      const items = $$(".ci", ev).filter((x) => x.dataset.ev);
+      const pick = items.find((x) => $(".a.bad", x)) || items[0];
+      if (pick) pick.click();
+    } catch { chat.innerHTML = '<div class="loading">Не удалось загрузить разбор.</div>'; }
+  }
+  const tabs = $("#case-tabs");
+  if (tabs) {
+    tabs.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      $$("button", tabs).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      loadCase(b.dataset.id);
+    });
+    new IntersectionObserver((en, o) => { if (en[0].isIntersecting) { o.disconnect(); loadCase("p1-kz-015"); } }, { rootMargin: "400px" }).observe(tabs);
+  }
+
   // Тексты команды и терминала без анимаций
   if (!hasGsap) {
     $$(".op .role").forEach((r) => (r.textContent = r.dataset.role));
