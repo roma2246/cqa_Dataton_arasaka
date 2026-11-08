@@ -6,6 +6,7 @@ import { renderChecklist } from "./views/checklist.js";
 import { renderAppeals } from "./views/appeals.js";
 import { renderTasks } from "./views/tasks.js";
 import { renderAnalytics } from "./views/analytics.js";
+import { renderStart } from "./views/start.js";
 
 export const root = document.getElementById("app");
 
@@ -99,6 +100,7 @@ async function route() {
     if (hash.startsWith("/c/")) { markNav("list"); return await renderCard(decodeURIComponent(hash.slice(3))); }
     if (hash === "/checklist") { markNav("checklist"); return await renderChecklist(); }
     if (hash === "/appeals") { markNav("appeals"); return await renderAppeals(); }
+    if (hash === "/start") { markNav("start"); return await renderStart(); }
     if (hash.startsWith("/analytics")) { markNav("analytics"); return await renderAnalytics(); }
     if (hash === "/tasks") { markNav("tasks"); return await renderTasks(); }
     markNav("list");
@@ -111,6 +113,7 @@ async function route() {
 }
 
 window.addEventListener("hashchange", route);
+if (!location.hash || location.hash === "#") history.replaceState(null, "", "#/start");   // первый вход — «Старт»
 // ---- Режим без фоновых процессов (Vercel): пока есть очередь, страница сама досчитывает её порциями ----
 let pumping = false;
 async function pump() {

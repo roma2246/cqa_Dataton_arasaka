@@ -356,3 +356,28 @@ h2 { font-weight: 800; letter-spacing: -.01em; }
 .btn-primary { box-shadow: 0 8px 18px -10px rgba(63, 157, 58, .9); }
 table thead th { font-size: 11.5px; letter-spacing: .06em; }
 tr.clickable:hover td { background: var(--accent-weak); }
+
+/* ---------- Старт ---------- */
+.start-hero { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 30px; margin-bottom: 16px;
+  background: linear-gradient(120deg, var(--surface) 55%, var(--accent-weak)); }
+.start-hero h1 { font-size: 30px; margin: 6px 0 8px; max-width: 720px; }
+.start-hero p { max-width: 720px; margin: 0; }
+.start-kicker { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.start-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+.start-step { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+.start-step h3 { font-size: 16px; } .start-step p { margin: 0; color: var(--text-2); font-size: 13.5px; flex: 1; }
+.start-step .btn { align-self: flex-start; }
+.start-n { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-weak); color: var(--accent); font-weight: 800; display: grid; place-items: center; }
+.start-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
+.start-try textarea { width: 100%; font: 500 14px/1.5 var(--font); resize: vertical; }
+.start-chat { display: flex; flex-direction: column; height: 100%; min-height: 420px; }
+.chat-log { flex: 1; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; background: var(--surface-2); max-height: 380px; }
+.chat-log .b { max-width: 85%; padding: 9px 12px; border-radius: 14px; font-size: 14px; }
+.chat-log .b.c { align-self: flex-end; background: var(--accent); color: var(--accent-text); }
+.chat-log .b.a { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); }
+.chat-log .b small { display: block; margin-top: 4px; font-size: 11px; color: var(--text-3); }
+.chat-log .b.sys { align-self: center; background: var(--accent-weak); color: var(--accent); font-size: 12px; }
+.chat-in { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); }
+.chat-in input { flex: 1; }
+@media (max-width: 1100px) { .start-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .start-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .start-steps { grid-template-columns: 1fr; } .start-hero { flex-direction: column; align-items: flex-start; } }
