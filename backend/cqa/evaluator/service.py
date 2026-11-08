@@ -128,6 +128,7 @@ def _real(conv: Conversation, checklist: ChecklistDraft) -> EvaluatorOutput:
     results, problems = validate(parsed.results, checklist, conv)
     results, problems = _guard_identification(results, problems, conv)
     results, problems = _guard_disclosure(results, problems)
+    results, problems = _guard_discovery(results, problems, conv)
     results, problems = _resolve_needs_review(results, problems, checklist, conv, system, examples, schema, calls)
     models = sorted({c.model for c in calls if c.model})
     return EvaluatorOutput(
@@ -192,6 +193,21 @@ def _guard_identification(results, problems, conv):
             r = r.model_copy(update={"status": "needs_review", "answer": None,
                                      "review_reason": "«Да» без реплики о проверке личности — реши: N/A или «Нет»"})
             problems = problems + ["идентификация «Да» без проверки личности — отправлено на уточнение"]
+        out.append(r)
+    return out, problems
+
+
+def _guard_discovery(results, problems, conv):
+    """«Да» по выявлению потребности требует уточняющего вопроса оператора. Вопросов не было — на уточнение."""
+    if prompt_builder.operator_questions(conv):
+        return results, problems
+    out = []
+    for r in results:
+        if r.criterion_id == "discovery" and r.status == "applicable" and r.answer == "yes":
+            r = r.model_copy(update={"status": "needs_review", "answer": None, "review_reason":
+                "Оператор не задал клиенту ни одного вопроса, значит «Да» невозможно. Реши: N/A — если слов клиента хватало "
+                "для правильного ответа; «Нет» — если данных не хватало, а оператор ответил наугад или не учёл сказанное."})
+            problems = problems + ["потребность «Да» без вопросов оператора — отправлено на уточнение"]
         out.append(r)
     return out, problems
 

@@ -154,3 +154,17 @@ def test_identification_no_sends_critical_to_review():
     i2 = i.model_copy(update={"status": "not_applicable", "answer": None})
     out, _ = _guard_disclosure([i2, c], [])
     assert out[1].answer == "no"
+
+
+def test_discovery_yes_without_operator_questions_goes_to_review():
+    from types import SimpleNamespace as NS
+    from cqa.evaluator.service import _guard_discovery
+    from cqa.models import CriterionResult
+    conv = NS(messages=[NS(message_id="m1", speaker="client", text="Где тариф?"),
+                        NS(message_id="m2", speaker="operator", text="Здравствуйте! Чем могу помочь? Тариф во вкладке «Кабинет».")])
+    r = CriterionResult(criterion_id="discovery", status="applicable", answer="yes", explanation="e")
+    out, _ = _guard_discovery([r], [], conv)
+    assert out[0].status == "needs_review"
+    conv.messages.append(NS(message_id="m3", speaker="operator", text="Вы в приложении или в веб-версии?"))
+    out, _ = _guard_discovery([r], [], conv)
+    assert out[0].answer == "yes"

@@ -99,6 +99,21 @@ _VERIFY = re.compile(r"личност\w* (клиента )?подтвержд|п
                      r"полное имя|фамили\w*,? имя|удостоверени\w* личности|\bиин\b|номер (документа|удостоверения)", re.I)
 
 
+_GREET_Q = re.compile(r"(чем (я )?могу (вам )?помочь|how can i help( you)?( today)?|can i help you|қалай көмектес\w*|с чем помочь)\s*\??", re.I)
+
+
+def operator_questions(conv: Conversation) -> list[str]:
+    """Реплики оператора с вопросом клиенту (кроме дежурного «чем могу помочь?»)."""
+    out = []
+    for m in conv.messages:
+        if m.speaker != "operator" or "?" not in m.text:
+            continue
+        rest = _GREET_Q.sub("", m.text)
+        if "?" in rest:
+            out.append(m.message_id)
+    return out
+
+
 def facts_block(conv: Conversation) -> str:
     """Факты, которые сервер вычисляет сам, чтобы модель не ошибалась в позициях и паузах."""
     ops = [m for m in conv.messages if m.speaker == "operator"]
@@ -131,6 +146,10 @@ def facts_block(conv: Conversation) -> str:
     else:
         lines.append("В разговоре НЕТ ни одной реплики о проверке личности (SMS-код, кодовое слово, отметка системы). "
                      "Поэтому по идентификации «Да» невозможно: N/A, если запрос не касался данных счёта клиента, иначе «Нет».")
+    qs = operator_questions(conv)
+    lines.append(("Вопросы оператора клиенту: " + ", ".join(qs)) if qs else
+                 "Оператор НЕ задал клиенту ни одного вопроса (кроме «чем могу помочь»): по выявлению потребности «Да» невозможно — "
+                 "N/A, если слов клиента хватало для ответа, иначе «Нет».")
     lines.append("Все реплики оператора: " + ", ".join(m.message_id for m in ops))
     return "<facts>\n" + "\n".join(lines) + "\n</facts>\n\n"
 

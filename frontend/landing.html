@@ -51,9 +51,9 @@
           <a class="btn ghost" href="#how">Как это работает</a>
         </div>
         <div class="trust reveal">
-          <div><b><span data-count="100">100</span>%</b>совпадение с эталоном</div>
-          <div><b><span data-count="3">3</span> языка</b>RU · KZ · EN</div>
-          <div><b>≈<span data-count="13">13</span> с</b>на один диалог</div>
+          <div><b><span data-count="93">93</span>%</b>совпадение на 43 реальных чатах</div>
+          <div><b><span data-count="7">7</span> из 7</b>грубых ошибок найдено</div>
+          <div><b>$0,003</b>за проверку чата</div>
         </div>
       </div>
 
@@ -96,14 +96,15 @@
       <h2 class="split">Сверяем каждый ответ <em>с эталоном</em>, а не на глаз</h2>
       <p class="sub reveal">Ответы модели сравниваются с эталонной разметкой по каждому критерию. Отложенный набор модель не видела, пока мы её настраивали.</p>
       <div class="stats">
-        <div class="stat reveal-up"><b><span data-count="100">100</span><sup>%</sup></b><p>основной набор</p><small>153 из 153 ответов · 33 диалога</small><div class="bar"><i style="--w:100%"></i></div></div>
-        <div class="stat dark reveal-up"><b><span data-count="100">100</span><sup>%</sup></b><p>отложенный набор</p><small>72 из 72 ответов · 18 диалогов</small><div class="bar"><i style="--w:100%"></i></div></div>
-        <div class="stat reveal-up"><b><span data-count="65" id="m-eval">65</span></b><p>реальных DEV-диалогов</p><small>оценены и выгружены в формате организаторов</small><div class="bar"><i style="--w:100%"></i></div></div>
-        <div class="stat reveal-up"><b>≈<span data-count="13">13</span><sup>с</sup></b><p>на один диалог</p><small>все 8 критериев, Gemini 3.6 Flash</small><div class="bar"><i style="--w:72%"></i></div></div>
+        <div class="stat reveal-up"><b><span data-count="93">93</span><sup>%</sup></b><p>реальные DEV-чаты организаторов</p><small>320 из 344 ответов · 43 диалога, из них 3 звонка</small><div class="bar"><i style="--w:93%"></i></div></div>
+        <div class="stat dark reveal-up"><b><span data-count="7">7</span><sup>/7</sup></b><p>грубых ошибок найдено</p><small>в 65 DEV-диалогах · ложных тревог 0</small><div class="bar"><i style="--w:100%"></i></div></div>
+        <div class="stat reveal-up"><b><span data-count="100">100</span><sup>%</sup></b><p>наборы с эталоном</p><small>225 из 225 ответов · 51 диалог, сложные сценарии</small><div class="bar"><i style="--w:100%"></i></div></div>
+        <div class="stat reveal-up"><b>$0,003</b><p>за проверку одного чата</p><small>все 8 критериев · Gemini 3.5 Flash-Lite · 65/65 DEV выгружено</small><div class="bar"><i style="--w:100%"></i></div></div>
       </div>
-      <p class="note reveal">Наборы с эталоном собраны командой по официальному чек-листу и покрывают сложные случаи: отвечал только бот, услуги в обход компании,
-        данные без идентификации, оборванный чат. Дополнительно 20 настоящих DEV-диалогов размечены независимой ИИ-разметкой (не экспертом-человеком) — совпадение 92%.
-        Все отчёты прогонов — в репозитории.</p>
+      <p class="note reveal">Реальные чаты: 43 диалога из DEV-набора организаторов размечены по официальному чек-листу независимой ИИ-разметкой (не экспертом-человеком).
+        23 из них отложены — на них правила не настраивались: 171 из 184 ответов (93%). Расхождения в основном в баллах по шкале («Ведение диалога», «Консультация»).
+        Наборы с эталоном собраны командой и покрывают сложные случаи: отвечал только бот, услуги в обход компании, данные без идентификации, оборванный чат.
+        Цена — по прайсу Google на 8 ноября 2026. Все отчёты прогонов — в репозитории.</p>
     </div>
   </section>
 
