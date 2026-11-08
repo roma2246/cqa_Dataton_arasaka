@@ -259,6 +259,7 @@ KNOWN_PRICES = {
     # Gemini: цены до 31.12.2026 (с 01.01.2027 — 1.50 / 7.50); output включает токены размышлений
     "gemini-3.8-flash": (0.75, 3.75),
     "gemini-3.6-flash": (0.75, 3.75),
+    "gemini-3.5-flash-lite": (0.30, 2.50),   # ai.google.dev/gemini-api/docs/pricing, 8.11.2026
     "claude-haiku-5-5": (0.10, 0.50),
 }
 

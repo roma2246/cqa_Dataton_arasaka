@@ -150,7 +150,7 @@ def test_identification_no_sends_critical_to_review():
     i = CriterionResult(criterion_id="identification", status="applicable", answer="no", explanation="e")
     c = CriterionResult(criterion_id="critical", status="applicable", answer="no", explanation="e")
     out, probs = _guard_disclosure([i, c], [])
-    assert out[1].status == "needs_review" and probs
+    assert out[0].status == "needs_review" and out[1].status == "needs_review" and probs
     i2 = i.model_copy(update={"status": "not_applicable", "answer": None})
     out, _ = _guard_disclosure([i2, c], [])
     assert out[1].answer == "no"

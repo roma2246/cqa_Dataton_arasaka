@@ -201,8 +201,17 @@ def _guard_disclosure(results, problems):
     Если модель поставила «Нет» по идентификации, а грубую ошибку не отметила, — уточняющий запрос по грубой ошибке."""
     by = {r.criterion_id: r for r in results}
     ident, crit = by.get("identification"), by.get("critical")
-    if not (ident and crit and ident.status == "applicable" and ident.answer == "no"
-            and crit.status == "applicable" and crit.answer == "no"):
+    if not (ident and ident.status == "applicable" and ident.answer == "no"):
+        return results, problems
+    # «Нет» по идентификации всегда перепроверяем: по чек-листу оно значит, что данные счёта названы
+    # (или сделано действие по счёту) без проверки. Если ничего такого не было — это N/A.
+    ask_id = ("Подтверди «Нет»: назвал ли оператор данные КОНКРЕТНОГО счёта клиента (баланс, ограничение, операции, статус "
+              "заявки) или сделал что-то со счётом без подтверждённой проверки? Если да — «Нет». Если оператор только "
+              "объяснял, советовал или отвечал в общем — N/A.")
+    results = [r.model_copy(update={"status": "needs_review", "answer": None, "review_reason": ask_id})
+               if r.criterion_id == "identification" else r for r in results]
+    problems = problems + ["идентификация «Нет» — отправлено на подтверждение"]
+    if not (crit and crit.status == "applicable" and crit.answer == "no"):
         return results, problems
     why = ("Идентификация «Нет»: если оператор назвал данные конкретного счёта (баланс, ограничение, операции) "
            "без подтверждённой проверки — это раскрытие конфиденциальной информации, грубая ошибка «Да». "

@@ -1,0 +1,45 @@
+{
+ "conversation_id": "p1-ru-012",
+ "checklist_version_id": 8,
+ "split": "holdout",
+ "annotator": "Claude (ИИ-разметка до просмотра ответов модели, не человек-эксперт)",
+ "results": [
+  {
+   "criterion_id": "contact",
+   "status": "applicable",
+   "answer": "yes"
+  },
+  {
+   "criterion_id": "discovery",
+   "status": "not_applicable"
+  },
+  {
+   "criterion_id": "identification",
+   "status": "not_applicable"
+  },
+  {
+   "criterion_id": "consultation",
+   "status": "applicable",
+   "answer": "20"
+  },
+  {
+   "criterion_id": "empathy",
+   "status": "applicable",
+   "answer": "yes"
+  },
+  {
+   "criterion_id": "dialogue",
+   "status": "applicable",
+   "answer": "10"
+  },
+  {
+   "criterion_id": "closure",
+   "status": "not_applicable"
+  },
+  {
+   "criterion_id": "critical",
+   "status": "applicable",
+   "answer": "no"
+  }
+ ]
+}

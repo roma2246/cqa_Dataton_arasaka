@@ -94,7 +94,9 @@ def _seconds(ts: str) -> float | None:
 
 
 _VERIFY = re.compile(r"личност\w* (клиента )?подтвержд|подтвердите\W+(пожалуйста\W+)?личност|кодов\w* слов|sms|смс|"
-                     r"identity (is )?verified|verify your identity|code word|жеке бас\w* расталды|кодтық сөз", re.I)
+                     r"identity (is )?verified|verify your identity|code word|жеке бас\w* расталды|кодтық сөз|"
+                     r"данные идентификации|проведем идентификаци|проведём идентификаци|идентификаци\w* (успешно )?(пройден|прое)|"
+                     r"полное имя|фамили\w*,? имя|удостоверени\w* личности|\bиин\b|номер (документа|удостоверения)", re.I)
 
 
 def facts_block(conv: Conversation) -> str:
