@@ -8,6 +8,7 @@ COPY backend backend
 COPY frontend frontend
 COPY data/checklists data/checklists
 COPY data/assistant_kb.json data/assistant_kb.json
+COPY data/assistant_faq.json data/assistant_faq.json
 COPY data/fixtures data/fixtures
 COPY evaluation/reports evaluation/reports
 RUN mkdir -p /data

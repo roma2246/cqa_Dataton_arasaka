@@ -109,34 +109,68 @@ SCHEMA = {"type": "object", "properties": {"answer": {"type": "string"}, "handof
           "required": ["answer", "handoff"], "additionalProperties": False}
 
 
+FAQ_FILE = "data/assistant_faq.json"   # справочник команды по ответам операторов DEV (RU/KZ/EN)
+_FAQ: Optional[list[dict]] = None
+_NAME_INTRO = re.compile(r"^\s*(здравствуйте|добрый день|привет|hi|hello|сәлеметсіз бе)[!,.]?\s*"
+                         r"((я|меня зовут|мен|i'm|i am|my name is)\s+(?!ии|ai\b|ии-|виртуальн)[A-ZА-ЯЁӘҒҚҢӨҰҮҺІ][\w-]*[!.,]?\s*)", re.I)
+_SELF_INTRO = re.compile(r"^\s*(здравствуйте[!,.]?\s*)?(я\s+)?(ии|виртуальный)[-\s]?ассистент[^.!]*[.!]\s*", re.I)
+
+
+def faq() -> list[dict]:
+    global _FAQ
+    if _FAQ is None:
+        from .config import ROOT
+        f = ROOT / FAQ_FILE
+        _FAQ = json.loads(f.read_text(encoding="utf-8")) if f.exists() else []
+    return _FAQ
+
+
+def _faq_text(lang: str) -> str:
+    key = {"RU": "ru", "KZ": "kz", "EN": "en"}[lang]
+    return "\n".join(f"[{x['id']}] {x['topic']}{' (ПЕРЕДАТЬ СПЕЦИАЛИСТУ)' if x.get('handoff') else ''}: {x.get(key) or x['ru']}"
+                     for x in faq())
+
+
 def reply(messages: list[dict]) -> dict[str, Any]:
     """messages: [{"role": "client"|"assistant", "text": "..."}]. Последнее сообщение — от клиента."""
-    last = next((m["text"] for m in reversed(messages) if m.get("role") == "client"), "").strip()[:800]
-    lang = language(last)
+    client_msgs = [m.get("text", "").strip()[:500] for m in messages if m.get("role") == "client"]
+    last = client_msgs[-1] if client_msgs else ""
+    lang = language(last) if len(last) > 3 else language(" ".join(client_msgs[-3:]))
     if not last:
         return {"reply": "", "handoff": False, "language": lang, "sources": []}
     if HANDOFF.search(last):
         return {"reply": TEXT[lang]["handoff"], "handoff": True, "language": lang, "sources": [], "eta_min": 2}
-    hits = retrieve(last)
-    if not hits:
-        return {"reply": TEXT[lang]["nofound"], "handoff": True, "language": lang, "sources": [], "eta_min": 2}
+    if re.fullmatch(r"\s*(привет\w*|здравствуй\w*|добрый (день|вечер|утро)|салам\w*|сәлем\w*|hi|hello|hey)[\s!.,)]*", last, re.I):
+        hello = next((x for x in faq() if x["id"] == "hello"), {})
+        return {"reply": hello.get({"RU": "ru", "KZ": "kz", "EN": "en"}[lang]) or hello.get("ru", "Здравствуйте! Чем помочь?"),
+                "handoff": False, "language": lang, "sources": []}
+    context = " ".join(client_msgs[-3:])                     # «я в вебе» понимаем вместе с прошлым вопросом
+    hits = retrieve(context, k=4)
     from .evaluator import llm_client
-    examples = "\n".join(f"- Клиент: {h['q'][:300]}\n  Оператор: {h['a'][:400]}" for h in hits)
+    examples = "\n".join(f"- Клиент: {h['q'][:250]}\n  Оператор: {h['a'][:350]}" for h in hits) or "—"
     history = "\n".join(f"{'Клиент' if m.get('role') == 'client' else 'Ассистент'}: {m.get('text', '')[:400]}"
-                        for m in messages[-6:])
-    system = ("Ты — ИИ-ассистент поддержки брокера (не человек; если спросят — так и скажи). Отвечай на языке клиента "
-              f"({ {'RU': 'русский', 'KZ': 'казахский', 'EN': 'английский'}[lang] }), коротко: 1–3 предложения, конкретный путь в "
-              "приложении, если он есть в примерах. Используй ТОЛЬКО факты из примеров ответов операторов ниже. "
-              "Не давай инвестиционных советов, не обещай сроков и сумм, не запрашивай личные данные. Если в примерах нет "
-              "ответа на вопрос клиента — handoff=true и answer: вежливо, что передаёшь вопрос специалисту. "
-              "Ответ — JSON {\"answer\": \"...\", \"handoff\": false|true}.")
-    user = f"Примеры ответов операторов:\n{examples}\n\nРазговор:\n{history}"
+                        for m in messages[-8:])
+    lang_name = {"RU": "русском", "KZ": "казахском", "EN": "английском"}[lang]
+    system = (
+        "Ты — ИИ-ассистент поддержки брокера Freedom Broker (не человек; если спросят — так и скажи). "
+        f"Отвечай на {lang_name} языке, коротко (1–3 предложения), по делу, с конкретным путём в приложении. "
+        "Факты бери ТОЛЬКО из СПРАВОЧНИКА (главный источник) и примеров ответов операторов. Учитывай весь разговор: "
+        "если клиент уточняет («я в вебе», «в приложении», «за прошлый год»), отвечай на его исходный вопрос с учётом уточнения. "
+        "Если ответ зависит от детали, которой нет (например, приложение или веб), — задай ОДИН короткий уточняющий вопрос "
+        "(handoff=false). Не начинай ответ с представления «я ИИ-ассистент» — представляйся, только если спросили, кто ты. "
+        "Не называй себя именами операторов, не пиши «я Алина/Света» и т. п. Не давай инвестиционных советов, "
+        "не обещай сумм и сроков, не запрашивай пароли и коды. Если тема помечена «ПЕРЕДАТЬ СПЕЦИАЛИСТУ» или ответа нет "
+        "в справочнике и примерах — коротко объясни и handoff=true. Ответ — JSON {\"answer\": \"...\", \"handoff\": false|true}.")
+    user = f"СПРАВОЧНИК:\n{_faq_text(lang)}\n\nПримеры ответов операторов:\n{examples}\n\nРазговор:\n{history}"
     try:
         resp = llm_client.chat_json(system, user, SCHEMA)
         data = json.loads(resp.text)
     except Exception:  # noqa: BLE001 — модель недоступна: честно передаём человеку
         return {"reply": TEXT[lang]["nofound"], "handoff": True, "language": lang, "sources": [], "eta_min": 2}
-    answer = (data.get("answer") or "").strip() or TEXT[lang]["nofound"]
+    answer = _NAME_INTRO.sub(lambda m: m.group(1) + "! ", (data.get("answer") or "").strip()).strip()
+    if not re.search(r"кто ты|ты человек|ты бот|who are you|are you (a )?(human|bot)|сен кімсің", last, re.I):
+        answer = _SELF_INTRO.sub("", answer).strip()
+    answer = (answer[:1].upper() + answer[1:]) if answer else TEXT[lang]["nofound"]
     out = {"reply": answer, "handoff": bool(data.get("handoff")), "language": lang,
            "sources": sorted({h["src"] for h in hits})[:3]}
     if out["handoff"]:

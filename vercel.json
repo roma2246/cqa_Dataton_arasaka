@@ -4,7 +4,7 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
-      "includeFiles": "{backend/cqa/**,backend/prompts/**,frontend/**,data/checklists/**,data/fixtures/**,data/assistant_kb.json,evaluation/reports/**}"
+      "includeFiles": "{backend/cqa/**,backend/prompts/**,frontend/**,data/checklists/**,data/fixtures/**,data/assistant_kb.json,data/assistant_faq.json,evaluation/reports/**}"
     }
   },
   "rewrites": [
