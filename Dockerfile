@@ -7,6 +7,7 @@ RUN pip install -r backend/requirements.txt
 COPY backend backend
 COPY frontend frontend
 COPY data/checklists data/checklists
+COPY data/assistant_kb.json data/assistant_kb.json
 COPY data/fixtures data/fixtures
 COPY evaluation/reports evaluation/reports
 RUN mkdir -p /data

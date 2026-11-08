@@ -25,6 +25,53 @@
     liveReady && liveReady();
   }).catch(() => { $("#live-sub").textContent = "Не удалось загрузить живые данные."; });
 
+  // ---------- Ассистент поддержки: ответы по опыту операторов, передача специалисту, оценка разговора ----------
+  (() => {
+    const box = $("#sup"), fab = $("#sup-fab"), log = $("#sup-log"), form = $("#sup-form"), q = $("#sup-q"), rateBox = $("#sup-rate");
+    if (!box) return;
+    const hist = [];
+    let lang = "RU", handed = false, rated = false, greeted = false;
+    const add = (cls, html) => { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
+    const open = () => {
+      box.hidden = false; fab.hidden = true; fab.setAttribute("aria-expanded", "true"); q.focus();
+      if (!greeted) {
+        greeted = true;
+        add("b a", "<small>ИИ-ассистент</small>Здравствуйте! Я ИИ-ассистент поддержки, не человек. Отвечаю по опыту операторов: тарифы, отчёты, приложение, " +
+          "пополнение. Вопросы о выводе, вашем счёте и личных данных сразу передаю специалисту.");
+      }
+    };
+    fab.addEventListener("click", open);
+    $$("[data-sup]").forEach((b) => b.addEventListener("click", open));
+    $("#sup-x").addEventListener("click", () => { box.hidden = true; fab.hidden = false; fab.setAttribute("aria-expanded", "false"); });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = q.value.trim(); if (!text) return;
+      q.value = ""; add("b c", esc(text)); hist.push({ role: "client", text });
+      const wait = add("b a", "<small>ИИ-ассистент</small>…");
+      try {
+        const r = await fetch("/api/assist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: hist }) });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.detail || "Ошибка");
+        lang = d.language || lang;
+        wait.innerHTML = "<small>ИИ-ассистент</small>" + esc(d.reply) +
+          (d.sources && d.sources.length ? `<div class="src">По ответам операторов: ${d.sources.map(esc).join(", ")}</div>` : "");
+        hist.push({ role: "assistant", text: d.reply });
+        if (d.handoff && !handed) {
+          handed = true;
+          add("sys", `Разговор передан специалисту · ответ обычно до ${d.eta_min || 2} мин · он увидит всю переписку`);
+        }
+        if ((handed || hist.length >= 4) && !rated) rateBox.hidden = false;
+      } catch (err) { wait.innerHTML = "<small>ИИ-ассистент</small>" + esc(err.message || "Не удалось ответить, попробуйте ещё раз."); }
+    });
+    rateBox.addEventListener("click", async (e) => {
+      const b = e.target.closest("button[data-r]"); if (!b || rated) return;
+      rated = true; rateBox.hidden = true;
+      try { await fetch("/api/assist/rate", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rating: +b.dataset.r, language: lang, handoff: handed }) }); } catch {}
+      add("sys", `Спасибо за оценку ${b.dataset.r} из 5 — она попадает в аналитику качества`);
+    });
+  })();
+
   // ---------- Разбор настоящих чатов: диалог + оценка из базы, клик по пункту подсвечивает реплики ----------
   const SPK = { client: "Клиент", operator: "Оператор", bot: "Бот", system: "Система" };
   const chkCache = {};

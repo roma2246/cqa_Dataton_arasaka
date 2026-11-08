@@ -49,6 +49,7 @@
         <div class="cta-row reveal">
           <a class="btn" href="/ui/">Открыть приложение<svg><use href="#arrow"/></svg></a>
           <a class="btn ghost" href="#how">Как это работает</a>
+          <button class="btn ghost" type="button" data-sup>Написать в поддержку</button>
         </div>
         <div class="trust reveal">
           <div><b><span data-count="93">93</span>%</b>совпадение на 43 реальных чатах</div>
@@ -266,6 +267,14 @@
   </section>
 </main>
 
+
+<button class="sup-fab" id="sup-fab" aria-controls="sup" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Написать в поддержку</span></button>
+<section class="sup" id="sup" hidden aria-label="Чат поддержки">
+  <header><div><b>Поддержка</b><small>ИИ-ассистент · отвечает за пару секунд · RU / KZ / EN</small></div><button id="sup-x" aria-label="Закрыть">×</button></header>
+  <div class="sup-log" id="sup-log"></div>
+  <div class="sup-rate" id="sup-rate" hidden><span>Оцените разговор</span><div><button data-r="1">1</button><button data-r="2">2</button><button data-r="3">3</button><button data-r="4">4</button><button data-r="5">5</button></div></div>
+  <form class="sup-in" id="sup-form"><input id="sup-q" maxlength="500" placeholder="Например: где посмотреть мой тариф?" autocomplete="off"><button aria-label="Отправить">→</button></form>
+</section>
 <script src="/ui/vendor/gsap.min.js"></script>
 <script src="/ui/vendor/ScrollTrigger.min.js"></script>
 <script src="/ui/vendor/lenis.min.js"></script>

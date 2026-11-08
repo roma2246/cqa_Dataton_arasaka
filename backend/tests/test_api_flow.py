@@ -193,3 +193,13 @@ def test_rate_limit_on_llm_endpoints(client, monkeypatch):
     main._HITS.clear()
     codes = [client.post("/api/analytics/ask", json={"group_id": "FIXTURE"}).status_code for _ in range(3)]
     assert codes[:2] != [429, 429] and codes[2] == 429
+
+
+def test_assistant_handoff_and_rating(client):
+    r = client.post("/api/assist", json={"messages": [{"role": "client", "text": "Почему ограничен вывод с моего счёта?"}]}).json()
+    assert r["handoff"] is True and r["language"] == "RU" and "специалист" in r["reply"]
+    r = client.post("/api/assist", json={"messages": [{"role": "client", "text": "Шотымнан ақша шығара алмаймын"}]}).json()
+    assert r["handoff"] is True and r["language"] == "KZ"
+    ok = client.post("/api/assist/rate", json={"rating": 5, "language": "RU", "handoff": True}).json()
+    assert ok["csat"]["count"] == 1 and ok["csat"]["avg"] == 5
+    assert client.post("/api/assist/rate", json={"rating": 9}).status_code == 422

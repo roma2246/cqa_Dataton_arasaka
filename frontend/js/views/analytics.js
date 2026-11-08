@@ -25,6 +25,11 @@ export async function renderAnalytics() {
       ${kpi("Грубые ошибки", a.critical_count, a.evaluated ? `${pct((100 * a.critical_count) / a.evaluated)} диалогов` : "")}
       ${kpi("Слабое место", weakest ? esc(weakest.title) : "—", weakest ? `выполнено в ${pct(weakest.score_pct)} случаев` : "")}
     </div>
+    <div class="kpis" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      ${kpi("Оценка клиентов (CSAT)", a.csat && a.csat.avg != null ? `${a.csat.avg} из 5` : "—",
+        a.csat && a.csat.count ? `${a.csat.count} оценок в чате поддержки · довольны ${pct(a.csat.good_pct)}` : "клиенты оценивают разговор в чате поддержки на главной")}
+      ${kpi("Передано специалисту", a.csat && a.csat.handoff_pct != null ? pct(a.csat.handoff_pct) : "—", "доля оценённых разговоров, где ассистент передал вопрос человеку")}
+    </div>
     <div class="card">
       <div class="card-head"><h2>По критериям</h2><span class="subtle">от худшего к лучшему</span></div>
       <div class="table-wrap"><table>

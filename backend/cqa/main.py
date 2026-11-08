@@ -59,7 +59,7 @@ import time as _time
 from collections import defaultdict as _dd, deque as _deque
 
 _RATE = {("POST", "/api/evaluations"): 60, ("POST", "/api/evaluations/batch"): 3, ("POST", "/api/analytics/ask"): 20,
-         ("POST", "/api/import/organizer"): 5}
+         ("POST", "/api/import/organizer"): 5, ("POST", "/api/assist"): 40, ("POST", "/api/assist/rate"): 20}
 _HITS: dict = _dd(_deque)
 
 
@@ -512,6 +512,33 @@ def root() -> FileResponse:
     return FileResponse(ROOT / "frontend" / "landing.html")
 
 
+# ---------- Ассистент поддержки (витрина) ----------
+
+class AssistBody(BaseModel):
+    messages: list[dict] = []
+
+
+@app.post("/api/assist")
+def assist(body: AssistBody) -> dict[str, Any]:
+    from . import assistant
+    return assistant.reply(body.messages[-12:])
+
+
+class RateBody(BaseModel):
+    rating: int
+    language: str = "RU"
+    handoff: bool = False
+
+
+@app.post("/api/assist/rate")
+def assist_rate(body: RateBody) -> dict[str, Any]:
+    from . import assistant
+    if not 1 <= body.rating <= 5:
+        raise HTTPException(422, "Оценка от 1 до 5")
+    assistant.rate(body.rating, body.language, body.handoff)
+    return {"ok": True, "csat": assistant.csat_summary()}
+
+
 _stats_cache: dict[str, Any] = {"at": 0.0, "data": None}
 
 
@@ -528,6 +555,8 @@ def public_stats() -> dict[str, Any]:
         a = an.summary("DEV", _official_vid(None, "DEV"))
         out.update({k: a[k] for k in ("evaluated", "avg_total", "critical_count", "by_language")})
         out["criteria"] = [{k: c[k] for k in ("title", "weight", "score_pct")} for c in a["criteria"]]
+        from . import assistant
+        out["csat"] = assistant.csat_summary()
     except Exception:  # noqa: BLE001 — витрина не должна падать
         return out
     _stats_cache.update(at=time.time(), data=out)

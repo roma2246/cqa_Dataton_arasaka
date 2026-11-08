@@ -81,7 +81,16 @@ def summary(group_id: Optional[str], version_id: int) -> dict[str, Any]:
         "by_channel": {k: {"n": len(v), "avg": avg(v)} for k, v in sorted(by_chan.items())},
         "worst": [{"conversation_id": c, "total": t} for t, c in sorted(worst)[:6]],
         "agreement_avg": round(agree_sum / agree_n, 3) if agree_n else None,
+        "csat": _csat(),
     }
+
+
+def _csat() -> dict:
+    try:
+        from . import assistant
+        return assistant.csat_summary()
+    except Exception:  # noqa: BLE001
+        return {"count": 0, "avg": None}
 
 
 ASK_SCHEMA = {
